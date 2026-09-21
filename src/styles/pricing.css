@@ -1,0 +1,482 @@
+/* ============================================================
+   Pricing page (.pp-*)
+   Brand: Primary Blue #0D598C leads. The magenta-purple gradient
+   appears only as micro accents. Signature: postage-stamp
+   perforation, echoing the SendMsg stamp logo.
+   ============================================================ */
+
+.pp {
+  --pp-blue: #0d598c;
+  --pp-ink: #16324f;
+  --pp-sky: #e9eff6;
+  --pp-line: #dbe4ee;
+  --pp-display: 'Assistant', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* ── hero ── */
+.pp-hero {
+  position: relative;
+  background: var(--pp-sky);
+  padding: 72px 0 150px;
+  text-align: center;
+}
+
+/* serrated stamp edge: white scallops biting into the soft blue */
+.pp-hero::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 14px;
+  background-image: radial-gradient(circle at 9px 14px, #fff 7px, rgba(255, 255, 255, 0) 7.7px);
+  background-size: 18px 14px;
+  background-repeat: repeat-x;
+  background-position: center bottom;
+  pointer-events: none;
+}
+
+.pp-hero h1 {
+  font-family: var(--pp-display);
+  font-size: clamp(2.2rem, 5vw, 3.3rem);
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--pp-ink);
+  margin-bottom: 16px;
+  text-wrap: balance;
+}
+
+.pp-hero-sub {
+  font-size: 1.15rem;
+  color: var(--text-gray);
+  max-width: 560px;
+  margin: 0 auto 26px;
+  line-height: 1.7;
+}
+
+.pp-trust {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px 22px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--pp-ink);
+}
+
+.pp-trust span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.pp-trust svg {
+  color: var(--success);
+  flex-shrink: 0;
+}
+
+/* ── plan cards ── */
+.pp-plans {
+  background: #fff;
+  padding: 0 0 72px;
+}
+
+.pp-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  align-items: stretch;
+  max-width: 1080px;
+  margin: -104px auto 0;
+  position: relative;
+  z-index: 1;
+}
+
+.pp-card {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid var(--pp-line);
+  border-radius: 20px;
+  padding: 34px 30px 30px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 10px 30px -18px rgba(22, 50, 79, 0.25);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.pp-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 22px 44px -20px rgba(22, 50, 79, 0.32);
+}
+
+.pp-card-popular {
+  border: 2px solid var(--pp-blue);
+  box-shadow: 0 28px 60px -24px rgba(13, 89, 140, 0.45);
+  margin-top: -22px;
+  padding-top: 44px;
+}
+
+/* gradient corner, echoing the logo's bottom corner */
+.pp-card-popular::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 34px;
+  height: 34px;
+  background: var(--primary-gradient);
+  clip-path: polygon(0 100%, 100% 100%, 0 0);
+  border-radius: 0 0 0 18px;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+/* "most popular" badge, shaped like a little postage stamp */
+.pp-badge {
+  position: absolute;
+  top: -16px;
+  right: 50%;
+  transform: translateX(50%) rotate(-2deg);
+  background: var(--pp-blue);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.82rem;
+  padding: 8px 20px;
+  border-radius: 6px;
+  outline: 1.5px dashed rgba(255, 255, 255, 0.75);
+  outline-offset: -5px;
+  box-shadow: 0 8px 18px -8px rgba(13, 89, 140, 0.7);
+  white-space: nowrap;
+}
+
+.pp-plan-name {
+  font-family: var(--pp-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--pp-ink);
+  margin-bottom: 6px;
+}
+
+.pp-plan-tagline {
+  font-size: 0.92rem;
+  color: var(--text-light);
+  margin-bottom: 20px;
+  min-height: 1.5em;
+}
+
+.pp-price-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+}
+
+.pp-price-num {
+  font-family: var(--pp-display);
+  font-size: 3.4rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--pp-blue);
+  letter-spacing: -0.01em;
+}
+
+.pp-price-word {
+  font-family: var(--pp-display);
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1.3;
+  color: var(--pp-blue);
+}
+
+.pp-price-cur {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-gray);
+}
+
+.pp-price-period {
+  font-size: 0.88rem;
+  color: var(--text-light);
+  margin-top: 6px;
+}
+
+/* perforated tear line, like a sheet of stamps */
+.pp-tear {
+  height: 6px;
+  margin: 24px 0 20px;
+  background-image: radial-gradient(circle closest-side, #c9d6e5 92%, rgba(201, 214, 229, 0));
+  background-size: 14px 6px;
+  background-position: center;
+  background-repeat: repeat-x;
+}
+
+.pp-lead {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--pp-ink);
+  text-align: right;
+  margin-bottom: 12px;
+}
+
+.pp-features {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  text-align: right;
+  margin-bottom: 26px;
+  flex-grow: 1;
+}
+
+.pp-features li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.95rem;
+  color: var(--text-gray);
+}
+
+.pp-check {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(40, 167, 69, 0.12);
+  color: var(--success);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.pp-card .primary-btn {
+  width: 100%;
+  padding: 14px;
+  font-size: 1.05rem;
+}
+
+.pp-btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 12px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--pp-blue);
+  border: 2px solid var(--pp-blue);
+  border-radius: var(--radius-xl);
+  background: transparent;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.pp-btn-outline:hover {
+  background: var(--pp-blue);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.pp-plans-note {
+  text-align: center;
+  font-size: 0.92rem;
+  color: var(--text-light);
+  margin-top: 34px;
+}
+
+/* ── "in every plan" band ── */
+.pp-band {
+  background: linear-gradient(160deg, #0d598c 0%, #16324f 100%);
+  color: #fff;
+  padding: 56px 0;
+}
+
+.pp-band h2 {
+  font-family: var(--pp-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.pp-band-sub {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 1rem;
+  margin-bottom: 40px;
+}
+
+.pp-band-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px;
+  text-align: center;
+}
+
+.pp-band-item svg {
+  color: #9fd0ee;
+  margin-bottom: 12px;
+}
+
+.pp-band-item h3 {
+  font-size: 1.02rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.pp-band-item p {
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.6;
+}
+
+/* ── FAQ ── */
+.pp-faq {
+  background: var(--bg-soft);
+  padding: 72px 0;
+}
+
+.pp-faq h2 {
+  font-family: var(--pp-display);
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: var(--pp-ink);
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.pp-faq-sub {
+  text-align: center;
+  color: var(--text-gray);
+  margin-bottom: 36px;
+}
+
+.pp-faq-list {
+  max-width: 760px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pp-faq-item {
+  background: #fff;
+  border: 1px solid var(--pp-line);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.pp-faq-q {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 22px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--pp-ink);
+  text-align: right;
+  background: transparent;
+}
+
+.pp-faq-arrow {
+  color: var(--pp-blue);
+  font-size: 1.15rem;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.pp-faq-item[data-open='true'] .pp-faq-arrow {
+  transform: rotate(180deg);
+}
+
+.pp-faq-a {
+  padding: 0 22px 18px;
+  font-size: 0.96rem;
+  color: var(--text-gray);
+  line-height: 1.75;
+}
+
+/* ── entry animation ── */
+@keyframes pp-rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.pp-hero h1,
+.pp-hero .pp-hero-sub,
+.pp-hero .pp-trust {
+  animation: pp-rise 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+.pp-hero .pp-hero-sub { animation-delay: 0.07s; }
+.pp-hero .pp-trust { animation-delay: 0.14s; }
+
+.pp-grid .pp-card { animation: pp-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+.pp-grid .pp-card:nth-child(1) { animation-delay: 0.15s; }
+.pp-grid .pp-card:nth-child(2) { animation-delay: 0.25s; }
+.pp-grid .pp-card:nth-child(3) { animation-delay: 0.35s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pp-hero h1,
+  .pp-hero .pp-hero-sub,
+  .pp-hero .pp-trust,
+  .pp-grid .pp-card {
+    animation: none;
+  }
+
+  .pp-card,
+  .pp-card:hover,
+  .pp-btn-outline:hover {
+    transform: none;
+    transition: none;
+  }
+
+  .pp-card-popular {
+    margin-top: -22px;
+  }
+}
+
+/* ── responsive ── */
+@media (max-width: 980px) {
+  .pp-grid {
+    grid-template-columns: 1fr;
+    max-width: 460px;
+    gap: 24px;
+    margin-top: -84px;
+  }
+
+  .pp-card-popular {
+    order: -1;
+    margin-top: 0;
+  }
+
+  .pp-hero {
+    padding: 56px 0 130px;
+  }
+
+  .pp-band-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px 20px;
+  }
+}
+
+@media (max-width: 520px) {
+  .pp-hero-sub {
+    font-size: 1.05rem;
+  }
+
+  .pp-price-num {
+    font-size: 2.9rem;
+  }
+
+  .pp-band-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+}

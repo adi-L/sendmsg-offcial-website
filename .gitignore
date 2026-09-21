@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+
+# Gatsby build output
+.cache/
+public/
+
+# Local tooling and workspace files
+.claude/
+.gsd/
+.impeccable/
+.bg-shell/
+.vscode/
+.mcp.json
+
+# Internal docs (brand book, strategy) - not for the public repo
+docs/
+
+# Local scratch
+test.html
+
+# OS
+.DS_Store
