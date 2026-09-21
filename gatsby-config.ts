@@ -1,6 +1,8 @@
 import type { GatsbyConfig } from "gatsby"
 
 const config: GatsbyConfig = {
+  // Used only when building with --prefix-paths (GitHub Pages preview)
+  pathPrefix: `/sendmsg-offcial-website`,
   siteMetadata: {
     title: `שלח מסר - מערכת דיוור אלקטרוני`,
     description: `מערכת דיוור אלקטרוני לעסקים, נגישה וידידותית. ניוזלטרים, SMS, דפי נחיתה, קורסים דיגיטליים ו-CRM במקום אחד.`,
