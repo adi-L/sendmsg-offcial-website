@@ -1,5 +1,5 @@
 import React from "react"
-import type { HeadFC } from "gatsby"
+import { withPrefix, type HeadFC } from "gatsby"
 import Layout from "../components/Layout"
 import SEO from "../components/SEO"
 
@@ -10,7 +10,7 @@ const NotFoundPage: React.FC = () => (
         <h1 className="gradient-text" style={styles.code}>404</h1>
         <h2 style={styles.title}>העמוד לא נמצא</h2>
         <p style={styles.text}>מצטערים, העמוד שחיפשתם לא קיים או הועבר.</p>
-        <a href="/" className="gradient-btn" style={styles.btn}>
+        <a href={withPrefix("/")} className="gradient-btn" style={styles.btn}>
           חזרה לדף הבית
         </a>
       </div>

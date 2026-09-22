@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react"
-import { Link } from "gatsby"
+import { Link, withPrefix } from "gatsby"
 
 const COUPON_CODE = "GE5H43D"
 const SHOW_DELAY_MS = 12_000
@@ -110,7 +110,7 @@ const PromoPopup: React.FC = () => {
                 />
                 <span>
                   אני מאשר/ת קבלת עדכונים לפי{" "}
-                  <a href="/privacy/" target="_blank" rel="noreferrer">
+                  <a href={withPrefix("/privacy/")} target="_blank" rel="noreferrer">
                     מדיניות הפרטיות
                   </a>
                   . אפשר להסיר בכל עת.

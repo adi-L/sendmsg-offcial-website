@@ -1,4 +1,5 @@
 import React from "react"
+import { withPrefix } from "gatsby"
 import logo from "../images/logo.png"
 
 const serviceLinks = [
@@ -55,23 +56,23 @@ const Footer: React.FC = () => (
         <div style={styles.col}>
           <h4 style={styles.colTitle}>שירותים</h4>
           {serviceLinks.map((link) => (
-            <a key={link.label} href={link.href} style={styles.link}>{link.label}</a>
+            <a key={link.label} href={withPrefix(link.href)} style={styles.link}>{link.label}</a>
           ))}
         </div>
 
         <div style={styles.col}>
           <h4 style={styles.colTitle}>תמיכה ומשאבים</h4>
           {supportLinks.map((link) => (
-            <a key={link.label} href={link.href} style={styles.link}>{link.label}</a>
+            <a key={link.label} href={withPrefix(link.href)} style={styles.link}>{link.label}</a>
           ))}
         </div>
 
         <div style={styles.col}>
           <h4 style={styles.colTitle}>על החברה</h4>
-          <a href="/about/" style={styles.link}>אודות</a>
-          <a href="/pricing/" style={styles.link}>מחירון</a>
-          <a href="/shomer-shabbat/" style={styles.link}>שומר שבת</a>
-          <a href="/privacy/" style={styles.link}>מדיניות פרטיות</a>
+          <a href={withPrefix("/about/")} style={styles.link}>אודות</a>
+          <a href={withPrefix("/pricing/")} style={styles.link}>מחירון</a>
+          <a href={withPrefix("/shomer-shabbat/")} style={styles.link}>שומר שבת</a>
+          <a href={withPrefix("/privacy/")} style={styles.link}>מדיניות פרטיות</a>
         </div>
 
         <div style={styles.col}>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react"
+import { withPrefix } from "gatsby"
 import TextTransition from "react-text-transition"
 import { openSignup } from "./SignupDialog"
 
@@ -153,7 +154,7 @@ const Hero: React.FC = () => {
               playsInline
               className="hero-video-player"
             >
-              <source src="/hero-ai-e7ecf4.mp4" type="video/mp4" />
+              <source src={withPrefix("/hero-ai-e7ecf4.mp4")} type="video/mp4" />
             </video>
           )}
         </div>

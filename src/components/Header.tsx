@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react"
+import { withPrefix } from "gatsby"
 import logo from "../images/logo.png"
 import { openSignup } from "./SignupDialog"
 
@@ -228,7 +229,7 @@ const Header: React.FC = () => {
       </div>
       <header ref={headerRef} className={`site-header${scrolled ? " site-header-scrolled" : ""}`}>
         <div className="container site-header-inner">
-          <a href="/" className="site-logo">
+          <a href={withPrefix("/")} className="site-logo">
             <img src={logo} alt="שלח מסר - SendMsg" style={styles.logoImg} />
           </a>
 
@@ -246,7 +247,7 @@ const Header: React.FC = () => {
                   <Caret open={openMega === item.label} />
                 </button>
               ) : (
-                <a key={item.label} href={item.href} className="nav-link">
+                <a key={item.label} href={withPrefix(item.href)} className="nav-link">
                   {item.label}
                 </a>
               )
@@ -279,7 +280,7 @@ const Header: React.FC = () => {
             <div className="container mega-inner">
               <div className="mega-items">
                 {activeItem.items.map((sub) => (
-                  <a key={sub.href + sub.label} href={sub.href} className="mega-item" onClick={() => setOpenMega(null)}>
+                  <a key={sub.href + sub.label} href={withPrefix(sub.href)} className="mega-item" onClick={() => setOpenMega(null)}>
                     <span className="mega-item-icon">
                       <Icon name={sub.icon} />
                     </span>
@@ -294,7 +295,7 @@ const Header: React.FC = () => {
                 <div className={`mega-media${activeItem.media.contain ? " mega-media-contain" : ""}`}>
                   <img src={activeItem.media.image} alt={activeItem.media.alt} loading="lazy" />
                   <p>{activeItem.media.caption}</p>
-                  <a href={activeItem.media.ctaHref} onClick={() => setOpenMega(null)}>
+                  <a href={withPrefix(activeItem.media.ctaHref)} onClick={() => setOpenMega(null)}>
                     {activeItem.media.ctaLabel}
                   </a>
                 </div>
@@ -307,11 +308,11 @@ const Header: React.FC = () => {
           <div className="mobile-menu">
             {navItems.map((item) => (
               <React.Fragment key={item.label}>
-                <a href={item.href} className="mobile-nav-link">
+                <a href={withPrefix(item.href)} className="mobile-nav-link">
                   {item.label}
                 </a>
                 {item.items?.map((sub) => (
-                  <a key={sub.href + sub.label} href={sub.href} className="mobile-sub-link">
+                  <a key={sub.href + sub.label} href={withPrefix(sub.href)} className="mobile-sub-link">
                     {sub.label}
                   </a>
                 ))}

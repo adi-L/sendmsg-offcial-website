@@ -1,5 +1,5 @@
 import React from "react"
-import { graphql, PageProps, HeadFC } from "gatsby"
+import { graphql, withPrefix, PageProps, HeadFC } from "gatsby"
 import Layout from "../components/Layout"
 import SEO from "../components/SEO"
 
@@ -26,7 +26,7 @@ const BlogPostTemplate: React.FC<PageProps<BlogPostData>> = ({ data }) => {
       <article style={styles.article}>
         <div className="container" style={styles.container}>
           <div style={styles.breadcrumbs}>
-            <a href="/">ראשי</a> &gt; <a href="/blog/">מרכז הידע</a> &gt;{" "}
+            <a href={withPrefix("/")}>ראשי</a> &gt; <a href={withPrefix("/blog/")}>מרכז הידע</a> &gt;{" "}
             <span>{post.frontmatter.title}</span>
           </div>
 

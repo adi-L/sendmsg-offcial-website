@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react"
+import { withPrefix } from "gatsby"
 import { openSignup } from "./SignupDialog"
 import alexAvatar from "../images/alex-avatar.png"
 
@@ -52,7 +53,7 @@ const AIAssistant: React.FC = () => {
             <strong>שירות חדש!</strong> יש לך חשבון במערכת אחרת? הצוות שלנו
             יסייע בכל המעבר ללא תוספת עלות של החבילה השנתית*
           </p>
-          <a href="/contact" className="ai-bubble-link" onClick={dismissBubble}>
+          <a href={withPrefix("/contact")} className="ai-bubble-link" onClick={dismissBubble}>
             לפרטים
           </a>
         </div>
@@ -82,13 +83,13 @@ const AIAssistant: React.FC = () => {
             היי! אני אלכס, העוזר החכם של שלח מסר. במה אפשר לעזור לך היום?
           </p>
           <div className="ai-panel-actions">
-            <a href="/contact" className="ai-panel-action">
+            <a href={withPrefix("/contact")} className="ai-panel-action">
               מעבר ממערכת אחרת, בחינם
             </a>
             <a href={PANEL_URL} className="ai-panel-action" onClick={openSignup}>
               פתיחת חשבון חינם
             </a>
-            <a href="/contact" className="ai-panel-action">
+            <a href={withPrefix("/contact")} className="ai-panel-action">
               יש לי שאלה אחרת
             </a>
             <a
