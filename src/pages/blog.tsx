@@ -164,7 +164,10 @@ export const Head: HeadFC = () => (
 
 export const query = graphql`
   query BlogList {
-    allMarkdownRemark(sort: { frontmatter: { date: DESC } }) {
+    allMarkdownRemark(
+      filter: { frontmatter: { slug: { ne: null } } }
+      sort: { frontmatter: { date: DESC } }
+    ) {
       nodes {
         id
         frontmatter {

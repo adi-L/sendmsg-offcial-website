@@ -25,6 +25,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx gatsby build --prefix-paths
+        env:
+          GATSBY_ASSET_ORIGIN: https://${{ github.repository_owner }}.github.io
       - uses: actions/upload-pages-artifact@v3
         with:
           path: public

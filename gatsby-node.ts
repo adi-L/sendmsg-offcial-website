@@ -17,7 +17,10 @@ export const createPages: GatsbyNode["createPages"] = async ({
     }
   }>(`
     {
-      allMarkdownRemark(sort: { frontmatter: { date: DESC } }) {
+      allMarkdownRemark(
+        filter: { frontmatter: { slug: { ne: null } } }
+        sort: { frontmatter: { date: DESC } }
+      ) {
         nodes {
           frontmatter {
             slug

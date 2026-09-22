@@ -51,9 +51,43 @@ const config: GatsbyConfig = {
         short_name: `SendMsg`,
         start_url: `/`,
         background_color: `#ffffff`,
-        theme_color: `#a8107e`,
+        theme_color: `#0D598C`,
         display: `standalone`,
-        icon: `src/images/icon.png`,
+        // manual mode: files live in static/icons; favicon + apple-touch-icon
+        // link tags are emitted by the SEO component
+        legacy: false,
+        icons: [
+          {
+            src: `/icons/icon-192x192.png`,
+            sizes: `192x192`,
+            type: `image/png`,
+            purpose: `any`,
+          },
+          {
+            src: `/icons/icon-384x384.png`,
+            sizes: `384x384`,
+            type: `image/png`,
+            purpose: `any`,
+          },
+          {
+            src: `/icons/icon-512x512.png`,
+            sizes: `512x512`,
+            type: `image/png`,
+            purpose: `any`,
+          },
+          {
+            src: `/icons/icon-192x192-maskable.png`,
+            sizes: `192x192`,
+            type: `image/png`,
+            purpose: `maskable`,
+          },
+          {
+            src: `/icons/icon-512x512-maskable.png`,
+            sizes: `512x512`,
+            type: `image/png`,
+            purpose: `maskable`,
+          },
+        ],
       },
     },
     `gatsby-plugin-sitemap`,
