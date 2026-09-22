@@ -28,7 +28,7 @@ const features = [
 ]
 
 const Features: React.FC = () => (
-  <section className="section" style={styles.section}>
+  <section className="section dot-grid">
     <div className="container">
       <h2 style={styles.heading}>
         המיילים שלך מנותחים באמצעות
@@ -50,9 +50,6 @@ const Features: React.FC = () => (
 )
 
 const styles: Record<string, React.CSSProperties> = {
-  section: {
-    background: "#fff",
-  },
   heading: {
     fontSize: "2.4rem",
     fontWeight: 800,

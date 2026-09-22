@@ -503,10 +503,19 @@ input, textarea {
   }
 }
 
-/* ── AI launchpad ── */
-.launchpad-section {
-  background: var(--bg-white);
+/* dot-grid texture: 26px lattice, tuned so the dots read as paper grain
+   rather than noise. Add the class to any section that wants it. */
+.dot-grid {
+  background-color: var(--bg-white);
+  background-image: radial-gradient(
+    circle at center,
+    #d9dfe8 1.2px,
+    transparent 1.3px
+  );
+  background-size: 26px 26px;
 }
+
+/* ── AI launchpad ── */
 
 .launchpad-main {
   max-width: 700px;
@@ -672,16 +681,21 @@ input, textarea {
   flex-wrap: wrap;
 }
 
+/* square icon button: 56px with a 10px corner and a 16px glyph — the
+   proportions of the reference, repainted in the brand gradient */
 .launchpad-btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 28px;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  /* stays at the end of the row even when the holiday picker is absent */
+  margin-inline-start: auto;
+  padding: 0;
   background: var(--primary-gradient);
   color: #fff;
-  border-radius: var(--radius-xl);
-  font-size: 1.05rem;
-  font-weight: 700;
+  border-radius: 10px;
   box-shadow: 0 4px 14px rgba(99, 40, 167, 0.22);
   transition: transform 0.2s, box-shadow 0.2s;
 }
@@ -689,6 +703,260 @@ input, textarea {
 .launchpad-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 22px rgba(168, 16, 126, 0.32);
+}
+
+.launchpad-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 10px rgba(99, 40, 167, 0.24);
+}
+
+/* ── Inline CTA ── */
+.inline-cta {
+  padding: 48px 0;
+  background: var(--bg-white);
+  border-bottom: 1px solid var(--border-color);
+  text-align: center;
+}
+
+.inline-cta-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 20px;
+}
+
+.inline-cta-note {
+  margin-top: 14px;
+  font-size: 0.9rem;
+  color: var(--text-gray);
+}
+
+/* dark band, same ground and accent family as the global-reach section */
+.inline-cta.is-dark {
+  background: var(--bg-dark);
+  border-bottom: none;
+}
+
+.inline-cta.is-dark .inline-cta-title {
+  color: #fff;
+}
+
+.inline-cta.is-dark .inline-cta-note {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* flat --primary-blue sits at only ~2:1 against the navy and reads muddy,
+   so the dark band takes the brand gradient plus a glow to lift it off */
+.inline-cta.is-dark .primary-btn {
+  background: var(--primary-gradient);
+  box-shadow: 0 6px 24px rgba(168, 16, 126, 0.45);
+}
+
+/* ── Global reach map ── */
+/* The artwork already prints logo badges across the world. The overlay turns
+   them into destinations: every route leaves Israel, flies out, and lands on a
+   badge — the section's sentence, performed. */
+.reach-map {
+  position: relative;
+}
+
+.reach-map img {
+  display: block;
+}
+
+.reach-routes {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Static layer — drawn whether or not the loop ever runs. */
+.reach-origin {
+  fill: #fff;
+}
+
+.reach-origin-halo {
+  fill: rgba(199, 125, 255, 0.3);
+}
+
+.reach-pin {
+  fill: #c77dff;
+  opacity: 0.9;
+}
+
+/* Animated layer — idle until the map scrolls into view. */
+.reach-trail,
+.reach-comet,
+.reach-comet-glow,
+.reach-arrival,
+.reach-sonar {
+  animation-duration: 7s;
+  animation-iteration-count: infinite;
+  animation-play-state: paused;
+}
+
+.reach-map.is-live .reach-trail,
+.reach-map.is-live .reach-comet,
+.reach-map.is-live .reach-comet-glow,
+.reach-map.is-live .reach-arrival,
+.reach-map.is-live .reach-sonar {
+  animation-play-state: running;
+}
+
+.reach-trail {
+  fill: none;
+  stroke: #c77dff;
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  opacity: 0;
+  animation-name: reach-trail;
+}
+
+/* a 4-unit dash on a 100-unit path: the same dashoffset that reveals the
+   trail carries this segment along as the message in flight. The glow is a
+   second, wider dash rather than a drop-shadow filter — a filter here would
+   rasterize the whole arc's bounding box on every frame. */
+.reach-comet,
+.reach-comet-glow {
+  fill: none;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 4 96;
+  stroke-dashoffset: 100;
+  opacity: 0;
+  animation-name: reach-comet;
+}
+
+.reach-comet {
+  stroke: #f3e6ff;
+  stroke-width: 3;
+}
+
+.reach-comet-glow {
+  stroke: rgba(199, 125, 255, 0.4);
+  stroke-width: 9;
+}
+
+.reach-arrival,
+.reach-sonar {
+  fill: none;
+  stroke: #c77dff;
+  vector-effect: non-scaling-stroke;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.reach-arrival {
+  stroke-width: 1.5;
+  animation-name: reach-arrival;
+}
+
+.reach-sonar {
+  stroke-width: 1;
+  animation-name: reach-sonar;
+}
+
+@keyframes reach-trail {
+  0% {
+    stroke-dashoffset: 100;
+    opacity: 0;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  22% {
+    stroke-dashoffset: 0;
+    opacity: 0.5;
+  }
+  36% {
+    stroke-dashoffset: 0;
+    opacity: 0.5;
+  }
+  48% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+
+@keyframes reach-comet {
+  0% {
+    stroke-dashoffset: 100;
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  22% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  24% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+
+@keyframes reach-arrival {
+  0%,
+  21% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  23% {
+    opacity: 0.9;
+    transform: scale(0.45);
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  44% {
+    opacity: 0;
+    transform: scale(1.9);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.9);
+  }
+}
+
+@keyframes reach-sonar {
+  0% {
+    opacity: 0.4;
+    transform: scale(0.2);
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  88% {
+    opacity: 0;
+    transform: scale(65);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(65);
+  }
+}
+
+/* Reduced motion keeps the relationship — Israel wired to each badge — and
+   drops the travel. */
+@media (prefers-reduced-motion: reduce) {
+  .reach-trail {
+    animation: none;
+    stroke-dashoffset: 0;
+    opacity: 0.4;
+  }
+  .reach-comet,
+  .reach-comet-glow,
+  .reach-arrival,
+  .reach-sonar {
+    animation: none;
+    opacity: 0;
+  }
 }
 
 /* ── Transform section ── */
@@ -781,16 +1049,15 @@ input, textarea {
     grid-template-columns: 1fr;
     gap: 36px;
   }
+  /* the square button is narrow enough to stay beside the picker on mobile;
+     the picker takes the remaining width */
   .launchpad-actions {
-    flex-direction: column;
-    align-items: stretch;
-    text-align: center;
-  }
-  .launchpad-btn {
-    justify-content: center;
+    flex-wrap: nowrap;
+    gap: 10px;
   }
   .launchpad-holiday-toggle {
-    width: 100%;
+    flex: 1;
+    min-width: 0;
     justify-content: center;
   }
   .launchpad-holiday-dropdown {

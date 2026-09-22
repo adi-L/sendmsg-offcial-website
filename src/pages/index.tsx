@@ -30,6 +30,7 @@ const IndexPage: React.FC = () => (
     <InlineCTA
       title="רוצים לראות איך זה עובד אצלכם בעסק?"
       note="בלי כרטיס אשראי, בלי התחייבות"
+      variant="dark"
     />
     <Features />
     <Audience />

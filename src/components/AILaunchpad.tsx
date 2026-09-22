@@ -19,13 +19,82 @@ const relativeLabel = (date: Date): string => {
   return `בעוד ${days} ימים`
 }
 
+// Example prompts that type themselves into the textarea, one after another
+const EXAMPLES = [
+  "ניוזלטר חודשי לחנות תכשיטים, עם מבצע לחג ועדכון על קולקציה חדשה",
+  "מייל השקה למסעדה חדשה, עם תפריט פתיחה והזמנה לערב היכרות",
+  "עדכון ללקוחות הסטודיו על שעות הפעילות בחופשת הקיץ",
+  "מבצע בלאק פריידי לחנות אונליין, עם קוד קופון ותאריך תפוגה",
+  "סיכום שנה לעמותה, עם הישגים, תודות וקריאה לתרומה",
+]
+
+const STATIC_PLACEHOLDER = `לדוגמה: ${EXAMPLES[0]}...`
+
+const TYPE_MS = 45
+const DELETE_MS = 22
+const HOLD_MS = 2200
+const GAP_MS = 500
+
+// Types an example out, holds it, erases it, moves to the next one.
+// Runs only while `enabled` — we pause it the moment the user takes over.
+const useTypedExample = (enabled: boolean): string => {
+  const [text, setText] = useState("")
+
+  useEffect(() => {
+    if (!enabled) return
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+      setText(EXAMPLES[0])
+      return
+    }
+
+    let phrase = 0
+    let chars = 0
+    let erasing = false
+    let timer = 0
+
+    const step = () => {
+      const current = EXAMPLES[phrase]
+      if (!erasing) {
+        chars += 1
+        setText(current.slice(0, chars))
+        if (chars === current.length) {
+          erasing = true
+          timer = window.setTimeout(step, HOLD_MS)
+          return
+        }
+        timer = window.setTimeout(step, TYPE_MS)
+        return
+      }
+      chars -= 1
+      setText(current.slice(0, chars))
+      if (chars === 0) {
+        erasing = false
+        phrase = (phrase + 1) % EXAMPLES.length
+        timer = window.setTimeout(step, GAP_MS)
+        return
+      }
+      timer = window.setTimeout(step, DELETE_MS)
+    }
+
+    timer = window.setTimeout(step, GAP_MS)
+    return () => window.clearTimeout(timer)
+  }, [enabled])
+
+  return text
+}
+
 const AILaunchpad: React.FC = () => {
   const [prompt, setPrompt] = useState("")
   const [holidays, setHolidays] = useState<Holiday[]>([])
   const [selectedHoliday, setSelectedHoliday] = useState<Holiday | null>(null)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [focused, setFocused] = useState(false)
   const inputRef = useRef<HTMLTextAreaElement>(null)
   const menuRef = useRef<HTMLDivElement>(null)
+
+  // the animated placeholder stands down once the box is focused or has text
+  const typing = !focused && prompt === ""
+  const typedExample = useTypedExample(typing)
 
   useEffect(() => {
     // Jewish holidays (Israel schedule) from Hebcal; panel stays hidden if unavailable
@@ -108,7 +177,7 @@ const AILaunchpad: React.FC = () => {
   }
 
   return (
-    <section className="section launchpad-section">
+    <section className="section launchpad-section dot-grid">
       <div className="container">
         <h2 className="section-title">צרו ניוזלטר עם AI, ממשפט אחד</h2>
         <p className="section-subtitle">
@@ -123,9 +192,15 @@ const AILaunchpad: React.FC = () => {
               className="launchpad-input"
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
+              onFocus={() => setFocused(true)}
+              onBlur={() => setFocused(false)}
               rows={3}
               aria-label="תיאור הניוזלטר שתרצו ליצור"
-              placeholder="לדוגמה: ניוזלטר חודשי לחנות תכשיטים, עם מבצע לחג ועדכון על קולקציה חדשה..."
+              placeholder={
+                typing && typedExample
+                  ? `לדוגמה: ${typedExample}\u258F`
+                  : STATIC_PLACEHOLDER
+              }
             />
             <div className="launchpad-actions">
               {holidays.length > 0 && (
@@ -187,11 +262,17 @@ const AILaunchpad: React.FC = () => {
                   )}
                 </div>
               )}
-              <button type="button" className="launchpad-btn" onClick={handleLaunch}>
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1" />
+              <button
+                type="button"
+                className="launchpad-btn"
+                onClick={handleLaunch}
+                aria-label="יצירה עם AI"
+                title="יצירה עם AI"
+              >
+                <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M7 17L17 7" />
+                  <path d="M11 7h6v6" />
                 </svg>
-                יצירה עם AI
               </button>
             </div>
           </div>
