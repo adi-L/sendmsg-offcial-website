@@ -2425,11 +2425,12 @@ a.contact-channel:hover .contact-channel-text span {
   border-bottom: 1px solid #f0f0f0;
 }
 
-/* logical properties so the accent sits on the start edge, right in RTL */
+/* promotes the existing row separator rather than adding an accent, so the
+   mobile marker reads the same as the desktop underline */
 .mobile-nav-link-current {
   color: var(--primary-blue);
-  border-inline-start: 3px solid var(--primary-blue);
-  padding-inline-start: 12px;
+  border-bottom: 2px solid var(--primary-blue);
+  padding-bottom: 11px;
 }
 
 .mobile-sub-link {
