@@ -275,47 +275,156 @@
 }
 
 /* ── values ── */
-.ab-values-grid {
+/* ── values: a perforated sheet of stamps ──────────────────────────
+   The page's motif is postal (scalloped hero edge, stamp year markers,
+   perforated timeline), so the values are printed as one sheet rather
+   than six separate cards: punched outer edge, perforation lines
+   between cells, and a single cancellation mark over the corner.
+   One ink for every mark — the sheet is one printing. */
+.ab-values {
+  background: var(--ab-sky);
+}
+
+.ab-sheet {
+  position: relative;
+  max-width: 960px;
+  margin: 0 auto;
+  background: #fdfdfb;
+  border-radius: 5px;
+  padding: 14px;
+  box-shadow: 0 22px 46px -34px rgba(22, 50, 79, 0.75);
+}
+
+/* punched edge, all four sides: half-circles in the section colour */
+.ab-sheet::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background-image:
+    radial-gradient(circle at 8px 0, var(--ab-sky) 4.6px, rgba(233, 239, 246, 0) 5.2px),
+    radial-gradient(circle at 8px 100%, var(--ab-sky) 4.6px, rgba(233, 239, 246, 0) 5.2px),
+    radial-gradient(circle at 0 8px, var(--ab-sky) 4.6px, rgba(233, 239, 246, 0) 5.2px),
+    radial-gradient(circle at 100% 8px, var(--ab-sky) 4.6px, rgba(233, 239, 246, 0) 5.2px);
+  background-size: 16px 10px, 16px 10px, 10px 16px, 10px 16px;
+  background-position: top left, bottom left, top left, top right;
+  background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
+}
+
+.ab-sheet-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
 }
 
-.ab-value {
-  background: #fff;
-  border: 1px solid var(--ab-line);
-  border-radius: 16px;
-  padding: 26px 24px;
+.ab-stamp-cell {
+  padding: 28px 24px 30px;
   text-align: right;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: background 0.25s ease;
 }
 
-.ab-value:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 16px 34px -22px rgba(22, 50, 79, 0.35);
+/* perforation between stamps, never along the punched outer edge */
+.ab-stamp-cell:not(:nth-child(3n)) {
+  border-inline-end: 2px dotted #cfdae6;
 }
 
-.ab-value h3 {
-  font-size: 1.05rem;
+.ab-stamp-cell:nth-child(-n + 3) {
+  border-block-end: 2px dotted #cfdae6;
+}
+
+.ab-stamp-cell:hover {
+  background: rgba(13, 89, 140, 0.035);
+}
+
+.ab-stamp-cell h3 {
+  font-size: 1.06rem;
   font-weight: 700;
   color: var(--ab-ink);
   margin-bottom: 8px;
 }
 
-.ab-value p {
+.ab-stamp-cell p {
   font-size: 0.92rem;
   color: var(--text-gray);
-  line-height: 1.7;
+  line-height: 1.75;
 }
 
-.ab-value-icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
+.ab-mark {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(13, 89, 140, 0.34);
+  color: var(--ab-blue);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+
+.ab-stamp-cell:hover .ab-mark {
+  border-color: var(--ab-blue);
+  background: rgba(13, 89, 140, 0.07);
+}
+
+.ab-mark-letter {
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ab-blue);
+}
+
+/* cancellation mark, parked over the far corner of the sheet */
+.ab-postmark {
+  position: absolute;
+  top: -22px;
+  inset-inline-end: -26px;
+  width: 104px;
+  height: 104px;
+  border-radius: 50%;
+  border: 2px solid var(--ab-blue);
+  color: var(--ab-blue);
+  opacity: 0.22;
+  transform: rotate(-11deg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.ab-postmark::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+}
+
+.ab-postmark span {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.ab-postmark b {
+  font-size: 1.05rem;
+  font-weight: 800;
+  line-height: 1;
+  padding: 3px 0;
+  border-block: 1px solid currentColor;
+  width: 54px;
+  text-align: center;
+}
+
+.ab-sheet-note {
+  max-width: 960px;
+  margin: 18px auto 0;
+  font-size: 0.86rem;
+  color: var(--text-light);
+  text-align: center;
 }
 
 /* ── numbers band ── */
@@ -346,63 +455,169 @@
 }
 
 /* ── certifications ── */
+/* ── certifications: one document, read at full size ──────────────
+   Both assets are full pages of text; at thumbnail size they were
+   noise. The picker chooses which document the viewer shows, and the
+   facts beside it are read off that document. */
 .ab-certs {
-  display: flex;
-  gap: 40px;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: minmax(270px, 380px) minmax(0, 1fr);
+  gap: 44px;
+  align-items: start;
 }
 
-.ab-cert-cards {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  min-width: 280px;
-  max-width: 420px;
-  flex: 1;
-}
-
-.ab-cert-badge {
+.ab-cert-card {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 16px 18px;
+  gap: 15px;
+  width: 100%;
+  padding: 15px 17px;
   background: #fff;
   border: 1px solid var(--ab-line);
   border-radius: 14px;
+  font: inherit;
+  color: inherit;
+  text-align: right;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.ab-cert-badge img {
-  width: 56px;
-  height: auto;
-  border-radius: 6px;
+.ab-cert-card + .ab-cert-card {
+  margin-top: 12px;
 }
 
-.ab-cert-badge strong {
+.ab-cert-card:hover {
+  border-color: #b3c6da;
+}
+
+.ab-cert-card[aria-pressed='true'] {
+  border-color: var(--ab-blue);
+  box-shadow: inset 0 0 0 1px var(--ab-blue), 0 16px 32px -28px rgba(13, 89, 140, 0.9);
+}
+
+.ab-cert-card[aria-pressed='true'] .ab-mark {
+  background: var(--ab-blue);
+  border-color: var(--ab-blue);
+  border-style: solid;
+  color: #fff;
+}
+
+.ab-cert-card .ab-mark {
+  margin-bottom: 0;
+  flex-shrink: 0;
+}
+
+.ab-cert-card strong {
   display: block;
   font-size: 1rem;
   color: var(--ab-ink);
+  margin-bottom: 3px;
 }
 
-.ab-cert-badge p {
+.ab-cert-desc {
+  display: block;
   font-size: 0.86rem;
   color: var(--text-gray);
+  line-height: 1.5;
+}
+
+/* facts read off the document currently on screen */
+.ab-cert-facts {
+  margin: 18px 0 0;
+  padding: 6px 18px;
+  border: 1px dashed #cfdae6;
+  border-radius: 14px;
+  background: var(--ab-sky);
+}
+
+.ab-cert-facts > div {
+  display: grid;
+  grid-template-columns: 82px 1fr;
+  gap: 12px;
+  padding: 11px 0;
+}
+
+.ab-cert-facts > div + div {
+  border-top: 1px dotted #c3d2e1;
+}
+
+.ab-cert-facts dt {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--ab-blue);
+}
+
+.ab-cert-facts dd {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--ab-ink);
+  line-height: 1.55;
+}
+
+.ab-cert-viewer {
   margin: 0;
 }
 
-.ab-cert-photo {
+.ab-cert-frame {
+  position: relative;
+  display: block;
   background: #fff;
   border: 1px solid var(--ab-line);
   border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0 16px 36px -24px rgba(22, 50, 79, 0.4);
+  padding: 14px;
+  box-shadow: 0 20px 44px -30px rgba(22, 50, 79, 0.55);
+  cursor: zoom-in;
+  transition: box-shadow 0.25s ease;
 }
 
-.ab-cert-photo img {
+.ab-cert-frame:hover {
+  box-shadow: 0 24px 50px -28px rgba(22, 50, 79, 0.65);
+}
+
+/* both documents share one frame height so switching never jumps the layout;
+   the wider report letterboxes against the frame's own white */
+.ab-cert-frame img {
+  display: block;
   width: 100%;
-  max-width: 260px;
-  border-radius: 8px;
+  aspect-ratio: 1.386 / 1;
+  object-fit: contain;
+  border-radius: 7px;
+}
+
+.ab-cert-card:focus-visible,
+.ab-cert-frame:focus-visible {
+  outline: 2px solid var(--ab-blue);
+  outline-offset: 3px;
+}
+
+.ab-cert-viewer figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px 14px;
+  margin-top: 14px;
+  font-size: 0.86rem;
+  color: var(--text-light);
+}
+
+.ab-cert-viewer figcaption a {
+  color: var(--ab-blue);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+}
+
+.ab-cert-viewer figcaption a::after {
+  content: ' ↗';
+}
+
+.ab-cert-hint {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-light);
+  margin-bottom: 10px;
 }
 
 /* ── team ── */
@@ -522,8 +737,11 @@
     animation: none;
   }
 
-  .ab-value,
-  .ab-value:hover,
+  .ab-stamp-cell,
+  .ab-stamp-cell:hover,
+  .ab-mark,
+  .ab-cert-card,
+  .ab-cert-frame,
   .ab-tool:hover,
   .ab-member:hover img {
     transform: none;
@@ -561,8 +779,36 @@
     margin: 0 auto;
   }
 
-  .ab-values-grid {
+  .ab-certs {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    max-width: 520px;
+    margin-inline: auto;
+  }
+
+  .ab-sheet-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .ab-stamp-cell:not(:nth-child(3n)),
+  .ab-stamp-cell:nth-child(-n + 3) {
+    border-inline-end: none;
+    border-block-end: none;
+  }
+
+  .ab-stamp-cell:not(:nth-child(2n)) {
+    border-inline-end: 2px dotted #cfdae6;
+  }
+
+  .ab-stamp-cell:nth-child(-n + 4) {
+    border-block-end: 2px dotted #cfdae6;
+  }
+
+  .ab-postmark {
+    width: 88px;
+    height: 88px;
+    inset-inline-end: -14px;
+    top: -18px;
   }
 
   .ab-band-grid {
@@ -576,8 +822,24 @@
 }
 
 @media (max-width: 560px) {
-  .ab-values-grid {
+  .ab-sheet-grid {
     grid-template-columns: 1fr;
+  }
+
+  .ab-stamp-cell:not(:nth-child(2n)) {
+    border-inline-end: none;
+  }
+
+  .ab-stamp-cell:nth-child(-n + 5) {
+    border-block-end: 2px dotted #cfdae6;
+  }
+
+  .ab-stamp-cell:last-child {
+    border-block-end: none;
+  }
+
+  .ab-postmark {
+    display: none;
   }
 
   .ab-team-grid {

@@ -60,37 +60,31 @@ const values = [
   {
     title: "פשטות קודם כל",
     desc: "טכנולוגיה נגישה וידידותית, גם למי שלא מגיע מרקע טכני. ממשק בעברית, ברור ופשוט.",
-    color: "#0d598c",
     icon: "simple",
   },
   {
     title: "אנושיות",
     desc: "מאחורי המערכת עומד צוות תמיכה אמיתי שמלווה אתכם אישית, לא בוטים.",
-    color: "#a8107e",
     icon: "human",
   },
   {
     title: "מקצועיות",
     desc: "פיתוח מתמיד, מערכת יציבה ומאובטחת עם זמינות גבוהה ותשתית ענן מתקדמת.",
-    color: "#6328a7",
     icon: "pro",
   },
   {
     title: "התאמה לשוק הישראלי",
     desc: "ממשק בעברית מלאה, מצב שומר שבת, עמידה בדרישות חוק הגנת הפרטיות הישראלי.",
-    color: "#0d598c",
     icon: "israel",
   },
   {
     title: "אחריות",
     desc: "עמידה בדרישות GDPR, תקן ISO 27001 לאבטחת מידע, דוח ESG לאחריות חברתית.",
-    color: "#28a745",
     icon: "responsibility",
   },
   {
     title: "תרומה לקהילה",
     desc: "תמיכה קבועה בעמותות וארגונים ללא מטרות רווח, כי שיווק טוב הוא לא רק לעסקים.",
-    color: "#a8107e",
     icon: "community",
   },
 ]
@@ -106,6 +100,41 @@ const team = [
   { name: "מריה קאל", role: "צוות שירות ותמיכה", photo: mariaKal },
   { name: "יפת הלוי", role: "צוות שירות ותמיכה", photo: yifatHalevi },
   { name: "אור סקהי", role: "תפעול וכתיבת תוכן", photo: orSkahi },
+]
+
+/* Both documents are full pages meant to be read, so the section shows one at
+   full width and lets the other be swapped in — the facts beside it come off
+   the document itself, which is what a 56px thumbnail was failing to convey. */
+const certificates = [
+  {
+    id: "iso",
+    name: "ISO 27001",
+    desc: "תקן בינלאומי לניהול אבטחת מידע",
+    mark: "seal",
+    image: isoCert,
+    alt: "תעודת ISO/IEC 27001:2022 של קומסטאר מערכות בע״מ, מונפקת על ידי מכון התקנים הישראלי",
+    caption: "תעודת ההסמכה כפי שהונפקה על ידי מכון התקנים הישראלי",
+    facts: [
+      ["התקן", "ת״י ISO/IEC 27001:2022"],
+      ["גוף מסמיך", "מכון התקנים הישראלי"],
+      ["מספר אישור", "1124792"],
+      ["בתוקף עד", "06/11/2028"],
+    ],
+  },
+  {
+    id: "esg",
+    name: "דוח ESG",
+    desc: "סביבה, חברה וממשל תאגידי",
+    mark: "leaf",
+    image: escReport,
+    alt: "העמוד הראשון של דוח ה-ESG של קומסטאר מערכות בע״מ",
+    caption: "העמוד הראשון של הדוח השנתי",
+    facts: [
+      ["סביבה", "מעבר מלא לדיגיטל, צמצום השימוש בנייר ובשינוע פיזי"],
+      ["חברה", "50% נשים בצוות, גיוס מכלל המגזרים"],
+      ["קהילה", "תרומות וסיוע טכנולוגי לעמותות"],
+    ],
+  },
 ]
 
 const aboutFaqs = [
@@ -135,45 +164,99 @@ const aboutFaqs = [
   },
 ]
 
-function ValueIcon({ type, color }: { type: string; color: string }) {
-  const svgProps = { width: 22, height: 22, fill: color, viewBox: "0 0 24 24" }
+/* Engraved marks, drawn as single-weight line work so the sheet reads as one
+   printing rather than six differently-coloured chips. "התאמה לשוק הישראלי"
+   is set as the Hebrew letter א — the market itself, not a globe. */
+function ValueMark({ type }: { type: string }) {
+  const stroke = {
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.5,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+  }
 
-  const icons: Record<string, React.ReactNode> = {
+  const marks: Record<string, React.ReactNode> = {
     simple: (
-      <svg {...svgProps}>
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+      <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="8.4" {...stroke} />
+        <path d="M8.3 12.3l2.6 2.6 4.9-5.4" {...stroke} />
       </svg>
     ),
     human: (
-      <svg {...svgProps}>
-        <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
+      <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="9.4" cy="8.4" r="3.2" {...stroke} />
+        <path d="M3.9 19.4c0-2.8 2.5-4.5 5.5-4.5s5.5 1.7 5.5 4.5" {...stroke} />
+        <circle cx="16.9" cy="9" r="2.4" {...stroke} opacity="0.55" />
+        <path d="M16.1 15.1c2.6.2 4.7 1.7 4.7 4.1" {...stroke} opacity="0.55" />
       </svg>
     ),
     pro: (
-      <svg {...svgProps}>
-        <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.488.488 0 00-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 00-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" />
+      <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M17.2 18.6a4.3 4.3 0 0 0 .4-8.57 5.8 5.8 0 0 0-11.1 1.16 3.8 3.8 0 0 0 .4 7.41h10.3z" {...stroke} />
+        <path d="M9.9 14.1l1.8 1.8 3.2-3.6" {...stroke} />
       </svg>
     ),
     israel: (
-      <svg {...svgProps}>
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
-      </svg>
+      <span className="ab-mark-letter" aria-hidden="true">
+        א
+      </span>
     ),
     responsibility: (
-      <svg {...svgProps}>
-        <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z" />
+      <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="4.8" y="10.4" width="14.4" height="9.4" rx="2.2" {...stroke} />
+        <path d="M8.4 10.4V7.9a3.6 3.6 0 0 1 7.2 0v2.5" {...stroke} />
+        <circle cx="12" cy="15.1" r="1.25" {...stroke} />
       </svg>
     ),
     community: (
-      <svg {...svgProps}>
-        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+      <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          d="M12 19.6C7.4 15.6 4.6 13.2 4.6 10.2A3.9 3.9 0 0 1 12 8.4a3.9 3.9 0 0 1 7.4 1.8c0 3-2.8 5.4-7.4 9.4z"
+          {...stroke}
+        />
       </svg>
     ),
   }
 
+  return <div className="ab-mark">{marks[type]}</div>
+}
+
+/* The cancellation mark that sits over the corner of the sheet. It carries the
+   one fact the values grow out of: this has been running since 2009. */
+function Postmark() {
   return (
-    <div className="ab-value-icon" style={{ background: `${color}14` }} aria-hidden="true">
-      {icons[type]}
+    <div className="ab-postmark" aria-hidden="true">
+      <span>שלח מסר</span>
+      <b>2009</b>
+      <span>ישראל</span>
+    </div>
+  )
+}
+
+function CertMark({ type }: { type: string }) {
+  const stroke = {
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.5,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+  }
+
+  return (
+    <div className="ab-mark">
+      {type === "seal" ? (
+        <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="9.3" r="5.5" {...stroke} />
+          <path d="M9.7 9.4l1.7 1.7 3-3.2" {...stroke} />
+          <path d="M8.7 14.1L7.6 20.6l4.4-2.2 4.4 2.2-1.1-6.5" {...stroke} />
+        </svg>
+      ) : (
+        <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M19.6 4.4c0 8-4.2 12.8-9.1 12.8a5.4 5.4 0 0 1-5.4-5.4c0-4.7 5.7-7.4 14.5-7.4z" {...stroke} />
+          <path d="M8 20.2c1.2-4.2 3.6-7.3 6.9-9.2" {...stroke} />
+        </svg>
+      )}
     </div>
   )
 }
@@ -219,6 +302,8 @@ function AnimatedCounter({ target, suffix }: { target: number; suffix: string })
 
 const AboutPage: React.FC = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(0)
+  const [activeCert, setActiveCert] = useState(0)
+  const cert = certificates[activeCert]
 
   return (
     <Layout>
@@ -314,22 +399,26 @@ const AboutPage: React.FC = () => {
         />
 
         {/* Values */}
-        <section className="ab-section">
+        <section className="ab-section ab-values">
           <div className="container">
             <h2 className="ab-section-title">מה מנחה אותנו</h2>
             <p className="ab-section-sub">
               החזון שלנו: להיות הבחירה הראשונה של כל עסק לשיווק דיגיטלי פשוט, נגיש ואוטומטי,
               כדי שתוכלו להתרכז במה שאתם טובים בו.
             </p>
-            <div className="ab-values-grid">
-              {values.map((v) => (
-                <div key={v.title} className="ab-value">
-                  <ValueIcon type={v.icon} color={v.color} />
-                  <h3>{v.title}</h3>
-                  <p>{v.desc}</p>
-                </div>
-              ))}
+            <div className="ab-sheet">
+              <Postmark />
+              <div className="ab-sheet-grid">
+                {values.map((v) => (
+                  <div key={v.title} className="ab-stamp-cell">
+                    <ValueMark type={v.icon} />
+                    <h3>{v.title}</h3>
+                    <p>{v.desc}</p>
+                  </div>
+                ))}
+              </div>
             </div>
+            <p className="ab-sheet-note">שישה ערכים, גיליון אחד. כל מסר שיוצא מכאן נושא את כולם.</p>
           </div>
         </section>
 
@@ -364,25 +453,50 @@ const AboutPage: React.FC = () => {
               החברתית והסביבתית שלנו מתועדת ושקופה.
             </p>
             <div className="ab-certs">
-              <div className="ab-cert-cards">
-                <div className="ab-cert-badge">
-                  <img src={isoCert} alt="ISO 27001" loading="lazy" />
-                  <div>
-                    <strong>ISO 27001</strong>
-                    <p>תקן אבטחת מידע בינלאומי</p>
-                  </div>
-                </div>
-                <div className="ab-cert-badge">
-                  <img src={escReport} alt="דוח ESG" loading="lazy" />
-                  <div>
-                    <strong>דוח ESG</strong>
-                    <p>אחריות חברתית, ממשל תאגידי, קיימות</p>
-                  </div>
-                </div>
+              <div className="ab-cert-picker">
+                <p className="ab-cert-hint">בחרו מסמך לצפייה</p>
+                {certificates.map((c, i) => (
+                  <button
+                    key={c.id}
+                    type="button"
+                    className="ab-cert-card"
+                    aria-pressed={activeCert === i}
+                    onClick={() => setActiveCert(i)}
+                  >
+                    <CertMark type={c.mark} />
+                    <span>
+                      <strong>{c.name}</strong>
+                      <span className="ab-cert-desc">{c.desc}</span>
+                    </span>
+                  </button>
+                ))}
+
+                <dl className="ab-cert-facts">
+                  {cert.facts.map(([label, value]) => (
+                    <div key={label}>
+                      <dt>{label}</dt>
+                      <dd>{value}</dd>
+                    </div>
+                  ))}
+                </dl>
               </div>
-              <div className="ab-cert-photo">
-                <img src={isoCert} alt="תעודת ISO 27001 של שלח מסר" loading="lazy" />
-              </div>
+
+              <figure className="ab-cert-viewer">
+                <a
+                  className="ab-cert-frame"
+                  href={cert.image}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img src={cert.image} alt={cert.alt} loading="lazy" />
+                </a>
+                <figcaption>
+                  {cert.caption}
+                  <a href={cert.image} target="_blank" rel="noopener noreferrer">
+                    פתיחה בגודל מלא
+                  </a>
+                </figcaption>
+              </figure>
             </div>
           </div>
         </section>
