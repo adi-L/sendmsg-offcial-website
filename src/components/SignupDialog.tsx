@@ -1,4 +1,5 @@
 import React, { useEffect } from "react"
+import { withPrefix } from "gatsby"
 
 // Built bundle of https://github.com/comstarsystemsltd/sendmsg-signup,
 // copied to static/signup/ (images must sit next to the JS — it resolves
@@ -27,10 +28,11 @@ export const openSignup = (e?: React.MouseEvent) => {
 
 const SignupDialog: React.FC = () => {
   useEffect(() => {
-    if (document.querySelector(`script[src="${SCRIPT_SRC}"]`)) return
+    const src = withPrefix(SCRIPT_SRC)
+    if (document.querySelector(`script[src="${src}"]`)) return
     const script = document.createElement("script")
     script.type = "module"
-    script.src = SCRIPT_SRC
+    script.src = src
     document.body.appendChild(script)
   }, [])
 
