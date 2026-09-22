@@ -2221,6 +2221,25 @@ a.contact-channel:hover .contact-channel-text span {
   color: var(--primary-blue);
 }
 
+.nav-link-current {
+  color: var(--primary-blue);
+  font-weight: 600;
+  position: relative;
+}
+
+/* inset matches .nav-link padding so the bar sits under the label only,
+   and both sides are set so it works in RTL and LTR alike */
+.nav-link-current::after {
+  content: "";
+  position: absolute;
+  right: 10px;
+  left: 10px;
+  bottom: 4px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--primary-blue);
+}
+
 .nav-caret {
   transition: transform 0.2s;
 }
@@ -2406,11 +2425,23 @@ a.contact-channel:hover .contact-channel-text span {
   border-bottom: 1px solid #f0f0f0;
 }
 
+/* logical properties so the accent sits on the start edge, right in RTL */
+.mobile-nav-link-current {
+  color: var(--primary-blue);
+  border-inline-start: 3px solid var(--primary-blue);
+  padding-inline-start: 12px;
+}
+
 .mobile-sub-link {
   padding: 10px 16px 10px 0;
   font-size: 0.95rem;
   color: var(--text-gray);
   border-bottom: 1px solid #f7f7f7;
+}
+
+.mobile-sub-link-current {
+  color: var(--primary-blue);
+  font-weight: 600;
 }
 
 @media (max-width: 1080px) {

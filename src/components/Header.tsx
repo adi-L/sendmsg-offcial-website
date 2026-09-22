@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react"
 import { withPrefix } from "gatsby"
+import { useLocation } from "@reach/router"
 import logo from "../images/logo.png"
 import { openSignup } from "./SignupDialog"
 
@@ -167,6 +168,13 @@ const navItems: NavItem[] = [
   { label: "שומר שבת", href: "/shomer-shabbat/" },
 ]
 
+// Trailing slash keeps section matching honest: "/about/" must not light up
+// on "/about-us/"
+const withTrailingSlash = (path: string) => {
+  const clean = path.split(/[?#]/)[0]
+  return clean.endsWith("/") ? clean : `${clean}/`
+}
+
 const Caret: React.FC<{ open: boolean }> = ({ open }) => (
   <svg
     className="nav-caret"
@@ -217,6 +225,24 @@ const Header: React.FC = () => {
 
   const activeItem = navItems.find((item) => item.label === openMega)
 
+  const { pathname } = useLocation()
+  const currentPath = withTrailingSlash(pathname)
+  const homePath = withTrailingSlash(withPrefix("/"))
+
+  const matchesPath = (href: string) => {
+    if (!href.startsWith("/")) return false
+    const target = withTrailingSlash(withPrefix(href))
+    // every path starts with home, so it only counts as an exact match
+    return target === homePath
+      ? currentPath === target
+      : currentPath.startsWith(target)
+  }
+
+  // a section also counts as current when we are on one of its mega items,
+  // e.g. /contact/ lights up "תמיכה ושירות"
+  const isCurrent = (item: NavItem) =>
+    matchesPath(item.href) || (item.items?.some((sub) => matchesPath(sub.href)) ?? false)
+
   return (
     <>
       <div style={styles.topBar}>
@@ -239,15 +265,23 @@ const Header: React.FC = () => {
                 <button
                   key={item.label}
                   type="button"
-                  className={`nav-link${openMega === item.label ? " nav-link-active" : ""}`}
+                  className={`nav-link${openMega === item.label ? " nav-link-active" : ""}${
+                    isCurrent(item) ? " nav-link-current" : ""
+                  }`}
                   aria-expanded={openMega === item.label}
+                  aria-current={isCurrent(item) ? "true" : undefined}
                   onClick={() => setOpenMega(openMega === item.label ? null : item.label)}
                 >
                   {item.label}
                   <Caret open={openMega === item.label} />
                 </button>
               ) : (
-                <a key={item.label} href={withPrefix(item.href)} className="nav-link">
+                <a
+                  key={item.label}
+                  href={withPrefix(item.href)}
+                  className={`nav-link${isCurrent(item) ? " nav-link-current" : ""}`}
+                  aria-current={isCurrent(item) ? "page" : undefined}
+                >
                   {item.label}
                 </a>
               )
@@ -308,11 +342,22 @@ const Header: React.FC = () => {
           <div className="mobile-menu">
             {navItems.map((item) => (
               <React.Fragment key={item.label}>
-                <a href={withPrefix(item.href)} className="mobile-nav-link">
+                <a
+                  href={withPrefix(item.href)}
+                  className={`mobile-nav-link${isCurrent(item) ? " mobile-nav-link-current" : ""}`}
+                  aria-current={isCurrent(item) ? "page" : undefined}
+                >
                   {item.label}
                 </a>
                 {item.items?.map((sub) => (
-                  <a key={sub.href + sub.label} href={withPrefix(sub.href)} className="mobile-sub-link">
+                  <a
+                    key={sub.href + sub.label}
+                    href={withPrefix(sub.href)}
+                    className={`mobile-sub-link${
+                      matchesPath(sub.href) ? " mobile-sub-link-current" : ""
+                    }`}
+                    aria-current={matchesPath(sub.href) ? "page" : undefined}
+                  >
                     {sub.label}
                   </a>
                 ))}
