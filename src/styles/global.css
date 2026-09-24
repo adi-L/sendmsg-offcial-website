@@ -1169,22 +1169,57 @@ input, textarea {
 }
 
 .transform-item {
+  position: relative;
   display: flex;
   align-items: flex-start;
-  gap: 14px;
+  gap: 16px;
 }
 
-.transform-check {
+/* A spine, not four dividers: these are parts of one system, so the line
+   joins the marks rather than separating the rows. It runs from under one
+   mark down into the gap, meeting the next one. */
+.transform-item:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  top: 38px;
+  bottom: -28px;
+  inset-inline-start: 16px;
+  width: 1px;
+  background: rgba(22, 50, 79, 0.14);
+}
+
+.transform-mark {
+  position: relative;
+  z-index: 1;
   flex-shrink: 0;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: rgba(13, 89, 140, 0.1);
-  color: var(--primary-blue);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 2px;
+  width: 33px;
+  height: 33px;
+  margin-top: 1px;
+  border-radius: 50%;
+  /* Opaque in the section's own colour so the spine passes behind it. */
+  background: var(--bg-soft);
+  border: 1px solid rgba(22, 50, 79, 0.18);
+  color: var(--primary-blue);
+}
+
+/* The section is called "let the AI do the work", so the AI point is the
+   claim and the other three support it. One mark carries the brand. */
+.transform-item--lead .transform-mark {
+  background: var(--primary-gradient);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 7px 16px -7px rgba(99, 40, 167, 0.75);
+}
+
+/* Set in the page's own face, at the weight of the titles: a letter, which
+   says "Hebrew" more plainly than a flag or a globe would. */
+.transform-alef {
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1;
 }
 
 .transform-item-title {
@@ -1221,16 +1256,9 @@ input, textarea {
   background: var(--bg-soft);
 }
 
-.showcase-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  max-width: 960px;
+.showcase-media {
+  max-width: 900px;
   margin: 0 auto;
-}
-
-.showcase-main {
-  grid-column: 1 / -1;
 }
 
 @media (max-width: 768px) {
@@ -1252,12 +1280,6 @@ input, textarea {
   .launchpad-holiday-dropdown {
     inset-inline: 0;
     min-width: 0;
-  }
-}
-
-@media (max-width: 1024px) {
-  .showcase-grid {
-    grid-template-columns: 1fr;
   }
 }
 

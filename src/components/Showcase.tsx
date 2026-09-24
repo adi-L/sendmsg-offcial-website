@@ -1,6 +1,10 @@
 import React from "react"
 import MediaPlaceholder from "./MediaPlaceholder"
 
+/* One slot, not three. A dashed placeholder reads as "asset coming here";
+   three in a grid read as a gallery that failed to load. When the real
+   screenshots exist they can come back -- until then the section promises
+   one look inside and shows one. */
 const Showcase: React.FC = () => (
   <section className="section showcase-section">
     <div className="container">
@@ -9,12 +13,12 @@ const Showcase: React.FC = () => (
         הצצה למערכת ולמה שה-AI מכין בשבילכם.
       </p>
 
-      <div className="showcase-grid">
-        <div className="showcase-main">
-          <MediaPlaceholder kind="video" ratio="16 / 9" label="סרטון דמו ראשי" />
-        </div>
-        <MediaPlaceholder kind="image" ratio="4 / 3" label="צילום מסך: עורך הניוזלטרים" />
-        <MediaPlaceholder kind="image" ratio="4 / 3" label="צילום מסך: מסע לקוח אוטומטי" />
+      <div className="showcase-media">
+        <MediaPlaceholder
+          kind="video"
+          ratio="16 / 9"
+          label="סרטון דמו: סיור במערכת"
+        />
       </div>
     </div>
   </section>
