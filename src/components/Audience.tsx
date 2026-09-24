@@ -97,9 +97,8 @@ const Audience: React.FC = () => {
         <div style={styles.divider} />
 
         <p style={styles.subtitle}>
-          שיווק באמצעות שלח מסר מתאים לכל מי שמכיר
-          <br />
-          בחשיבות של שיווק נכון ומדויק ללקוחות שלו, אבל בעיקר ל:
+          שיווק באמצעות שלח מסר מתאים לכל מי שמכיר בחשיבות של שיווק
+          נכון ומדויק ללקוחות שלו, אבל בעיקר ל:
         </p>
 
         <div className="audience-carousel">
@@ -122,7 +121,7 @@ const Audience: React.FC = () => {
           >
             {audiences.map((a) => (
               <div key={a.title} className="audience-item">
-                <img src={a.img} alt={a.title} style={styles.image} />
+                <img src={a.img} alt="" style={styles.image} />
                 <h3 style={styles.title}>{a.title}</h3>
               </div>
             ))}
@@ -169,16 +168,19 @@ const styles: Record<string, React.CSSProperties> = {
     color: "var(--text-gray)",
     lineHeight: 1.8,
     marginBottom: "48px",
-  },
+    maxWidth: "640px",
+    marginInline: "auto",
+    textWrap: "balance",
+  } as React.CSSProperties,
   image: {
     width: "160px",
-    height: "200px",
-    objectFit: "contain",
-    objectPosition: "bottom",
+    height: "auto",
+    filter: "drop-shadow(0 14px 10px rgba(22, 50, 79, 0.18))",
   },
   title: {
-    fontSize: "1.05rem",
+    fontSize: "1.1rem",
     fontWeight: 700,
+    color: "var(--ink)",
   },
 }
 

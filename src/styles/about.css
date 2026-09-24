@@ -1,9 +1,12 @@
 /* ============================================================
    About page (.ab-*)
-   Same system as the pricing page: Primary Blue #0D598C leads,
-   Assistant type, magenta-purple gradient only as micro accents.
-   Signature: postage-stamp motif (scalloped hero edge, stamp
-   year markers, perforated timeline).
+   Runs the home page's world: deep ink bands with magenta/purple
+   blooms and a 26px dot lattice, white sections carrying the same
+   lattice, Primary Blue #0D598C as the structural ink and the
+   magenta-purple gradient as the accent.
+   Signature kept from this page alone: the postage-stamp motif
+   (punched hero edge, stamp year markers, perforated values sheet),
+   which is the logo's own shape.
    ============================================================ */
 
 .ab {
@@ -11,87 +14,170 @@
   --ab-ink: #16324f;
   --ab-sky: #e9eff6;
   --ab-line: #dbe4ee;
+  /* the ink band's own palette, shared with .ab-band */
+  --ab-night: #091d31;
+  --ab-on-night: #c3d5e8;
+  --ab-on-night-dim: #a6bdd6;
+  --ab-accent: #ff8ad1;
 }
 
-/* ── hero ── */
+/* ── hero: the page's title plate ───────────────────────────────
+   A visitor who clicked "אודות" in the nav should see the word back.
+   So the ink band is a nameplate, not a pitch: the page says what it
+   is, then hands straight off to the substance. Short on purpose —
+   it orients and gets out of the way. */
 .ab-hero {
   position: relative;
-  background: var(--ab-sky);
-  padding: 72px 0 96px;
+  isolation: isolate;
+  overflow: hidden;
+  padding: 64px 0 76px;
+  background: var(--ab-night);
+  color: #fff;
+  text-align: center;
 }
 
+/* blooms re-aimed to sit behind the nameplate now that no artwork
+   anchors the left of the band */
+.ab-hero::before {
+  content: '';
+  position: absolute;
+  inset: -60% -12% -30%;
+  z-index: -2;
+  background:
+    radial-gradient(40em 22em at 50% 40%, rgba(168, 16, 126, 0.4), transparent 62%),
+    radial-gradient(46em 26em at 16% -10%, rgba(99, 40, 167, 0.5), transparent 64%),
+    radial-gradient(50em 26em at 86% -14%, rgba(13, 89, 140, 0.46), transparent 66%);
+}
+
+/* the same 26px lattice as .dot-grid, inverted and fading out before
+   the punched edge so the band hands off cleanly */
 .ab-hero::after {
   content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, 0.11) 1.2px,
+    transparent 1.3px
+  );
+  background-size: 26px 26px;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 40%, transparent 94%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 40%, transparent 94%);
+}
+
+.ab-hero ::selection {
+  background: rgba(255, 138, 209, 0.32);
+  color: #fff;
+}
+
+.ab-hero :focus-visible {
+  outline-color: var(--ab-accent);
+}
+
+/* the stamp's punched edge; --edge-color must match whatever section
+   follows, or the perforation reads as a row of stray dots */
+.ab-hero-edge {
+  --edge-color: var(--ab-sky);
   position: absolute;
   bottom: -1px;
   left: 0;
   right: 0;
   height: 14px;
-  background-image: radial-gradient(circle at 9px 14px, #fff 7px, rgba(255, 255, 255, 0) 7.7px);
+  z-index: 1;
+  background-image: radial-gradient(
+    circle at 9px 14px,
+    var(--edge-color) 7px,
+    transparent 7.7px
+  );
   background-size: 18px 14px;
   background-repeat: repeat-x;
   background-position: center bottom;
   pointer-events: none;
 }
 
-.ab-hero-grid {
-  display: flex;
-  align-items: center;
-  gap: 48px;
-}
-
-.ab-hero-text {
-  flex: 1;
-  min-width: 300px;
-}
-
-.ab-hero h1 {
-  font-size: clamp(2.1rem, 4.6vw, 3rem);
+.ab-hero-title {
+  font-size: clamp(2.6rem, 6.4vw, 4.2rem);
   font-weight: 800;
-  line-height: 1.2;
-  color: var(--ab-ink);
-  margin-bottom: 18px;
-  text-wrap: balance;
-}
-
-.ab-hero-sub {
-  font-size: 1.12rem;
-  color: var(--text-gray);
-  line-height: 1.8;
-  max-width: 560px;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: #fff;
   margin-bottom: 14px;
 }
 
-.ab-trust {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 22px;
-  margin-top: 22px;
-  font-size: 0.92rem;
-  font-weight: 600;
-  color: var(--ab-ink);
+.ab-hero-desc {
+  font-size: 1.12rem;
+  color: var(--ab-on-night);
+  line-height: 1.6;
+  max-width: 34em;
+  margin: 0 auto;
 }
 
-.ab-trust span {
-  display: inline-flex;
+/* ── who we are ────────────────────────────────────────────────
+   What used to open the page, now sitting where it belongs: after
+   the page has said its name. The artwork reads on the pale ground
+   as well as it did on the ink, so this section takes --bg-soft and
+   the page keeps its light/dark alternation. */
+.ab-intro {
+  background: var(--ab-sky);
+}
+
+.ab-intro-grid {
+  display: grid;
+  grid-template-columns: 1.02fr 0.98fr;
   align-items: center;
-  gap: 7px;
+  gap: 52px;
 }
 
-.ab-trust svg {
-  color: var(--success);
-  flex-shrink: 0;
+.ab-intro-text {
+  min-width: 0;
 }
 
-.ab-hero-art {
-  flex: 0 0 auto;
-  display: flex;
-  justify-content: center;
+.ab-intro-text h2 {
+  font-size: clamp(1.9rem, 3.6vw, 2.6rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--ab-ink);
+  margin-bottom: 20px;
+  text-wrap: balance;
 }
 
-.ab-hero-art img {
+/* on the pale ground the hero's light accent would wash out, so the
+   year takes the full-strength brand magenta */
+.ab-since {
+  display: block;
+  color: var(--primary-pink);
+  font-weight: 900;
+}
+
+.ab-intro-lede {
+  font-size: 1.16rem;
+  color: var(--ab-ink);
+  line-height: 1.72;
+  max-width: 32em;
+  margin-bottom: 16px;
+}
+
+.ab-intro-note {
+  font-size: 1rem;
+  color: var(--text-gray);
+  line-height: 1.7;
+  max-width: 34em;
+}
+
+.ab-intro-art {
+  justify-self: center;
   width: 100%;
-  max-width: 380px;
+  max-width: 540px;
+  line-height: 0;
+}
+
+.ab-intro-art img {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 22px 38px rgba(22, 50, 79, 0.22));
 }
 
 /* ── shared section bits ── */
@@ -100,11 +186,21 @@
 }
 
 .ab-section-title {
-  font-size: 2.1rem;
+  font-size: 2.4rem;
   font-weight: 800;
-  color: var(--ab-ink);
+  color: var(--text-dark);
   text-align: center;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
+  text-wrap: balance;
+}
+
+/* the home page's rule under every section heading */
+.ab-section-title + .ab-rule {
+  width: 40px;
+  height: 3px;
+  background: var(--primary-pink);
+  border-radius: 2px;
+  margin: 16px auto 20px;
 }
 
 .ab-section-sub {
@@ -427,11 +523,65 @@
   text-align: center;
 }
 
-/* ── numbers band ── */
+/* the shared dark inline CTA ships on --bg-dark, a touch warmer than this
+   page's ink; on a page with three dark bands the difference reads as a
+   mistake, so it takes the same ground as the other two */
+.ab .inline-cta.is-dark {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--ab-night);
+}
+
+.ab .inline-cta.is-dark::before {
+  content: '';
+  position: absolute;
+  inset: -60% -20%;
+  z-index: -1;
+  background: radial-gradient(34em 18em at 50% 50%, rgba(99, 40, 167, 0.42), transparent 62%);
+}
+
+/* ── numbers band ──
+   The page's second ink band, built on the hero's recipe so the two
+   read as the same surface returning, not as two different darks. */
 .ab-band {
-  background: linear-gradient(160deg, #0d598c 0%, #16324f 100%);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--ab-night);
   color: #fff;
-  padding: 60px 0;
+  padding: 68px 0;
+}
+
+.ab-band::before {
+  content: '';
+  position: absolute;
+  inset: -40% -12%;
+  z-index: -2;
+  background:
+    radial-gradient(40em 22em at 18% 108%, rgba(99, 40, 167, 0.5), transparent 64%),
+    radial-gradient(38em 20em at 84% -10%, rgba(168, 16, 126, 0.34), transparent 62%);
+}
+
+.ab-band::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, 0.1) 1.2px,
+    transparent 1.3px
+  );
+  background-size: 26px 26px;
+  -webkit-mask-image: radial-gradient(70% 120% at 50% 50%, #000 30%, transparent 100%);
+  mask-image: radial-gradient(70% 120% at 50% 50%, #000 30%, transparent 100%);
+}
+
+.ab-band ::selection {
+  background: rgba(255, 138, 209, 0.32);
+  color: #fff;
 }
 
 .ab-band-grid {
@@ -441,16 +591,24 @@
   text-align: center;
 }
 
+/* one hairline between figures, so three numbers read as one reading
+   rather than three loose cards */
+.ab-band-grid > div + div {
+  border-inline-end: 1px solid rgba(255, 255, 255, 0.14);
+}
+
 .ab-band-num {
   font-size: 2.9rem;
   font-weight: 800;
   line-height: 1.15;
   direction: ltr;
+  font-variant-numeric: tabular-nums;
+  color: var(--ab-accent);
 }
 
 .ab-band-label {
   font-size: 0.98rem;
-  color: rgba(255, 255, 255, 0.78);
+  color: var(--ab-on-night-dim);
   margin-top: 6px;
 }
 
@@ -689,10 +847,10 @@
 }
 
 .ab-faq-arrow {
+  display: flex;
   color: var(--ab-blue);
-  font-size: 1.15rem;
   flex-shrink: 0;
-  transition: transform 0.2s ease;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .ab-faq-item[data-open='true'] .ab-faq-arrow {
@@ -718,22 +876,16 @@
   }
 }
 
-.ab-hero h1,
-.ab-hero .ab-hero-sub,
-.ab-hero .ab-trust,
-.ab-hero .ab-hero-art {
-  animation: ab-rise 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+.ab-hero-title,
+.ab-hero-desc {
+  animation: ab-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) backwards;
 }
 
-.ab-hero .ab-hero-sub { animation-delay: 0.07s; }
-.ab-hero .ab-trust { animation-delay: 0.14s; }
-.ab-hero .ab-hero-art { animation-delay: 0.1s; }
+.ab-hero-desc { animation-delay: 0.1s; }
 
 @media (prefers-reduced-motion: reduce) {
-  .ab-hero h1,
-  .ab-hero .ab-hero-sub,
-  .ab-hero .ab-trust,
-  .ab-hero .ab-hero-art {
+  .ab-hero-title,
+  .ab-hero-desc {
     animation: none;
   }
 
@@ -751,21 +903,31 @@
 
 /* ── responsive ── */
 @media (max-width: 980px) {
-  .ab-hero-grid {
-    flex-direction: column-reverse;
+  .ab-hero {
+    padding: 52px 0 66px;
+  }
+
+  .ab-intro-grid {
+    grid-template-columns: 1fr;
+    gap: 36px;
     text-align: center;
   }
 
-  .ab-hero-sub {
+  /* art first when stacked: it establishes the section before the prose */
+  .ab-intro-art {
+    grid-row: 1;
+    max-width: 440px;
+  }
+
+  .ab-intro-lede,
+  .ab-intro-note {
     margin-inline: auto;
   }
 
-  .ab-trust {
-    justify-content: center;
-  }
-
-  .ab-hero-art img {
-    max-width: 280px;
+  .ab-band-grid > div + div {
+    border-inline-end: none;
+    border-block-start: 1px solid rgba(255, 255, 255, 0.14);
+    padding-block-start: 28px;
   }
 
   .ab-story-grid {
@@ -818,6 +980,36 @@
 
   .ab-team-grid {
     grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .ab-section {
+    padding: 52px 0;
+  }
+
+  .ab-section-title {
+    font-size: 1.8rem;
+  }
+
+  .ab-hero {
+    padding: 40px 0 56px;
+  }
+
+  .ab-hero-desc {
+    font-size: 1rem;
+  }
+
+  .ab-intro-lede {
+    font-size: 1.06rem;
+  }
+
+  .ab-intro-note {
+    font-size: 0.96rem;
+  }
+
+  .ab-intro-art {
+    max-width: min(86vw, 380px);
   }
 }
 

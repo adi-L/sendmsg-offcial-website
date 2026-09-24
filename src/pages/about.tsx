@@ -6,7 +6,7 @@ import InlineCTA from "../components/InlineCTA"
 import CTA from "../components/CTA"
 import "../styles/about.css"
 
-import heroIllustration from "../images/illustrations/company-vision.svg"
+import heroArt from "../images/about-hero.webp"
 import historyIllustration from "../images/illustrations/how-it-started.svg"
 import isoCert from "../images/logos/iso-27001-2025.webp"
 import escReport from "../images/logos/esc-report.webp"
@@ -308,39 +308,56 @@ const AboutPage: React.FC = () => {
   return (
     <Layout>
       <div className="ab">
-        {/* Hero */}
-        <section className="ab-hero">
+        {/* Title plate: the page says its name back to whoever clicked it */}
+        <section className="ab-hero ink-hero">
           <div className="container">
-            <div className="ab-hero-grid">
-              <div className="ab-hero-text">
-                <h1>מערכת השיווק הישראלית, מאז 2009</h1>
-                <p className="ab-hero-sub">
+            <h1 className="ab-hero-title">אודות</h1>
+            <p className="ab-hero-desc">
+              הסיפור, הצוות והערכים שמאחורי מערכת הדיוור והשיווק הישראלית.
+            </p>
+          </div>
+          <div className="ab-hero-edge" aria-hidden="true" />
+        </section>
+
+        {/* Who we are */}
+        <section className="ab-section ab-intro">
+          <div className="container">
+            <div className="ab-intro-grid">
+              <div className="ab-intro-text">
+                <h2>
+                  מערכת השיווק הישראלית,
+                  <span className="ab-since">מאז 2009</span>
+                </h2>
+                <p className="ab-intro-lede">
                   שלח מסר היא מערכת אחת לכל השיווק של העסק: ניוזלטרים, SMS, דפי נחיתה,
                   קורסים דיגיטליים ו-CRM, בממשק אחד בעברית, עם צוות אמיתי שמלווה אתכם אישית.
                 </p>
-                <p className="ab-hero-sub">
+                <p className="ab-intro-note">
                   בין הלקוחות שלנו תמצאו עסקים קטנים וגדולים, ארגונים, עמותות, מרצים ויוצרי תוכן.
                 </p>
-                <div className="ab-trust">
-                  {["מעל 51,000 עסקים בחרו בנו", "תקן אבטחת מידע ISO 27001", "מצב שומר שבת מובנה"].map((t) => (
-                    <span key={t}>
-                      <CheckIcon />
-                      {t}
-                    </span>
-                  ))}
-                </div>
               </div>
-              <div className="ab-hero-art">
-                <img src={heroIllustration} alt="" role="presentation" />
+
+              {/* Decorative: the heading beside it carries the meaning, so the
+                  artwork stays out of the reading order. */}
+              <div className="ab-intro-art" aria-hidden="true">
+                <img
+                  src={heroArt}
+                  alt=""
+                  width={1141}
+                  height={766}
+                  loading="eager"
+                  decoding="async"
+                />
               </div>
             </div>
           </div>
         </section>
 
         {/* Story timeline */}
-        <section className="ab-section">
+        <section className="ab-section dot-grid">
           <div className="container">
             <h2 className="ab-section-title">איך הכל התחיל</h2>
+            <div className="ab-rule" />
             <p className="ab-section-sub">
               שלח מסר לא נולדה במצגת. היא נולדה מהבקשות של לקוחות אמיתיים.
             </p>
@@ -378,6 +395,7 @@ const AboutPage: React.FC = () => {
         <section className="ab-section" style={{ background: "var(--bg-soft)" }}>
           <div className="container">
             <h2 className="ab-section-title">כל הכלים בפלטפורמה אחת</h2>
+            <div className="ab-rule" />
             <p className="ab-section-sub">
               במקום לתחזק חמש מערכות נפרדות, אצלנו הכל מחובר: אנשי הקשר, הדפים,
               ההודעות והנתונים עובדים יחד.
@@ -396,12 +414,14 @@ const AboutPage: React.FC = () => {
         <InlineCTA
           title="רוצים לראות איך זה מרגיש מבפנים?"
           note="בלי כרטיס אשראי, בלי התחייבות"
+          variant="dark"
         />
 
         {/* Values */}
         <section className="ab-section ab-values">
           <div className="container">
             <h2 className="ab-section-title">מה מנחה אותנו</h2>
+            <div className="ab-rule" />
             <p className="ab-section-sub">
               החזון שלנו: להיות הבחירה הראשונה של כל עסק לשיווק דיגיטלי פשוט, נגיש ואוטומטי,
               כדי שתוכלו להתרכז במה שאתם טובים בו.
@@ -448,6 +468,7 @@ const AboutPage: React.FC = () => {
         <section className="ab-section">
           <div className="container">
             <h2 className="ab-section-title">אחריות היא חלק מהמוצר</h2>
+            <div className="ab-rule" />
             <p className="ab-section-sub">
               המידע של הלקוחות שלכם שמור אצלנו לפי תקנים בינלאומיים, וגם האחריות
               החברתית והסביבתית שלנו מתועדת ושקופה.
@@ -505,6 +526,7 @@ const AboutPage: React.FC = () => {
         <section className="ab-section" style={{ background: "var(--bg-soft)" }}>
           <div className="container">
             <h2 className="ab-section-title">הצוות שמאחורי המסרים</h2>
+            <div className="ab-rule" />
             <p className="ab-section-sub">
               מנהלים ומנהלות, מפתחים ומפתחות, אנשי תמיכה ותוכן.
               כולנו כאן כדי שהשיווק שלכם פשוט יעבוד.
@@ -522,9 +544,10 @@ const AboutPage: React.FC = () => {
         </section>
 
         {/* FAQ */}
-        <section className="ab-section">
+        <section className="ab-section dot-grid">
           <div className="container">
             <h2 className="ab-section-title">שאלות נפוצות</h2>
+            <div className="ab-rule" />
             <div className="ab-faq-list" style={{ marginTop: "36px" }}>
               {aboutFaqs.map((faq, i) => (
                 <div key={faq.q} className="ab-faq-item" data-open={openFaq === i}>
@@ -534,7 +557,11 @@ const AboutPage: React.FC = () => {
                     onClick={() => setOpenFaq(openFaq === i ? null : i)}
                   >
                     <span>{faq.q}</span>
-                    <span className="ab-faq-arrow" aria-hidden="true">▾</span>
+                    <span className="ab-faq-arrow" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M6 9l6 6 6-6" />
+                      </svg>
+                    </span>
                   </button>
                   {openFaq === i && <div className="ab-faq-a">{faq.a}</div>}
                 </div>

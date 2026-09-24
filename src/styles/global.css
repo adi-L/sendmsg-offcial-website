@@ -2190,7 +2190,8 @@ a.contact-channel:hover .contact-channel-text span {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  /* the label belongs to the figure above it, so it sits close */
+  gap: 10px;
   flex: 0 0 auto;
   width: 160px;
   scroll-snap-align: center;
@@ -2650,6 +2651,25 @@ a.contact-channel:hover .contact-channel-text span {
 }
 
 /* ── Site header & nav ── */
+.site-topbar {
+  background: var(--bg-dark);
+}
+
+.header-login {
+  padding: 8px 20px;
+  border-radius: var(--radius-xl);
+  border: 2px solid var(--primary-pink);
+  color: var(--primary-pink);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-align: center;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+
+.header-login:hover {
+  background: rgba(168, 16, 126, 0.08);
+}
+
 .site-header {
   position: sticky;
   top: 0;
@@ -2661,6 +2681,74 @@ a.contact-channel:hover .contact-channel-text span {
 
 .site-header-scrolled {
   box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* ── Ink header ──────────────────────────────────────────────────
+   A page whose first section is an ink band marks it with .ink-hero,
+   and the whole top stack — phone strip, nav bar, band — is painted
+   in that one ink. Otherwise the white bar sits between two darks
+   and the top of the page reads as two sites stacked.
+   Scoped with :has() so no page opts in by accident; browsers without
+   it simply keep the white bar. */
+body:has(.ink-hero) .site-topbar {
+  background: #061422;
+}
+
+body:has(.ink-hero) .site-header {
+  background: rgba(9, 29, 49, 0.88);
+  backdrop-filter: blur(12px) saturate(140%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+body:has(.ink-hero) .site-header-scrolled {
+  background: rgba(7, 23, 40, 0.94);
+  box-shadow: 0 2px 24px rgba(2, 8, 20, 0.55);
+}
+
+body:has(.ink-hero) .nav-link {
+  color: #cfdeed;
+}
+
+body:has(.ink-hero) .nav-link:hover,
+body:has(.ink-hero) .nav-link-active,
+body:has(.ink-hero) .nav-link-current {
+  color: #fff;
+}
+
+body:has(.ink-hero) .nav-link-current::after {
+  background: #ff8ad1;
+}
+
+/* the mark is a blue stamp; on ink it needs lifting off the ground */
+body:has(.ink-hero) .site-logo img {
+  filter: brightness(1.22) saturate(1.1)
+    drop-shadow(0 2px 8px rgba(0, 0, 0, 0.45));
+}
+
+/* --primary-pink sits at ~2.4:1 on this ink, so the outline button
+   takes the hero's own lighter accent */
+body:has(.ink-hero) .header-login {
+  border-color: rgba(255, 138, 209, 0.7);
+  color: #ff8ad1;
+}
+
+body:has(.ink-hero) .header-login:hover {
+  border-color: #ff8ad1;
+  background: rgba(255, 138, 209, 0.12);
+}
+
+/* flat brand blue is muddy on navy — same fix the dark inline CTA uses */
+body:has(.ink-hero) .header-actions .primary-btn {
+  background: var(--primary-gradient);
+  box-shadow: 0 6px 20px rgba(168, 16, 126, 0.42);
+}
+
+body:has(.ink-hero) .header-burger span {
+  background: #e8f0fa !important;
+}
+
+body:has(.ink-hero) .site-header :focus-visible {
+  outline-color: #ff8ad1;
 }
 
 .site-header-inner {

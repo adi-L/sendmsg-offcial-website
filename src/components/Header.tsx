@@ -245,7 +245,7 @@ const Header: React.FC = () => {
 
   return (
     <>
-      <div style={styles.topBar}>
+      <div className="site-topbar" style={styles.topBar}>
         <div className="container" style={styles.topBarInner}>
           <a href="tel:077-4600600" style={styles.topBarLink}>
             077-4600600 ☎
@@ -289,7 +289,7 @@ const Header: React.FC = () => {
           </nav>
 
           <div className="header-actions">
-            <a href={PANEL_URL} style={styles.loginBtn}>
+            <a href={PANEL_URL} className="header-login">
               כניסה
             </a>
             <a href={PANEL_URL} className="primary-btn" style={styles.trialBtn} onClick={openSignup}>
@@ -364,7 +364,7 @@ const Header: React.FC = () => {
               </React.Fragment>
             ))}
             <div style={styles.mobileActions}>
-              <a href={PANEL_URL} style={styles.loginBtn}>כניסה</a>
+              <a href={PANEL_URL} className="header-login">כניסה</a>
               <a href={PANEL_URL} className="primary-btn" style={{ ...styles.trialBtn, width: "100%" }} onClick={openSignup}>
                 ניסיון חינם
               </a>
@@ -377,8 +377,9 @@ const Header: React.FC = () => {
 }
 
 const styles: Record<string, React.CSSProperties> = {
+  /* background lives in CSS so a page with an ink hero can take the bar
+     into the same field — see .site-topbar */
   topBar: {
-    background: "var(--bg-dark)",
     color: "#ccc",
     fontSize: "0.85rem",
     padding: "8px 0",
@@ -398,16 +399,6 @@ const styles: Record<string, React.CSSProperties> = {
   logoImg: {
     height: 44,
     width: "auto",
-  },
-  loginBtn: {
-    padding: "8px 20px",
-    borderRadius: "var(--radius-xl)",
-    border: "2px solid var(--primary-pink)",
-    color: "var(--primary-pink)",
-    fontWeight: 600,
-    fontSize: "0.9rem",
-    transition: "all 0.2s",
-    textAlign: "center",
   },
   trialBtn: {
     padding: "10px 24px",
