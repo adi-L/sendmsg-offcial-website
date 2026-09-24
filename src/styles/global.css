@@ -236,76 +236,91 @@ input, textarea {
   opacity: 1 !important;
 }
 
-/* ── Hero section ── */
+/* ── Hero section ──
+   The one heavy surface on an otherwise white page. Deep brand ink with
+   magenta/purple blooms, so the fold has an anchor and the white sections
+   below read as air rather than as more of the same. */
 .hero-section {
-  padding: 72px 0 56px;
-  background: var(--bg-soft);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding-top: 76px;
+  background: #091d31;
+  color: #fff;
+}
+
+/* Colour blooms. Purple sits behind the artifact, magenta answers it
+   diagonally, blue lifts the top edge out of flat navy. */
+.hero-section::before {
+  content: "";
+  position: absolute;
+  inset: -25% -12% -12%;
+  z-index: -2;
+  background:
+    radial-gradient(52em 32em at 24% 4%, rgba(99, 40, 167, 0.58), transparent 62%),
+    radial-gradient(44em 28em at 88% 90%, rgba(168, 16, 126, 0.34), transparent 60%),
+    radial-gradient(62em 34em at 64% -6%, rgba(13, 89, 140, 0.5), transparent 68%);
+}
+
+/* Same 26px lattice as .dot-grid, inverted, fading out before the bottom
+   edge so the band hands off to the dotted white section cleanly. */
+.hero-section::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, 0.11) 1.2px,
+    transparent 1.3px
+  );
+  background-size: 26px 26px;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 45%, transparent 92%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 45%, transparent 92%);
+}
+
+.hero-section ::selection {
+  background: rgba(255, 138, 209, 0.32);
+  color: #fff;
+}
+
+.hero-section :focus-visible {
+  outline-color: #ff8ad1;
 }
 
 .hero-row {
-  display: flex;
-  align-items: start;
-  gap: 48px;
-}
-
-.hero-text {
-  flex: 1;
-}
-
-.hero-video {
-  flex: 1;
-  position: relative;
-}
-
-.hero-video-player {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
-  border-radius: 16px;
-}
-
-.hero-video-mute {
-  position: absolute;
-  bottom: 16px;
-  left: 16px;
-  background: rgba(0, 0, 0, 0.6);
-  border: none;
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1.02fr 0.98fr;
   align-items: center;
-  justify-content: center;
-  color: #fff;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.hero-video-mute:hover {
-  background: rgba(0, 0, 0, 0.8);
+  gap: 56px;
+  padding-bottom: 60px;
 }
 
 .hero-headline {
-  font-size: 3.6rem;
+  font-size: clamp(2.4rem, 5.1vw, 4.4rem);
   font-weight: 800;
-  line-height: 1.18;
-  letter-spacing: -0.01em;
-  color: var(--ink);
-  margin-bottom: 20px;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: #fff;
+  margin-bottom: 22px;
   text-wrap: balance;
 }
 
 .hero-rotate {
   display: block;
-  color: var(--primary-pink);
+  color: #ff8ad1;
   font-weight: 900;
-  min-height: 1.25em;
+  line-height: 1.18;
+  min-height: 1.18em;
 }
 
+/* No rule under the word: at 900 weight in brand pink against the ink band
+   it already carries the emphasis, and a fixed-width rule under a slot sized
+   for the longest string overhangs every shorter one. */
 .hero-rotate-word {
   position: relative;
   display: inline-block;
-  padding-bottom: 6px;
 }
 
 /* Clip the outgoing word so the swap stays inside the line */
@@ -314,57 +329,33 @@ input, textarea {
   overflow: hidden;
 }
 
-.hero-rotate-word::after {
-  content: '';
-  position: absolute;
-  inset-inline: 2px;
-  bottom: 0;
-  height: 6px;
-  border-radius: 3px;
-  background: var(--primary-gradient);
-  opacity: 0.85;
+/* react-text-transition measures its slot on mount, before the webfont
+   lands, and freezes that width inline -- which clips the longest word.
+   min-width beats the inline width and reserves the real slot (the widest
+   string measures 5.33em).
+   position is the other half: the library sets overflow:hidden here but not
+   position, so the absolutely positioned words resolve against
+   .hero-rotate-word instead and the swap was never actually clipped -- the
+   outgoing word rode up over the line above it. */
+.hero-rotate-word > div {
+  position: relative;
+  min-width: 5.45em;
 }
 
 .hero-subtitle {
-  font-size: 1.35rem;
-  font-weight: 500;
-  color: var(--ink);
-  line-height: 1.55;
-  max-width: 34em;
-  margin-bottom: 8px;
+  font-size: 1.22rem;
+  font-weight: 400;
+  color: #c3d5e8;
+  line-height: 1.62;
+  max-width: 32em;
+  margin-bottom: 10px;
 }
 
 .hero-tagline {
-  font-size: 1.35rem;
+  font-size: 1.22rem;
   font-weight: 700;
-  color: var(--ink);
-  margin-bottom: 28px;
-}
-
-.hero-features-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px 60px;
-  margin-bottom: 40px;
-  text-align: start;
-}
-
-.hero-feature-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: var(--ink);
-}
-
-.hero-feature-icon {
-  font-size: 1.3rem;
-  flex-shrink: 0;
-}
-
-.hero-feature-label {
-  white-space: nowrap;
+  color: #fff;
+  margin-bottom: 30px;
 }
 
 .hero-cta {
@@ -373,50 +364,26 @@ input, textarea {
   align-items: center;
   direction: rtl;
   gap: 10px;
-  padding: 14px 36px;
-  background: var(--primary-blue);
+  padding: 16px 40px;
+  background: linear-gradient(135deg, #a8107e 0%, #6328a7 100%);
   color: #fff;
   border-radius: var(--radius-xl);
   font-size: 1.15rem;
   font-weight: 700;
-  margin-bottom: 14px;
-  overflow: hidden;
-  isolation: isolate;
-  box-shadow: 0 4px 16px rgba(13, 89, 140, 0.25);
-  transition: transform 0.2s, box-shadow 0.2s;
+  margin-bottom: 16px;
+  box-shadow: 0 14px 34px -10px rgba(168, 16, 126, 0.75);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s;
   cursor: pointer;
-}
-
-.hero-cta::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: linear-gradient(135deg, #0d598c 0%, #6328a7 50%, #a8107e 100%);
-  background-size: 250% 250%;
-  opacity: 0;
-  transition: opacity 0.4s ease;
 }
 
 .hero-cta:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 26px rgba(99, 40, 167, 0.35);
-}
-
-.hero-cta:hover::before {
-  opacity: 1;
-  animation: primary-btn-flow 2.4s ease infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-cta:hover::before {
-    animation: none;
-  }
+  box-shadow: 0 20px 44px -12px rgba(168, 16, 126, 0.9);
 }
 
 .hero-cta-arrow {
   font-size: 1.3rem;
-  transition: transform 0.2s;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .hero-cta:hover .hero-cta-arrow {
@@ -424,24 +391,238 @@ input, textarea {
 }
 
 .hero-cta-note {
-  font-size: 1.05rem;
+  font-size: 1.02rem;
   font-weight: 500;
-  color: var(--ink);
-  margin-bottom: 10px;
+  color: #c3d5e8;
+  margin-bottom: 12px;
 }
 
 .hero-cta-note strong {
-  color: var(--primary-pink);
+  color: #ff8ad1;
   font-weight: 700;
 }
 
 .hero-trust {
   display: flex;
   gap: 20px;
-  font-size: 0.9rem;
-  color: #4a5b74;
-  margin-bottom: 28px;
+  font-size: 0.92rem;
+  color: #a6bdd6;
   flex-wrap: wrap;
+}
+
+/* Capability rail: the full inventory, sitting quietly under both columns
+   so the headline and the CTA get the eye first. */
+.hero-rail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 38px;
+  padding: 24px 0 34px;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+/* Only span the full width where all six fit on one line; wrapped rows
+   under space-between would fling two items to opposite edges. */
+@media (min-width: 981px) {
+  .hero-rail {
+    justify-content: space-between;
+  }
+}
+
+.hero-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #bed1e4;
+}
+
+.hero-feature-icon {
+  display: flex;
+  flex-shrink: 0;
+  color: #82b6dd;
+}
+
+/* ── Hero portrait ──
+   The cutout ships with its own magenta/purple rim light, so the section
+   adds no frame of its own -- only a bed of shadow underneath so he sits in
+   the band rather than on top of it. He is cropped at the waist, so he is
+   bottom-aligned and allowed to run past the row's padding onto the rail
+   divider; a gap under the crop would read as a mistake.
+
+   One clamped root drives the whole composition, cards included, so the
+   orbit scales with the photo instead of drifting off it. */
+.hero-portrait {
+  position: relative;
+  align-self: end;
+  justify-self: center;
+  width: clamp(290px, 40vw, 530px);
+  margin-bottom: -60px;
+  font-size: clamp(8px, 0.88vw, 11.5px);
+  line-height: 0;
+}
+
+.hero-portrait-img {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 26px 46px rgba(8, 4, 26, 0.55));
+  animation: portrait-rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ── Status cards ──
+   Smoked glass, not white paper: on a navy band five white slabs are the
+   loudest thing on the page, and they are meant to be overheard, not read
+   first. Each card is pinned by the point its wire ends at -- --ox/--oy is
+   that point and `translate` swings the card off it -- so the two can never
+   drift apart. Physical left/right on purpose: this is a picture, built
+   around his shoulders and the laptop, not a text flow. */
+.hero-orb {
+  position: absolute;
+  z-index: 4;
+  top: var(--oy);
+  left: var(--ox);
+  display: flex;
+  align-items: center;
+  gap: 0.55em;
+  padding: 0.52em 0.72em;
+  border-radius: 0.8em;
+  background: rgba(16, 33, 57, 0.74);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  box-shadow: 0 1.1em 2em -1em rgba(2, 8, 20, 0.85);
+  line-height: 1.25;
+  white-space: nowrap;
+  backdrop-filter: blur(10px);
+}
+
+/* translate, not transform: the entrance and the drift own transform. */
+.hero-orb--ai   { --ox: 74%; --oy: 40%; translate: 0 -100%; }
+.hero-orb--mail { --ox: 68%; --oy: 42%; translate: -100% -100%; }
+.hero-orb--deal { --ox: 74%; --oy: 66%; translate: 0 0; }
+.hero-orb--sms  { --ox: 60%; --oy: 84%; translate: -100% 0; }
+
+.hero-orb-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1em;
+}
+
+.hero-orb-text b {
+  font-size: 1em;
+  font-weight: 600;
+  color: #e8f0fa;
+}
+
+.hero-orb-text i {
+  font-size: 0.82em;
+  font-style: normal;
+  font-weight: 500;
+  color: #8ea6c2;
+}
+
+.hero-orb-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.85em;
+  height: 1.85em;
+  border-radius: 0.55em;
+}
+
+.hero-orb-icon svg {
+  width: 1em;
+  height: 1em;
+}
+
+.hero-orb-icon--violet { background: rgba(167, 139, 250, 0.2); color: #c9b6fb; }
+.hero-orb-icon--green  { background: rgba(52, 211, 153, 0.18); color: #86e3bb; }
+.hero-orb-icon--blue   { background: rgba(96, 165, 250, 0.18); color: #a3c8fb; }
+.hero-orb-icon--pink   { background: rgba(244, 114, 182, 0.18); color: #f7b3d6; }
+
+/* The one card that reports a live event gets a slow outward ping, so the
+   composition reads as something still running rather than a still frame. */
+.hero-orb--mail .hero-orb-icon::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 0.55em;
+  border: 1px solid rgba(134, 227, 187, 0.75);
+  animation: orb-ping 3.6s ease-out infinite;
+  animation-delay: 2.8s;
+}
+
+@keyframes orb-ping {
+  0%   { opacity: 0.5; transform: scale(1); }
+  55%  { opacity: 0; transform: scale(1.7); }
+  100% { opacity: 0; transform: scale(1.7); }
+}
+
+/* Entrance first -- each card lands as its wire reaches it -- then an
+   endless drift, delayed past the entrance so the two never fight. */
+.hero-orb {
+  animation:
+    orb-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both,
+    orb-drift 7s ease-in-out infinite;
+}
+
+.hero-orb--mail { animation-delay: 1.10s, 2.2s; animation-duration: 0.5s, 6.2s; }
+.hero-orb--ai   { animation-delay: 1.34s, 2.4s; animation-duration: 0.5s, 7.4s; }
+.hero-orb--deal { animation-delay: 1.58s, 2.6s; animation-duration: 0.5s, 7.7s; }
+.hero-orb--sms  { animation-delay: 1.82s, 2.8s; animation-duration: 0.5s, 8.1s; }
+
+@keyframes orb-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.6em) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes orb-drift {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-0.45em); }
+}
+
+@keyframes portrait-rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-portrait-img,
+  .hero-orb {
+    animation: none;
+  }
+  .hero-orb--mail .hero-orb-icon::after {
+    display: none;
+  }
+}
+
+@media (max-width: 980px) {
+  .hero-row {
+    grid-template-columns: 1fr;
+    gap: 44px;
+  }
+  /* Stacked: he no longer shares the row with the text, so he stops
+     hanging off its bottom edge and simply centres under it. */
+  .hero-portrait {
+    width: clamp(280px, 52vw, 460px);
+    margin-bottom: -44px;
+    font-size: clamp(8px, 1.3vw, 11px);
+  }
 }
 
 @media (max-width: 768px) {
@@ -454,15 +635,13 @@ input, textarea {
   .container {
     padding: 0 16px;
   }
+  .hero-section {
+    padding-top: 52px;
+  }
   .hero-row {
-    flex-direction: column;
     text-align: center;
-  }
-  .hero-video {
-    display: none;
-  }
-  .hero-headline {
-    font-size: 2.3rem;
+    gap: 40px;
+    padding-bottom: 44px;
   }
   .hero-subtitle {
     margin-left: auto;
@@ -470,16 +649,37 @@ input, textarea {
   }
   .hero-subtitle,
   .hero-tagline {
-    font-size: 1.1rem;
+    font-size: 1.08rem;
   }
-  .hero-features-grid {
+  .hero-cta {
+    font-size: 1.05rem;
+    padding: 14px 32px;
+  }
+  .hero-trust {
+    justify-content: center;
+    gap: 6px 18px;
+  }
+  .hero-portrait {
+    width: min(84vw, 380px);
+    margin-bottom: -40px;
+    font-size: clamp(8px, 2.5vw, 10.5px);
+  }
+  /* Two cards at phone size, not five: the rest would sit on his face or
+     off the screen. The wires go with them -- at this size they read as
+     scratches, not connections. */
+  /* Two cards at phone size, not four: the rest would sit on his hands or
+     off the screen. */
+  .hero-orb--sms,
+  .hero-orb--deal {
+    display: none;
+  }
+  .hero-rail {
+    display: grid;
     grid-template-columns: auto auto;
-    gap: 14px 18px;
-    width: fit-content;
-    margin-inline: auto;
-    margin-bottom: 32px;
+    justify-content: center;
+    gap: 14px 22px;
+    padding: 22px 0 28px;
     text-align: start;
-    justify-items: start;
   }
   .hero-feature-item {
     font-size: 0.85rem;
@@ -489,19 +689,8 @@ input, textarea {
     width: 17px;
     height: 17px;
   }
-  .hero-feature-label {
-    white-space: normal;
-  }
-  .hero-cta {
-    font-size: 1rem;
-    padding: 12px 28px;
-  }
-  .hero-trust {
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-  }
 }
+
 
 /* dot-grid texture: 26px lattice, tuned so the dots read as paper grain
    rather than noise. Add the class to any section that wants it. */
