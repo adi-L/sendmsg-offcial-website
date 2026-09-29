@@ -14,7 +14,7 @@ public/
 .mcp.json
 
 # Internal docs (brand book, strategy) - not for the public repo
-docs/
+/docs/
 
 # Local scratch
 test.html
