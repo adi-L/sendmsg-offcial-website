@@ -447,9 +447,15 @@
   }
 }
 
-.doc-status,
-.doc-machine {
-  margin-top: 40px;
+.doc-sub {
+  margin-top: 44px;
+  scroll-margin-top: calc(var(--doc-topbar-h) + 12px);
+}
+
+/* Intro links point at prose, not endpoints, so they carry no method dot
+   and need the indent the dot would otherwise provide. */
+.doc-sidebar-list a:not(:has(.doc-dot)) {
+  padding-left: 21px;
 }
 
 .doc-machine-links {

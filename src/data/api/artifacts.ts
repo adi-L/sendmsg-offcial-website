@@ -9,6 +9,7 @@ import {
   schemaById,
   statusCodes,
   support,
+  smsRules,
 } from "./index"
 import type { Endpoint, Variant } from "./types"
 import { buildSample, LANGUAGES, LANGUAGE_LABELS } from "./samples"
@@ -42,6 +43,13 @@ export function buildLlmsTxt(): string {
     `Machine description: ${SITE}/api/openapi.json`,
     "",
   ]
+
+  out.push("## Introduction", "")
+  out.push(`- [API Support](${SITE}/api/#api-support)`)
+  out.push(`- [About SMS](${SITE}/api/#about-sms)`)
+  out.push(`- [Status codes](${SITE}/api/#status-codes)`)
+  out.push(`- [Important](${SITE}/api/#important)`)
+  out.push("")
 
   for (const { group, endpoints: list } of endpointsByGroup) {
     out.push(`## ${group.title}`)
@@ -131,6 +139,14 @@ export function buildLlmsFullTxt(): string {
   ]
   for (const c of conventions) out.push(`- **${c.title}.** ${c.body}`)
 
+  out.push("", "## API Support", "", support.requirement, "")
+  support.steps.forEach((step, i) => out.push(`${i + 1}. ${step}`))
+  out.push("", `Template: ${support.templateUrl}`, `Email: ${support.email}`, "")
+
+  out.push("## About SMS", "", smsRules.lede, "")
+  out.push(`Restrictions on \`${smsRules.restrictionsFor}\`:`, "")
+  for (const rule of smsRules.restrictions) out.push(`- ${rule}`)
+
   out.push("", "## Status codes", "", "| Code | Meaning |", "| --- | --- |")
   for (const s of statusCodes) out.push(`| ${s.code} | ${s.meaning} |`)
   out.push(
@@ -178,10 +194,6 @@ export function buildLlmsFullTxt(): string {
       }
     }
   }
-
-  out.push("## Support", "", support.requirement, "")
-  support.steps.forEach((step, i) => out.push(`${i + 1}. ${step}`))
-  out.push("", `Template: ${support.templateUrl}`, `Email: ${support.email}`, "")
 
   return out.join("\n")
 }

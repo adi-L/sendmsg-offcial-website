@@ -122,6 +122,29 @@ export const statusCodes: StatusCode[] = [
   },
 ]
 
+/**
+ * The introduction, as the blueprint orders it: support, SMS, status codes,
+ * and the rules that apply to every request. These are sections in their own
+ * right, not preamble, so each is addressable and listed in the contents.
+ */
+export const introSections = [
+  { id: "api-support", title: "API Support" },
+  { id: "about-sms", title: "About SMS" },
+  { id: "status-codes", title: "Status codes" },
+  { id: "important", title: "Important" },
+]
+
+/** Restrictions the blueprint places on the SMS sender number. */
+export const smsRules = {
+  lede: "SMS can be sent through this API.",
+  restrictionsFor: "SenderPhone",
+  restrictions: [
+    "Any special character or space is deleted.",
+    "Any word longer than 11 characters is trimmed.",
+    "Letters must be English only.",
+  ],
+}
+
 /** Rules that apply to every request, called out separately in the blueprint. */
 export const conventions = [
   {

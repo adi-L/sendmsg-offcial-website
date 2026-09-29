@@ -11,6 +11,7 @@ import {
   endpointsByGroup,
   statusCodes,
   support,
+  smsRules,
 } from "../data/api"
 import "../styles/api-docs.css"
 
@@ -41,16 +42,48 @@ const ApiPage: React.FC = () => (
         </p>
       </div>
 
-      <dl className="doc-conventions">
+      <section className="doc-sub" id="api-support">
+        <h2 className="doc-h2">API Support</h2>
+        <p className="doc-section-lede">{support.requirement}</p>
+        <ol className="doc-steps">
+          {support.steps.map((step) => (
+            <li key={step}>{step}</li>
+          ))}
+        </ol>
+        <p className="doc-foot-links">
+          <a href={support.templateUrl} target="_blank" rel="noreferrer noopener">
+            Template for a support request
+          </a>
+          <a href={`mailto:${support.email}`}>{support.email}</a>
+        </p>
+      </section>
+
+      <section className="doc-sub" id="about-sms">
+        <h2 className="doc-h2">About SMS</h2>
+        <p className="doc-section-lede">
+          {smsRules.lede} These restrictions apply to{" "}
+          <code>{smsRules.restrictionsFor}</code>.
+        </p>
+        <ul className="doc-notes">
+          {smsRules.restrictions.map((rule) => (
+            <li key={rule}>{rule}</li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="doc-sub" id="important">
+        <h2 className="doc-h2">Important</h2>
+        <dl className="doc-conventions">
         {conventions.map((c) => (
           <div key={c.title} className="doc-convention">
             <dt>{c.title}</dt>
             <dd>{c.body}</dd>
           </div>
-        ))}
-      </dl>
+          ))}
+        </dl>
+      </section>
 
-      <div className="doc-status" id="status-codes">
+      <section className="doc-sub" id="status-codes">
         <h2 className="doc-h2">Status codes</h2>
         <p className="doc-section-lede">
           Whatever the code, <code>result.ResultMessage</code> carries the detail.
@@ -73,9 +106,9 @@ const ApiPage: React.FC = () => (
             ))}
           </tbody>
         </table>
-      </div>
+      </section>
 
-      <div className="doc-machine">
+      <section className="doc-sub" id="for-agents">
         <h2 className="doc-h2">For agents and tooling</h2>
         <p className="doc-section-lede">
           The whole reference is available as plain text and as a machine
@@ -95,7 +128,7 @@ const ApiPage: React.FC = () => (
             <span>Import into Postman, or generate a client.</span>
           </li>
         </ul>
-      </div>
+      </section>
     </section>
 
     {endpointsByGroup.map(({ group, endpoints }) => (
@@ -112,22 +145,10 @@ const ApiPage: React.FC = () => (
       </section>
     ))}
 
-    <footer className="doc-foot" id="support">
-      <h2 className="doc-h2">Support</h2>
-      <p className="doc-section-lede">{support.requirement}</p>
-
-      {/* A real sequence, so it is numbered. */}
-      <ol className="doc-steps">
-        {support.steps.map((step) => (
-          <li key={step}>{step}</li>
-        ))}
-      </ol>
-
-      <p className="doc-foot-links">
-        <a href={support.templateUrl} target="_blank" rel="noreferrer noopener">
-          Template for a support request
-        </a>
-        <a href={`mailto:${support.email}`}>{support.email}</a>
+    <footer className="doc-foot">
+      <p>
+        Questions about this reference go through{" "}
+        <a href="#api-support">API Support</a>.
       </p>
     </footer>
   </DocsLayout>

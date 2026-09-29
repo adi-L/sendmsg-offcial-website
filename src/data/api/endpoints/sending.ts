@@ -99,11 +99,11 @@ export const sending: Endpoint[] = [
     group: "sending",
     title: "Add subscribers and send an SMS",
     method: "POST",
-    path: "/AddUsersAndSend",
+    path: "/AddUsersAndSendSMS",
     auth: true,
     description:
-      "The same endpoint as the email send, with an SMS message object. " +
-      "Identified by MessageType and TypeSms rather than a different path.",
+      "Adds or updates subscribers and sends them an SMS in a single call. " +
+      "This has its own path, separate from the email send.",
     notes: [
       "SenderPhone strips special characters and spaces, trims words over 11 characters, and accepts English letters only.",
     ],
@@ -142,7 +142,7 @@ export const sending: Endpoint[] = [
         responseNotes: sendNotes,
       },
     ],
-    sourceLines: [700, 896],
+    sourceLines: [697, 896],
   },
   {
     id: "send-email-to-mailing-lists",
@@ -196,10 +196,11 @@ export const sending: Endpoint[] = [
     group: "sending",
     title: "Send an SMS to mailing lists",
     method: "POST",
-    path: "/SendEmailToMailingLists",
+    path: "/SendSmsToMailingLists",
     auth: true,
     description:
-      "The same endpoint as the email send to lists, with an SMS message object.",
+      "Sends an SMS to every subscriber of the given mailing lists. Unlike the " +
+      "other send pairs, this has its own path rather than sharing the email one.",
     variants: [
       {
         id: "new",
@@ -232,7 +233,7 @@ export const sending: Endpoint[] = [
         responseNotes: sendNotes,
       },
     ],
-    sourceLines: [1111, 1225],
+    sourceLines: [1069, 1225],
   },
   {
     id: "create-message",
