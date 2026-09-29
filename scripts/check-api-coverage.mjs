@@ -106,6 +106,25 @@ const PROSE_SECTIONS = [
   { heading: "Introduction nav", must: "about-sms" },
 ]
 
+/**
+ * Every field name declared in a parameter table, and every JSON key used in
+ * a worked example. The two differ: SenderName ships in the blueprint's
+ * examples but appears in no table, so transcribing the tables alone lost it.
+ * Checking both is what caught that.
+ */
+function blueprintNames(src) {
+  const tableFields = new Set()
+  for (const line of src.split("\n")) {
+    const m = /^\|\s*([A-Za-z][A-Za-z0-9_]{2,})\s*\|/.exec(line)
+    if (!m) continue
+    if (/^(Variable|Code|Paramater|Parameter|Type|Delete|requestType|Field|Name)$/i.test(m[1])) continue
+    tableFields.add(m[1])
+  }
+  const jsonKeys = new Set()
+  for (const m of src.matchAll(/"([A-Za-z][A-Za-z0-9_]{2,})"\s*:/g)) jsonKeys.add(m[1])
+  return { tableFields, jsonKeys }
+}
+
 const blueprint = await loadBlueprint(process.argv[2])
 const expected = blueprintPaths(blueprint)
 const actual = documentedPaths()
@@ -130,9 +149,15 @@ const missingProse = PROSE_SECTIONS.filter(
   (s) => !published.includes(s.must.toLowerCase())
 )
 
+const { tableFields, jsonKeys } = blueprintNames(blueprint)
+const missingFields = [...tableFields].filter((f) => !published.includes(f.toLowerCase()))
+const missingKeys = [...jsonKeys].filter((k) => !published.includes(k.toLowerCase()))
+
 console.log(`Blueprint resources  : ${expected.size}`)
 console.log(`Documented paths     : ${actual.size}`)
 console.log(`Prose facts checked  : ${PROSE_SECTIONS.length}`)
+console.log(`Table fields checked : ${tableFields.size}`)
+console.log(`Example keys checked : ${jsonKeys.size}`)
 console.log(`Intentionally skipped: ${IGNORED.size}`)
 for (const [p, why] of IGNORED) console.log(`  - ${p}: ${why}`)
 
@@ -155,6 +180,18 @@ if (missingProse.length) {
   for (const s of missingProse) console.error(`  - ${s.heading}: expected "${s.must}"`)
 }
 
+if (missingFields.length) {
+  failed = true
+  console.error(`\nFAIL: ${missingFields.length} parameter-table field(s) missing:`)
+  console.error(`  ${missingFields.join(", ")}`)
+}
+
+if (missingKeys.length) {
+  failed = true
+  console.error(`\nFAIL: ${missingKeys.length} key(s) used in blueprint examples but missing:`)
+  console.error(`  ${missingKeys.join(", ")}`)
+}
+
 if (failed) process.exit(1)
 
-console.log(`\nOK: every resource and prose fact is accounted for.`)
+console.log(`\nOK: every resource, prose fact, field and example key is accounted for.`)

@@ -151,6 +151,16 @@ export const schemas: Schema[] = [
         default: "comstar@sendmsg.co.il",
       },
       {
+        name: "SenderName",
+        required: false,
+        type: "string",
+        description: "Display name shown beside the from address.",
+        example: "comstar",
+        note:
+          "The blueprint sends this in its worked examples but never lists it " +
+          "in a parameter table, so its exact behaviour is undocumented.",
+      },
+      {
         name: "MessageBackColor",
         required: false,
         type: "string",

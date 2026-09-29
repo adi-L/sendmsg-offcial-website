@@ -22,6 +22,7 @@ const emailMessage = {
   MessageSubject: "hello world",
   MessageInnerName: "inner name",
   SenderEmailAddress: "office@comstar.co.il",
+  SenderName: "comstar",
   MessageBackColor: "black",
   MessageDirection: 2,
   AddFacebook: true,
