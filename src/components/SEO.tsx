@@ -30,7 +30,7 @@ const SEO: React.FC<SEOProps> = ({ title, description, pathname, image }) => {
         "@type": "Organization",
         "@id": `${siteUrl}/#organization`,
         name: "שלח מסר",
-        alternateName: "SendMsg",
+        alternateName: "Sendmsg",
         url: siteUrl,
         logo: `${assetOrigin}${withPrefix("/images/logo/logo.png")}`,
         telephone: "077-4600600",
@@ -83,7 +83,7 @@ const SEO: React.FC<SEOProps> = ({ title, description, pathname, image }) => {
         sizes="180x180"
         href={withPrefix("/icons/icon-180x180.png")}
       />
-      <meta property="og:site_name" content="שלח מסר - SendMsg" />
+      <meta property="og:site_name" content="שלח מסר - Sendmsg" />
       <meta property="og:locale" content="he_IL" />
       <meta property="og:title" content={pageTitle} />
       <meta property="og:description" content={pageDescription} />

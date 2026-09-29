@@ -47,8 +47,8 @@ const config: GatsbyConfig = {
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `שלח מסר - SendMsg`,
-        short_name: `SendMsg`,
+        name: `שלח מסר - Sendmsg`,
+        short_name: `Sendmsg`,
         start_url: `/`,
         background_color: `#ffffff`,
         theme_color: `#0D598C`,

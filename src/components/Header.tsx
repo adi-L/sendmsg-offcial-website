@@ -256,7 +256,7 @@ const Header: React.FC = () => {
       <header ref={headerRef} className={`site-header${scrolled ? " site-header-scrolled" : ""}`}>
         <div className="container site-header-inner">
           <a href={withPrefix("/")} className="site-logo">
-            <img src={logo} alt="שלח מסר - SendMsg" style={styles.logoImg} />
+            <img src={logo} alt="שלח מסר - Sendmsg" style={styles.logoImg} />
           </a>
 
           <nav className="site-nav" aria-label="תפריט ראשי">
