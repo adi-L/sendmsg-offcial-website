@@ -139,7 +139,7 @@ const navItems: NavItem[] = [
     items: [
       { label: "צרו קשר", href: "/contact/", icon: "phone", desc: "טלפון, WhatsApp או טופס, איך שנוח לכם." },
       { label: "תכנית שותפים", href: "https://www.sendmsg.co.il/affiliate/", icon: "share", desc: "ממליצים על שלח מסר ומרוויחים." },
-      { label: "התממשקות API", href: "https://www.sendmsg.co.il/api/", icon: "code", desc: "מחברים את המערכת לכל כלי אחר." },
+      { label: "התממשקות API", href: "/api/", icon: "code", desc: "מחברים את המערכת לכל כלי אחר." },
     ],
     media: {
       image: megaSupport,

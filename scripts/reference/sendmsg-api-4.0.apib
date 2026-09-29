@@ -1,0 +1,2132 @@
+FORMAT: 1A
+HOST:https://gconvertrest.sendmsg.co.il/api/Sendmsg/
+
+# Sendmsg API 4.0 
+
+The Sendmsg Api is a simple API that allows managing and creating mailing lists, newsletters and sending SMS campaigns.
+
+#API Support
+
+#####Support Request Will Only Be Accepted In The Proper Template
+
+Link:
+<br><a href="https://gconvertrest.sendmsg.co.il/views/apisupport.html">Template For Support Request</a>
+
++ Copy The Template to Your mail 
++ Fill The Template With The Requested Data
++ Send The Mail To : send.help@comstar.co.il
+
+#About SMS
+SMS can be sent by this api
+
+##### Paramater Restrictions:(SenderPhone)
+* Any special character or spaces will be deleted.
+* Any word over 11 characters will be trimmed.
+* Letters can be only in english
+
+
+# Status Codes
+
+| Code       |Info                   |
+|:-----------|-----------------------|
+| 200 Or 10000        | Success               | 
+|200 > * && *<300    |Success with message in the result  |
+|410        |Did not find what you were looking for    |
+|500        |An error occurred    |
+|530        |Please Try again later   |
+|531        |Success to insert But not in sending the message   |
+|550        |An error occurred during data extraction. Please Try again later   |
+
+##Every status code returns with details at the "ResultMessage" value.
+
+# Important
+
++ You should send the string as <b>UTF-8</b>.
+  <br>Necessary in working with the Hebrew language.
++ <b><u>PHP:</u></b> content-length is required.<br>
+  length of the json in the Body of the request.
+
+## Getting started [/token]
+To start using our API, you need your account SiteID and API Password.
+
+SiteID is your Sendmsg account number.
+
+You can get your accounts' API Password by mailing our support team - send.help@comstar.co.il
+
+After gathering all the information - it's time to get a token:
+### Click here to get token! [POST]
+* After receiving the token - 
+* The token should be added to the header when the key is "Authorization" in every single method used.
+* The Token valid for 12 hour.
+We recommend renewing a token in a short time
+
+Example:
+![name](https://gconvertrest.sendmsg.co.il/exampleHeader.PNG)
+| Paramater |Info                  | type    | 
+|:----------|----------------------|---------|
+| SiteID    | Account number        |number      |      
+|Password   |Get from support           |string  | 
+
+You can request the token data (like timestamp or expiry date) using this route (POST) -
+ https://gconvertrest.sendmsg.co.il/api/sendMsg/token/?full=true
+ 
+ 
+ + Request (application/json)
+
+           {
+            "siteID": 1687,
+            "password" : "0123456789"
+        }
+         
+
++ Response 200 (application/json)
+        
+  + Body
+  
+             {
+             "Token": "34234-34234234-fsdgdfg-34r5t343f334f"
+             }
+        
+
+
+## Test Authentication [/ping]
+
+### Test authentication[POST]
+
+    + Headers
+    
+             Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+
+
++ Response 200 (application/json)
+  
+        
+        {
+         "isSuccess": true,
+          "msg": "hello user: 11111 test works! you are now validated.."
+        }
+        
+
+
+## Add Or Update Users [/AddUsersOnly]
+
+You can add or update  subscribers to your account by sending a json with the subcscribers details.
+
+#### Users Json Object Option
+
+
+#### User Json Object By Email
+
+| Variable Name     |Fill Required|Info                  |exmple value       |
+|:------------------|------------|-----------------------|-------------------|
+| EmailAddress    |yes|Subscriber Email                |comstar@comstar.com|
+| Cellphone|no |Subscriber Cellphone number      |0500000000|
+| FirstName|no |The system will try to find one personal field in your account whose name is 'first name', if it finds one, the information will be entered there      |First Name Client|
+| LastName|no |The system will try to find one personal field in your account whose name is 'last name', if it finds one, the information will be entered there      |Last Name Client|
+| userSystemFields  |no         |Array Of Customer fields on SendMSG|'userSystemFields': [{<br>'Key': 'company name',<br>'Value': 'comstar'<br>}]|
+
+
+
+#### User Json Object By UserID  
+
+| Variable Name     |Fill Required|Info                  |exmple value       |
+|:------------------|------------|-----------------------|-------------------|
+| UserID    |yes|UserID number From Sendmsg Account |19407|
+| Cellphone|no |Subscriber Cellphone number      |0500000000|
+| FirstName|no |The system will try to locate one personal field whose name is 'first name', if it finds one, the information will be entered there      |First Name Client|
+| LastName|no |The system will try to find one personal field in your account whose name is 'last name', if it finds one, the information will be entered there      |Last Name Client|
+| userSystemFields  |no         |Array Of Custome field on SendMSG|'userSystemFields': [{<br>'Key': 'company name',<br>'Value': 'comstar'<br>}]|
+
+
+# Example: 
+
+Please take a look at the Brackets in the [MessageContent].
+This is will be one of your fields and will be replace on rendering.
+if key will not match, it will be removed.
+to Create a new field, please use  the [CreateField method]
+
+### body 
+
+```json
+{
+  "users": [
+    {
+      "EmailAddress": "comstar@comstar.com",
+      "Cellphone": "050111111",
+      //"FirstName": "Client First Name",
+      //"LastName": "Client Last Name",
+    },
+  ],
+  "Message": {
+    "MessageContent": "Hello [companyName]",
+  }
+}
+```
+
+ <u><b>Comment:</b></u><br>
+ + If UserID and Email apper Together and they are init with veriable the result will return base on the Email
+
+
+### Add Or Update Users By Email [POST]
+
++ Request 1 (application/json)
+
+   + Headers
+    
+            Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+
+    + Body
+    
+   
+            [
+             { 
+             "EmailAddress": "comstar@comstar.com", 
+             "Cellphone": "0501234567",
+             "FirstName":"Client First Name",
+             "LastName":"Client Last Name",
+             "userSystemFields": [
+                                  {
+                                   "Key": "Custome Field Name In Sendmsg",
+                                   "Value": "Value" 
+                                  },
+                                  {
+                                   "Key": "Custome Field Name In Sendmsg",
+                                   "Value": "Value" 
+                                  }
+                                 ]
+             }
+            ]
+
++ Response 200 (application/json)
+
+    + Body
+ 
+ 
+            {
+            "success": true-Or-false,
+            "res": true-Or-false,
+            "result": {
+                       "ResultID": Status-Code,
+                       "ResultMessage": SendMsgResult-Message,
+                       "Tin": deprecated-always-empty 
+                    },
+            "data": {
+                     "users": [user Count],
+                     "message": Massage ID
+                    }
+             }
+
+
+### Add Or Update Users By UserID [POST]
+
+
++ Request 2 (application/json)
+
+   + Headers
+    
+            Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+
+    + Body
+    
+   
+            [
+             { 
+             "UserID": "19407", 
+             "Cellphone": "0501234567",
+             "FirstName":"Client First Name",
+             "LastName":"Client Last Name",
+             "userSystemFields": [
+                                  {
+                                   "Key": "Custome Field Name In Sendmsg",
+                                   "Value": "Value" 
+                                  },
+                                  {
+                                   "Key": "Custome Field Name In Sendmsg",
+                                   "Value": "Value" 
+                                  }
+                                 ]
+             }
+            ]
+
+    
++ Response 200 (application/json)
+
+    + Body
+ 
+ 
+            {
+            "success": true-Or-false,
+            "res": true-Or-false,
+            "result": {
+                       "ResultID": Status-Code,
+                       "ResultMessage": SendMsgResult-Message,
+                       "Tin": deprecated-always-empty 
+                    },
+            "data": {
+                     "users": [user Count],
+                     "message": Massage ID
+                    }
+             }
+             
+             
+## TEST [/AddUsersToLists2]
+
+add users to an existing mailing list.      
+
+## Add Users to Maling Lists [/AddUsersToLists]
+
+
+add users to an existing mailing list.
+
+####Post Request Body Objects
+
+#####Users Json Object Options
+
+####+User Json Object By Email
+
+| Variable Name     |Fill Required|Info                  |exmple value       |
+|:------------------|------------|-----------------------|-------------------|
+| EmailAddress    |yes|Subscriber Email                |comstar@comstar.com|
+
+
+####+User Json Object By UserID
+
+| Variable Name     |Fill Required|Info                  |exmple value       |
+|:------------------|------------|-----------------------|-------------------|
+| UserID    |yes|UserID number From Sendmsg Account |19407|
+
+
+
+
+####Mailing Lists Array Json
+
+#####+Existing List ID Json Object
+| Variable Name     |Fill Required|Info                  |exmple value       |
+|:------------------|------------|-----------------------|-------------------|
+| ExistingListID    |yes |Array of MailingList ID(int) From Sendmsg Account |19407|
+
+
+### Add Users By Email to Maling Lists [POST]
+
++ Request 1 (application/json)
+
+    + Headers
+    
+            Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+
+
+    + Body
+    
+    
+            {
+            "users": 
+                    [ 
+                     { 
+                      "EmailAddress": "comstar@comstar.com"
+                     } 
+                    ],
+            "mailingLists":
+                           [ 
+                            {
+                             "ExistingListID": 5 
+                            }
+                           ]
+            }
+
++ Response 200 (application/json)
+
+
+   + Body
+ 
+ 
+            {
+            "success": true-Or-false,
+            "res": true-Or-false,
+            "result": {
+                       "ResultID": Status-Code,
+                       "ResultMessage": SendMsgResult-Message,
+                       "Tin": deprecated-always-empty 
+                    },
+            "data": {
+                     "users": [array - userID],
+                     "mailingLists": [array - mailingLists ID]
+                    }
+             }
+
+
+### Add Users By UserID to Maling Lists [POST]
+
++ Request 2 (application/json)
+
+    + Headers
+    
+            Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+
+    + Body
+    
+    
+            { 
+            "users": 
+               [ 
+                { 
+                 "UserID": 19407
+                } 
+              ],
+            "mailingLists":
+                [ 
+                 {
+                  "ExistingListID": 5 
+                 }
+                ] 
+            }
+
++ Response 200 (application/json)
+
+
+   + Body
+ 
+ 
+            {
+            "success": true-Or-false,
+            "res": true-Or-false,
+            "result": {
+                       "ResultID": Status-Code,
+                       "ResultMessage": SendMsgResult-Message,
+                       "Tin": deprecated-always-empty 
+                    },
+            "data": {
+                     "users": [array - userID],
+                     "mailingLists": [array - mailingLists ID]
+                    }
+             }
+
+
+## Add Users and Send Email [/AddUsersAndSend]
+
+You can add or update subscribers to your account by sending a json with the subcscribers details.
+and a Email Message details. 
+
+
+### Post Request Body Objects
+
+#### Users Json Object Options
+
+#### User Json Object By Email
+
+| Variable Name     |Fill Required|Info                  |exmple value       |
+|:------------------|------------|-----------------------|-------------------|
+| EmailAddress    |yes|Subscriber Email                |comstar@comstar.com|
+| Cellphone|no |Subscriber Cellphone number      |0500000000|
+| FirstName|no |The system will try to locate one personal field whose name is 'first name', if it finds one, the information will be entered there      |First Name Client|
+| LastName|no |The system will try to find one personal field in your account whose name is 'last name', if it finds one, the information will be entered there      |Last Name Client|
+| userSystemFields  |no         |Array Of Custome field on SendMSG|'userSystemFields': [{<br>'Key': 'company name',<br>'Value': 'comstar'<br>}] <br> full example below|
+| userSendFields  |no         |Array Of data field on this msg|'userSendFields': [{<br>'Key': 'company name',<br>'Value': 'comstar'<br>}] <br> full example below<br><b>Supports simple emojis (UTF-8 only - excluding utf8mb4)</b>|
+
+
+
+# MessageContent Example: 
+
+Please take a look at the Brackets in the [MessageContent].
+This is will be one of your fields and will be replace on rendering.
+if key will not match, it will be removed.
+to Create a new field, please use  the [CreateField method]
+
+### body 
+
+```json
+{
+  "users": [
+    {
+      "EmailAddress": "comstar@comstar.com",
+      "Cellphone": "050111111",
+      //"FirstName": "Client First Name",
+      //"LastName": "Client Last Name",
+    },
+  ],
+  "Message": {
+    "MessageContent": "Hello [companyName]",
+  }
+}
+```
+
+# userSendFields Example:
+
+key example:  [|[your key]|]
+<br/><b>Supports simple emojis (UTF-8 only - excluding utf8mb4)</b><br/>
+for using userSendFields, please take a  look at the example,
+
+```json
+{
+  "users": [
+    {
+      "EmailAddress": "example@comstar.com",
+      "userSendFields":[{
+        "Key":"companyName",
+        "Value":"comstar"
+}]
+    }
+  ],
+  "Message": {
+    "MessageContent": "Your [|[companyName]|] Name ",
+    "MessageSubject": "hello world",
+    "SenderEmailAddress": "office@comstar.co.il",
+    "SenderName": "comstar",
+    "MessageBackColor": "black",
+    "MessageDirection": 2,
+    "MessageInnerName": "inner name",
+    "AddFacebook": true,
+    "AddForward": true,
+    "AddShowMessage": true
+  }
+}
+```
+
+#### User Json Object By UserID
+
+| Variable Name     |Fill Required|Info                  |exmple value       |
+|:------------------|------------|-----------------------|-------------------|
+| UserID    |yes|UserID number From Sendmsg Account |19407|
+| Cellphone|no |Subscriber Cellphone number      |0500000000|
+| FirstName|no |The system will try to locate one personal field whose name is 'first name', if it finds one, the information will be entered there      |First Name Client|
+| LastName|no |The system will try to find one personal field in your account whose name is 'last name', if it finds one, the information will be entered there      |Last Name Client|
+| userSystemFields  |no         |Array Of Custome field on SendMSG|'userSystemFields': [{<br>'Key': 'company name',<br>'Value': 'comstar'<br>}] |
+| userSendFields  |no         |Array Of data field on this msg|'userSendFields': [{<br>'Key': 'company name',<br>'Value': 'comstar'<br>}] <br> full example below<br><b>Supports simple emojis (UTF-8 only - excluding utf8mb4)</b>|
+
+
+
+### Message Json Object
+
+#### New Message Object
+
+| Variable Name     |Fill Required|Info                  |exmple value       |Default if not Using|
+|:------------------|------------|-----------------------|-------------------|--------------------|
+| MessageContent    |yes   |Content Of The Massage|Hello World|none|
+| MessageSubject    |yes   |Subject Of Message| HeadLine|none|
+| MessageInnerName  |yes   |Name of Massage <br>(in sendmsg account)|MassageName|none|
+| SenderEmailAddress|no    |Email|test@sendmsg.co.il|comstar@sendmsg.co.il|
+| MessageBackColor  |no    |Can be set by Hex Color|#fcba03|#ffffff - Black|
+| MessageDirection  |yes   | RTL=1 <br>Or<br> LTR=2 |1|none|
+| AddFacebook       |no    |Add a Share Link of Mail<br>to Facebook<br>(Link to Share the mail on Social Madia)|true|false|
+| AddForward        |no    |Add a Link To Forward the Mail|true|false|
+| AddShowMessage    |no    |Add a Link To view the Mail <br>on the Browser|true|false|
+
+#####+Past Message Object
+
+
+| Variable Name     |Fill Required|Info                  |exmple value       |
+|:------------------|------------|-----------------------|-------------------|
+| MessageID    |yes   |ID Number of Massage <br>from History of all Massages Sent |2050763|
+
+#####+Draft Message Object
+
+
+| Variable Name     |Fill Required|Info                  |exmple value       |
+|:------------------|------------|-----------------------|-------------------|
+| UseDraftID    |yes   |ID Number of Massage <br>from Drafts Massage's|2050763|
+
+
+
+### Add Users and Send New Email  [POST]
+
++ Request 1 (application/json)
+
+   + Headers
+    
+            Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+
+    + Body
+
+
+            {
+             "users":[
+                     {
+                     "EmailAddress": "comstar@comstar.com",
+                     "Cellphone" : "050111111",
+                     "FirstName": "Client First Name",
+                     "LastName": "Client Last Name",
+                     },
+                     {
+                     "EmailAddress": "comstar@gmail.com",
+                     "Cellphone" : "0502222222",
+                     "FirstName": "Client First Name",
+                     "LastName": "Client Last Name",
+                     }
+                    ],
+             "Message":
+                     {
+                      "MessageContent":"this is the content of the message",
+                      "MessageSubject":"hello world",
+                      "SenderEmailAddress":"office@comstar.co.il",
+                      "SenderName": "comstar",
+                      "MessageBackColor":"black",
+                      "MessageDirection":2,
+                      "MessageInnerName":"inner name",
+                      "AddFacebook": true,
+                      "AddForward": true,
+                      "AddShowMessage":true
+                     }
+            }
+
++ Response 200 (application/json)
+ 
+    
+    + Body
+ 
+ 
+            {
+            "success": true-Or-false,
+            "res": true-Or-false,
+            "result": {
+                       "ResultID": Status-Code,
+                       "ResultMessage": SendMsgResult-Message,
+                       "Tin": deprecated-always-empty 
+                    },
+            "data": {
+                     "users": [user Count],
+                     "message": Massage ID
+                    }
+             }
+
+
+### Add Users and Send Past Email  [POST]
++ Request 2 (application/json)
+
+   + Headers
+    
+            Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+
+    + Body
+
+
+            {
+            "users":[
+                     {
+                     "EmailAddress": "comstar@comstar.com",
+                     "Cellphone" : "050111111",
+                     "FirstName": "Client First Name",
+                     "LastName": "Client Last Name",
+                     },
+                     {
+                     "EmailAddress": "comstar@gmail.com",
+                     "Cellphone" : "0502222222",
+                     "FirstName": "Client First Name",
+                     "LastName": "Client Last Name",
+                     }
+                    ],
+            "Message":
+                     {
+                      "MessageID":121231
+                     }
+            }
+
++ Response 200 (application/json)
+ 
+    
+    + Body
+ 
+ 
+            {
+            "success": true-Or-false,
+            "res": true-Or-false,
+            "result": {
+                       "ResultID": Status-Code,
+                       "ResultMessage": SendMsgResult-Message,
+                       "Tin": deprecated-always-empty 
+                    },
+            "data": {
+                     "users": [user Count],
+                     "message": Massage ID
+                    }
+             }
+
+### Add Users and Send Draft Email  [POST]
++ Request 3 (application/json)
+
+   + Headers
+    
+            Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+
+    + Body
+
+
+            {
+            "users":[
+                     {
+                     "EmailAddress": "comstar@comstar.com",
+                     "Cellphone" : "0501111111",
+                     "FirstName": "Client First Name",
+                     "LastName": "Client Last Name",
+                     },
+                     {
+                     "EmailAddress": "comstar@gmail.com",
+                     "Cellphone" : "0502222222",
+                     "FirstName": "Client First Name",
+                     "LastName": "Client Last Name",
+                     }
+                    ],
+            "Message":
+                     {
+                      "UseDraftID":2050763,
+                      "MessageDirection":2
+                     }
+            }
+
+
+
++ Response 200 (application/json)
+ 
+    
+    + Body
+ 
+ 
+            {
+            "success": true-Or-false,
+            "res": true-Or-false,
+            "result": {
+                       "ResultID": Status-Code,
+                       "ResultMessage": SendMsgResult-Message,
+                       "Tin": deprecated-always-empty 
+                    },
+            "data": {
+                     "users": [user Count],
+                     "message": Massage ID
+                    }
+             }
+
+
+##Add Users And Send SMS [/AddUsersAndSendSMS]
+
+    *Please read the #About SMS in the introduction.*
+    
+####Post Request Body Objects
+
+#####Users Json Object Options
+
+####+User Json Object By Email
+
+| Variable Name     |Fill Required|Info                  |exmple value       |
+|:------------------|------------|-----------------------|-------------------|
+| EmailAddress    |yes|Subscriber Email                |comstar@comstar.com|
+| Cellphone|no |Subscriber Cellphone number      |0500000000|
+| FirstName|no |The system will try to locate one personal field whose name is 'first name', if it finds one, the information will be entered there      |First Name Client|
+| LastName|no |The system will try to find one personal field in your account whose name is 'last name', if it finds one, the information will be entered there      |Last Name Client|
+| userSystemFields  |no         |Array Of Custome field on SendMSG|'userSystemFields': [{<br>'Key': 'company name',<br>'Value': 'comstar'<br>}]|
+
+####+User Json Object By UserID
+
+| Variable Name     |Fill Required|Info                  |exmple value       |
+|:------------------|------------|-----------------------|-------------------|
+| UserID    |yes|UserID number From Sendmsg Account |19407|
+| Cellphone|no |Subscriber Cellphone number      |0500000000|
+| FirstName|no |The system will try to locate one personal field whose name is 'first name', if it finds one, the information will be entered there      |First Name Client|
+| LastName|no |The system will try to find one personal field in your account whose name is 'last name', if it finds one, the information will be entered there      |Last Name Client|
+| userSystemFields  |no         |Array Of Custome field on SendMSG|'userSystemFields': [{<br>'Key': 'company name',<br>'Value': 'comstar'<br>}]|
+
+
+####Message Json Object
+
+#####+New Message Object
+
+| Variable Name     |Fill Required|Info                  |exmple value       |
+|:------------------|------------|-----------------------|-------------------|
+| MessageContent    |yes    |Content                |Hello World|
+| SenderPhone       |yes         |the sender number      |0500000000|
+| MessageInnerName  |yes         |Name of Massage <br>(on sendmsg account)|0531111111|
+| MessageSubject    |no          |Not Required           | empty|
+| MessageType       |yes         |always 1               |1|
+| TypeSms           |yes         |1 -for small sms <br> 2 -for long sms|1 Or 2|
+
+#####+Past Message Object
+
+
+| Variable Name     |Fill Required|Info                  |exmple value       |
+|:------------------|------------|-----------------------|-------------------|
+| MessageID    |yes   |ID Number of Massage <br>from History of all Massages Sent |2050763|
+
+#####+Draft Message Object
+
+
+| Variable Name     |Fill Required|Info                  |exmple value       |
+|:------------------|------------|-----------------------|-------------------|
+| UseDraftID    |yes   |ID Number of Massage <br>from Drafts Massage's|2050763|
+
+   
+
+###Add Users And Send New SMS [POST]
++ Request 1 (application/json)
+
+  + Headers
+    
+             Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+    
+    + Body
+    
+    
+            {
+            "Users":[
+                     {
+                      "EmailAddress": "comstar@comstar.com",
+                      "Cellphone" : "0531111111",
+                      "FirstName": "Client First Name",
+                      "LastName": "Client Last Name",
+                     }
+                    ],
+            "Message":{
+                       "MessageContent": "hello world",
+                       "SenderPhone":"0531111111",
+                       "MessageInnerName":"inner name",
+                       "MessageSubject":"",
+                       "MessageType":1,
+                       "TypeSms":1
+                      }
+            }
+
+
++ Response 200 (application/json)
+
+
+   + Body
+ 
+ 
+            {
+            "success": true-Or-false,
+            "res": true-Or-false,
+            "result": {
+                       "ResultID": Status-Code,
+                       "ResultMessage": SendMsgResult-Message,
+                       "Tin": deprecated-always-empty 
+                    },
+            "data": {
+                     "users": [user Count],
+                     "message": Massage ID
+                    }
+             }
+
+###Add Users And Send Past SMS [POST]
++ Request 2 (application/json)
+
+  + Headers
+    
+             Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+    
+    + Body
+    
+    
+            {
+            "Users":[
+                     {
+                      "EmailAddress": "comstar@comstar.com",
+                      "Cellphone" : "0531111111",
+                      "FirstName": "Client First Name",
+                      "LastName": "Client Last Name",
+                     }
+                    ],
+            "Message":{
+                       "MessageID": 2050763
+                      }
+            }
+
+
++ Response 200 (application/json)
+
+
+   + Body
+ 
+ 
+            {
+            "success": true-Or-false,
+            "res": true-Or-false,
+            "result": {
+                       "ResultID": Status-Code,
+                       "ResultMessage": SendMsgResult-Message,
+                       "Tin": deprecated-always-empty 
+                    },
+            "data": {
+                     "users": [user Count],
+                     "message": Massage ID
+                    }
+             }
+
+###Add Users And Send Draft SMS [POST]
++ Request 3 (application/json)
+
+  + Headers
+    
+             Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+    
+    + Body
+    
+    
+            {
+            "Users":[
+                     {
+                      "EmailAddress": "comstar@comstar.com",
+                      "Cellphone" : "0531111111",
+                      "FirstName": "Client First Name",
+                      "LastName": "Client Last Name",
+                     }
+                    ],
+            "Message":{
+                       "UseDraftID": 2050763
+                      }
+            }
+
+
++ Response 200 (application/json)
+
+
+   + Body
+   
+   
+            {
+            "success": true-Or-false,
+            "res": true-Or-false,
+            "result": {
+                       "ResultID": Status-Code,
+                       "ResultMessage": SendMsgResult-Message,
+                       "Tin": deprecated-always-empty 
+                    },
+            "data": {
+                     "users": [user Count],
+                     "message": Massage ID
+                    }
+             }
+
+
+
+
+## Send Email to Mailing List by ID [/SendEmailToMailingLists]
+
+####Post Request Body Object
+
+#####Maling List Json Object
+| Variable Name    |required|Info                  |exmple value       |
+|:-----------------|--------|-----------------------|-------------------|
+| MalingListIDs    | yes   |  array of ints        |[1,45,2253,98]     |
+
+
+
+####Message Json Object
+
+#####+New Message Object
+
+
+| Variable Name     |Fill Required|Info                  |exmple value       |Default if not Using|
+|:------------------|------------|-----------------------|-------------------|--------------------|
+| MessageContent    |yes   |Content Of The Massage|Hello World|none|
+| MessageSubject    |yes   |Subject Of Message| HeadLine|none|
+| MessageInnerName  |yes   |Name of Massage <br>(in sendmsg account)|MassageName|none|
+| SenderEmailAddress|no    |Email|test@sendmsg.co.il|comstar@sendmsg.co.il|
+| MessageBackColor  |no    |Can be set by Hex Color|#fcba03|#ffffff - Black|
+| MessageDirection  |yes   | RTL=1 <br>Or<br> LTR=2 |1|none|
+| AddFacebook       |no    |Add a Share Link of Mail<br>to Facebook<br>(Link to Share the mail on Social Madia)|true|false|
+| AddForward        |no    |Add a Link To Forward the Mail|true|false|
+| AddShowMessage    |no    |Add a Link To view the Mail <br>on the Browser|true|false|
+
+
+
+#####+Past Message Object
+
+
+| Variable Name     |Fill Required|Info                  |exmple value       |
+|:------------------|------------|-----------------------|-------------------|
+| MessageID    |yes   |ID Number of Massage <br>from History of all Massages Sent |2050763|
+
+#####+Draft Message Object
+
+
+| Variable Name     |Fill Required|Info                  |exmple value       |
+|:------------------|------------|-----------------------|-------------------|
+| UseDraftID    |yes   |ID Number of Massage <br>from Drafts Massage's|2050763|
+
+
+### Send New Email Message to Mailing List by ID [POST]
++ Request  (application/json)
+
+
+    + Headers
+
+               Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+
+
+    + Body 
+
+
+                 {
+                 "Message":{
+                        "MessageContent":"this is the content of the message",
+                        "MessageSubject":"hello world",
+                        "MessageInnerName":"inner name",
+                        "SenderEmailAddress":"office@comstar.co.il",
+                        "MessageBackColor":"black",
+                        "MessageDirection":2,
+                        "AddFacebook": true,
+                        "AddForward": true,
+                        "AddShowMessage":true
+                        },
+                 "MalingListIDs":[172595]
+                }
+
+
++ Response 200 (application/json)
+
+    + Body
+
+
+            {
+             "success": true-Or-false,
+             "res": true-Or-false,
+             "result": {
+                       "ResultID": Status-Code,
+                       "ResultMessage": SendMsgResult-Message,
+                       "Tin": deprecated-always-empty 
+                      },
+             "data": {
+                      "users": [array<int UserID> - List Of All User ID],
+                      "message": <int messageID> - The ID of the message
+                     }
+            }
+
+### Send Past Email Message to Mailing List by ID [POST]
+
++ Request 2 (application/json)
+
+
+    + Headers
+
+               Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+
+    + Body
+    
+    
+            {
+             "Message":{
+                        "MessageID":2050763
+                       },
+             "MalingListIDs":[180599]
+            }
+
+
++ Response 200 (application/json)
+
+    + Body
+
+
+            {
+             "success": true-Or-false,
+             "res": true-Or-false,
+             "result": {
+                       "ResultID": Status-Code,
+                       "ResultMessage": SendMsgResult-Message,
+                       "Tin": deprecated-always-empty 
+                      },
+             "data": {
+                      "users": [array<int UserID> - List Of All User ID],
+                      "message": <int messageID> - The ID of the message
+                     }
+            }
+
+### Send Draft Email Message to Mailing List by ID [POST]
+
+
++ Request 3 (application/json)
+
+
+    + Headers
+
+               Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+
+    + Body
+    
+    
+            {
+             "Message":{
+                        "UseDraftID":2050763,
+                        "MessageDirection":2
+                       },
+             "MalingListIDs":[180599]
+            }
+
++ Response 200 (application/json)
+
+    + Body
+
+
+            {
+             "success": true-Or-false,
+             "res": true-Or-false,
+             "result": {
+                       "ResultID": Status-Code,
+                       "ResultMessage": SendMsgResult-Message,
+                       "Tin": deprecated-always-empty 
+                      },
+             "data": {
+                      "users": [array<int UserID> - List Of All User ID],
+                      "message": <int messageID> - The ID of the message
+                     }
+            }
+
+# Send SMS to Mailing List by ID [/SendSmsToMailingLists]
+
+*Please read the #About SMS in the introduction.*
+    
+
+####Post Request Body Object
+
+#####Maling List Json Object
+| Variable Name    |Fill required|Info                  |exmple value       |
+|:-----------------|--------|-----------------------|-------------------|
+| MalingListIDs     | yes     |array of ints       |[1,45,2253,98]|
+
+
+####Message Json Object
+
+#####+New Message Object
+
+| Variable Name     |Fill Required|Info                  |exmple value       |
+|:------------------|------------|-----------------------|-------------------|
+| MessageContent    |yes    |Content                |Hello World|
+| SenderPhone       |yes         |the sender number      |0500000000|
+| MessageInnerName  |yes         |Name of Massage <br>(on sendmsg account)|0531111111|
+| MessageSubject    |no          |Not Required           | empty|
+| MessageType       |yes         |always 1               |1|
+| TypeSms           |yes         |1 -for small sms <br> 2 -for long sms|1 Or 2|
+                
+
+#####+Past Message Object
+
+
+| Variable Name     |Fill Required|Info                  |exmple value       |
+|:------------------|------------|-----------------------|-------------------|
+| MessageID    |yes   |ID Number of Massage <br>from History of all Massages Sent |2050763|
+
+#####+Draft Message Object
+
+
+| Variable Name     |Fill Required|Info                  |exmple value       |
+|:------------------|------------|-----------------------|-------------------|
+| UseDraftID    |yes   |ID Number of Massage <br>from Drafts Massage's|2050763|
+
+
+### Send New SMS Message to Mailing List by ID [POST]
+
++ Request (application/json)
+
+    + Headers
+    
+             Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+   
+    + Body
+
+            {
+               "Message":{
+                  "MessageContent":"hello [[שם]]",
+                  "SenderPhone":"0532351827:",
+                  "MessageInnerName":"inner name",
+                  "MessageSubject":"subject",
+                  "TypeSms":1,
+                  "MessageType":1
+                },
+                "MalingListIDs":[172595]
+            }
+        
++ Response 200 (application/json)
+
+    + Body
+
+
+            {
+             "success": true-Or-false,
+             "res": true-Or-false,
+             "result": {
+                       "ResultID": Status-Code,
+                       "ResultMessage": SendMsgResult-Message,
+                       "Tin": deprecated-always-empty 
+                      },
+             "data": {
+                      "users": [array<int UserID> - List Of All User ID],
+                      "message": <int messageID> - The ID of the message
+                     }
+            }
+
+### Send Past SMS Message to Mailing List by ID [POST]
+
++ Request (application/json)
+
+    + Headers
+    
+             Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+
+    + Body
+    
+            {
+             "Message":{
+                        "MessageID":2050763
+                       },
+             "MalingListIDs":[180599]
+            }
+
++ Response 200 (application/json)
+
+    + Body
+
+
+            {
+             "success": true-Or-false,
+             "res": true-Or-false,
+             "result": {
+                       "ResultID": Status-Code,
+                       "ResultMessage": SendMsgResult-Message,
+                       "Tin": deprecated-always-empty 
+                      },
+             "data": {
+                      "users": [array<int UserID> - List Of All User ID],
+                      "message": <int messageID> - The ID of the message
+                     }
+            }
+
+### Send Draft SMS Message to Mailing List by ID [POST]
+
++ Request (application/json)
+
+    + Headers
+    
+             Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+    
+    + Body
+
+            {
+             "Message":{
+                        "MessageID":2050763
+                       },
+             "MalingListIDs":[180599]
+            }
+
++ Response 200 (application/json)
+    
+    + Body
+
+            {
+             "success": true-Or-false,
+             "res": true-Or-false,
+             "result": {
+                       "ResultID": Status-Code,
+                       "ResultMessage": SendMsgResult-Message,
+                       "Tin": deprecated-always-empty 
+                      },
+             "data": {
+                      "users": [array<int UserID> - List Of All User ID],
+                      "message": <int messageID> - The ID of the message
+                     }
+            }
+
+
+
+
+
+## Get All Maling Lists ID's [/GetMailingListNames]
+
+### Get All Maling Lists ID's [POST]
+
++ Request
+
+    + Headers
+    
+            Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+
+   
++ Response 200 (application/json)
+
+    + Headers
+    
+            Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+
+    + Body 
+
+
+            {
+            "success": true-Or-false,
+            "res": true-Or-false,
+            "result": {
+                       "ResultID": Status-Code,
+                       "ResultMessage": SendMsgResult-Message,
+                       "Tin": deprecated-always-empty 
+                    },
+            "listNames": [array - 
+                            {
+                             "ActiveUserCount": int - Count only Active Users,
+                             "ExistingListID": int - List ID,
+                             "IsNewList": bool - New List Flag,
+                             "NewListDescription": string - List Description,
+                             "NewListName": string - List Name,
+                             "UserCount": int - Count of all users in List
+                            }
+            }
+
+## Get All Fields [/GetAllFields]
+
+### Get All Fields [POST]
+
++ Request (application/json)
+    
+    
+    + Headers
+    
+            Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+            "success": true-Or-false,
+            "res": true-Or-false,
+            "result": {
+                       "ResultID": Status-Code,
+                       "ResultMessage": SendMsgResult-Message,
+                       "Tin": deprecated-always-empty 
+                      },
+            "AllFields": { 
+                          "eMail": "email",
+                          "cellPhone": "cell Phone",
+                          "2": "שם משפחה" <= Custom Field Will Be Key Value Pair
+                         }
+            }
+            
+
+## Get User Details [/GetUserDetails/{?userID}]
+
+Get All User details from sendmsg account by the userID 
+    
+### Get the User Details by UserID [GET]
+
++ Parameters
+    + userID - ID of the user in SendMsg Account
+
+
++ Request 
+
+    + Headers
+    
+            Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+            
+
+
++ Response 200
+
+            {
+            "success": true-Or-false,
+            "res": true-Or-false,
+            "result": {
+                       "ResultID": Status-Code,
+                       "ResultMessage": SendMsgResult-Message,
+                       "Tin": deprecated-always-empty 
+                      },
+            "user": {
+                    "Cellphone": "0501234567",
+                    "DeleteUser": false,
+                    "EmailAddress": "comstar2@comstar2.com",
+                    "IsUserSelfRemoved": false,
+                    "UndeleteUserIfExists": false,
+                    "UserID": 43998,
+                    "UserSendFields": [ {
+                                            "Key": "Custom Field for this message",
+                                            "Value": "Value" 
+                                         }],
+                    "UserSystemFields": [array<KeyValuePair> - all data field of this user
+                                         {
+                                            "Key": "Custom Field Name In Sendmsg",
+                                            "Value": "Value" 
+                                         }
+                                        ]
+                    }
+            }
+    
+
+
+
+
+## Get Maling Lists by ID [/GetMailingListByID/{?listID,type}]
+
+
+|type  |Info                   |User Range Query| 
+|-----|----------------------------|----------------|
+|0     |Get All Users|Deleted,Wrong,Active,Unsubscriber|
+|1     |Get Deleted Users|Deleted|
+|2     |Get Unsubscriber Users|Unsubscriber|
+|3     |Get Wrong  eMails|Wrong|
+|4     |Get Active Users|Active|
+
+
+
+### Get Maling Lists by ID [GET]
+
+
++ Parameters
+    + listID - ID of the Mailing List in SendMsg Account.
+    + type - Get Users from Mailing List By Type.
+
++ Request 
+
+    + Headers
+    
+            Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+            
+
+       
+
+   
+
+
+## Get Users by RequestType [/GetSystemUsers]
+
+Get All The Users that has been Unsubscribed/Deleted/Wrong Email By RequestType Parameter. 
+ 
+| requestType|Info| 
+|:-----------|----|
+|SelfRemUsers|Unsubscribed Users from SendMsg Account|  
+|DelUsers|Users that had been Deleted from SendMsg Account|
+|wrongMails|Users that had been Flaged as User with a Wrong Mail|
+
+
+### Get Users by RequestType [POST]
+
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+          
+
+    + Body
+
+    
+            {
+                "requestType": "SelfRemUsers"
+            }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+            "success": true-Or-false,
+            "res": true-Or-false,
+            "result": {
+                       "ResultID": Status-Code,
+                       "ResultMessage": SendMsgResult-Message,
+                       "Tin": deprecated-always-empty 
+                      },
+            "users": [array<Json User> - all users by requestType selected
+                      {
+                       "Cellphone": "0501234567",
+                       "DeleteUser": false,
+                       "EmailAddress": "comstar2@comstar2.com",
+                       "IsUserSelfRemoved": false,
+                       "UndeleteUserIfExists": false,
+                       "UserID": 43998,
+                       "UserSendFields": [],
+                       "UserSystemFields": [array<Json KeyValuePair> - all data field of this user
+                                            {
+                                             "Key": "Custome Field Name In Sendmsg",
+                                             "Value": "Value" 
+                                            }
+                                           ]
+                      }
+                     ]
+            }
+
+
+
+## Create Maling List [/CreateMalingList]
+
+####Post Request Body Object
+
+#####New Maling List Json Object
+
+| Variable Name    |Fill required|Info|exmple value|
+|:-----------------|-------------|----|------------|
+| IsNewList     | yes     |Always True|true|
+| NewListName     | yes     |Name of The List|Andromeda|
+| NewListDescription| no|Description Of The List|List from Another Galaxy|
+
+
+### Create Maling List [POST]
+
++ Request (application/json)
+
+
+    + Headers
+    
+            Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+
+    + Body
+
+                {
+                 "IsNewList": true,
+                 "NewListName" : "my new malinglist",
+                 "NewListDescription": "this is the description of the maling list"
+                }
+        
+
++ Response 200 (application/json)
+
+    + Body
+    
+                            {
+                             "success": true-Or-false,
+                             "res": true-Or-false,
+                             "result": {
+                                        "ResultID": Status-Code,
+                                        "ResultMessage": SendMsgResult-Message,
+                                        "Tin": deprecated-always-empty 
+                                       },
+                             "data": {
+                                      "users": [array - userID],
+                                      "mailingLists": [array - mailingLists ID]
+                                     }
+                            }
+
+
+
+## Get The Statistics of the Message [/GetMsgFullStatistics/{?messageID}]
+
+####URI Parameters (QueryString)
+    + messageID - ID of the Past Message in SendMsg Account.
+
+### Get The Statistics of the Message [GET]
+
+
++ Parameters
+    + messageID - ID of the Past Message in SendMsg Account.
+   
++ Request
+
+    + Headers
+    
+            Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+
+
++ Response 200 (application/json)
+
+    + Body
+    
+
+
+## Create message [/CreateMessage]
+
+
+####Message Json Object
+#####New Message Object
+
+
+| Variable Name     |Fill Required|Info                  |exmple value       |Default if not Using|
+|:------------------|------------|-----------------------|-------------------|--------------------|
+| MessageContent    |yes   |Content Of The Massage|Hello World|none|
+| MessageSubject    |yes   |Subject Of Message| HeadLine|none|
+| MessageInnerName  |yes   |Name of Massage <br>(in sendmsg account)|MassageName|none|
+| SenderEmailAddress|no    |Email|test@sendmsg.co.il|comstar@sendmsg.co.il|
+| MessageBackColor  |no    |Can be set by Hex Color|#fcba03|#ffffff - White|
+| MessageDirection  |yes   | RTL=1 <br>Or<br> LTR=2 |1|none|
+| AddFacebook       |no    |Add a Share Link of Mail<br>to Facebook<br>(Link to Share the mail on Social Madia)|true|false|
+| AddForward        |no    |Add a Link To Forward the Mail|true|false|
+| AddShowMessage    |no    |Add a Link To view the Mail <br>on the Browser|true|false|
+| PostponeSendTime    |no    |Scheduling the send for a future date|2030-02-25|NOW|
+
+
+### Create message [POST]
+
+
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+
+    + Body
+
+                {
+                 "MessageContent":"the content of the message",
+                 "MessageSubject":"subject",
+                 "MessageInnerName":"inner name",
+                 "SenderEmailAddress":"comstar@comstar.co.il",
+                 "MessageBackColor": "black",
+                 "MessageDirection":1,
+                 "AddFacebook": true,
+                 "AddForward": true,
+                 "AddShowMessage":true
+                }
+
+
++ Response 200 (application/json)
+
+    + Body
+    
+                            {
+                             "success": true-Or-false,
+                             "res": true-Or-false,
+                             "result": {
+                                        "ResultID": Status-Code,
+                                        "ResultMessage": SendMsg-Results ,
+                                        "Tin": deprecated-always-empty 
+                                       },
+                             "newMessageID": newMessageID
+                            }
+
+## Delete Past Message [/DelMessage/{?MsgID}]
+
+
+####URI Parameters (QueryString)
+    + MsgID - ID of the Past Message in SendMsg Account.
+
+### Delete Past message [GET]
+
++ Parameters
+    + MsgID - ID of the Past Message in SendMsg Account.
+
+
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+
+
++ Response 200 (application/json)
+
+    + Body
+    
+                {
+                 "success": true-Or-false,
+                 "res": true-Or-false,
+                 "result": {
+                            "ResultID": Status-Code,
+                            "ResultMessage": SendMsg-Results ,
+                            "Tin": deprecated-always-empty 
+                           },
+                 "newMessageID": 2052217
+                }
+
+## Delete all Users from Maling List by ID [/TruncateMailingLists]
+
+
+
+### Delete all Users from Maling List by ID [POST]
+
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+
+    + Body
+    
+                [1,2,3,4,5]
+    
++ Response 200 (application/json)
+
+
+    + Body
+
+                {
+                 "success": true-Or-false,
+                 "res": true-Or-false,
+                 "result": {
+                            "ResultID": Status-Code,
+                            "ResultMessage": SendMsgResult-Message,
+                            "Tin": deprecated-always-empty 
+                           },
+                 "data": null
+                }
+
+
+## Delete Users from Maling Lists by Parameters [/RemoveFromMailingLists/ManyToMany]
+
+
+Please add only one Mailing List PER User.<br> 
+Any extra type will be dismissed. The api will always prefer the userId and ignore the other parameters.<br>
+
+
+| Delete Parameter |Info                | 
+|------------|--------------------|
+| UserID     |remove user by id   |  
+|EmailAddress|remove user by email|
+|Cellphone   |remove user by phone|
+
+
+###Delete Users from a Maling Lists by UserID [POST]
+
+
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+
+    + Body
+    
+    
+                {
+                 "users":[
+                        {
+                         "UserID":"4"
+                        },
+                        {
+                         "UserID":"3"
+                        },
+                        {
+                         "UserID":"9"
+                        }
+                       ],
+                 "mailingLists":[
+                               {
+                                "ExistingListID":5
+                               },
+                               {
+                                "ExistingListID":7
+                               },
+                               {
+                                "ExistingListID":9
+                               }
+                              ]
+                }
+
+   
++ Response 200 (application/json)
+
+
+    + Body
+
+                {
+                 "success": true-Or-false,
+                 "res": true-Or-false,
+                 "result": {
+                            "ResultID": Status-Code,
+                            "ResultMessage": SendMsgResult-Message,
+                            "Tin": deprecated-always-empty 
+                           },
+                 "data": null
+                }
+
+
+###Delete Users from a Maling Lists by EmailAddress [POST]
+
+
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+
+    + Body
+    
+    
+                {
+                 "users":[
+                        {
+                         "EmailAddress":"test1@comstar.co.il"
+                        },
+                        {
+                         "EmailAddress":"test2@comstar.co.il"
+                        },
+                        {
+                         "EmailAddress":"test3@comstar.co.il"
+                        }
+                       ],
+                 "mailingLists":[
+                               {
+                                "ExistingListID":5
+                               },
+                               {
+                                "ExistingListID":7
+                               },
+                               {
+                                "ExistingListID":9
+                               }
+                              ]
+                }
+
+   
++ Response 200 (application/json)
+
+
+    + Body
+
+                {
+                 "success": true-Or-false,
+                 "res": true-Or-false,
+                 "result": {
+                            "ResultID": Status-Code,
+                            "ResultMessage": SendMsgResult-Message,
+                            "Tin": deprecated-always-empty 
+                           },
+                 "data": null
+                }
+
+###Delete Users from a Maling Lists by Cellphone [POST]
+
+
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+
+    + Body
+    
+    
+                {
+                 "users":[
+                        {
+                         "Cellphone":"0520000001"
+                        },
+                        {
+                         "Cellphone":"0520000002"
+                        },
+                        {
+                         "Cellphone":"0520000003"
+                        }
+                       ],
+                 "mailingLists":[
+                               {
+                                "ExistingListID":5
+                               },
+                               {
+                                "ExistingListID":7
+                               },
+                               {
+                                "ExistingListID":9
+                               }
+                              ]
+                }
+
+   
++ Response 200 (application/json)
+
+
+    + Body
+
+                {
+                 "success": true-Or-false,
+                 "res": true-Or-false,
+                 "result": {
+                            "ResultID": Status-Code,
+                            "ResultMessage": SendMsgResult-Message,
+                            "Tin": deprecated-always-empty 
+                           },
+                 "data": null
+                }
+
+
+
+###Delete Users from a Maling Lists by MIX [POST]
+
+
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+
+    + Body
+    
+    
+                {
+                 "users":[
+                        {
+                         "UserID":"4"
+                        },
+                        {
+                         "EmailAddress":"test2@comstar.co.il"
+                        },
+                        {
+                         "Cellphone":"0520000001"
+                        }
+                       ],
+                 "mailingLists":[
+                               {
+                                "ExistingListID":5
+                               },
+                               {
+                                "ExistingListID":7
+                               },
+                               {
+                                "ExistingListID":9
+                               }
+                              ]
+                }
+
+   
++ Response 200 (application/json)
+
+
+    + Body
+
+                {
+                 "success": true-Or-false,
+                 "res": true-Or-false,
+                 "result": {
+                            "ResultID": Status-Code,
+                            "ResultMessage": SendMsgResult-Message,
+                            "Tin": deprecated-always-empty 
+                           },
+                 "data": null
+                }
+
+
+
+
+## sms regulations
+
+## Get Verification Code By SMS  [/VerificationOfSenderNumberBySMS]
+
+For the purpose of sending a message by a personal mobile number.
+we require you to provide a valid phone number To make sure that your information is accurate and up-to-date, 
+ we may require that you verify your phone number via SMS text or phone call by two steps. 
+ 
+ 1. add the phone number on panel.sendmsg.co.il
+ 2. post to our API to verify your phone number
+ 
+### Get Verification Code By SMS [POST]
+
++ Request
+
+
+    + Headers
+    
+             Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+
+    + body 
+        
+        {
+        "SenderNumber":"0501231234",
+        }
+ 
+
+## Authenticate the phone number  [/AuthenticateOfSenderNumberBySMS]
+ 
+### Authenticate the phone number   [POST]
+
++ Request
+
+
+    + Headers
+    
+             Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+
+
+    + body 
+        
+        {
+        "SenderNumber":"0501231234",
+        "Code":"111111"
+        }
+
+## Check Verification of phone number  [/IsAllowedOfSenderNumberBySMS]
+ 
+### Check Verification of phone number [POST]
+
++ Request
+
+
+    + Headers
+    
+             Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+
+    + body 
+        
+        {
+            "SenderNumber":"0501231234",
+        }
+
+## Checking Sms Balances [/CheckingSmsBalances]
+ 
+### CheckingSmsBalances [GET]
+
+checking balance of long and short sms messages.
+
++ Request 200 
+
+
+    + Headers
+    
+             Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+
++ Response 200
+    
+    {
+    "success": true,
+    "res": true,
+    "result": {
+        "ResultID": 200,
+        "ResultMessage": "SMS balances:\nShort amount = {num}\nLong amount = {num}",
+        "Tin": ""
+    },
+    "data": null
+}
+
+## Get subscribers by timeline [/GetNumberOfJoinersToSystem]
+
+### Get subscribers by timeline[POST]
+
++ Request Get Subscribers by Timeline
+
+    + Headers
+
+        Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+
+    + Body
+
+        ```
+        [
+            {
+                "From": "2023-07-22 18:03:33",
+                "Until": "2023-08-11 18:03:33"
+            },
+            {
+                "From": "2023-07-02 18:03:34",
+                "Until": "2023-07-22 18:03:34"
+            }
+        ]
+        ```
+
++ Response 200 (application/json)
+
+    ```
+    {
+        "success": true,
+        "res": true,
+        "result": {
+            "ResultID": 200,
+            "ResultMessage": "Passed OK",
+            "Tin": ""
+        },
+        "SendMsgJoinersDate": [
+            {
+                "From": "2023-07-22T18:03:33",
+                "Sum": 2,
+                "Until": "2023-08-11T18:03:33"
+            },
+            {
+                "From": "2023-07-02T18:03:34",
+                "Sum": 1,
+                "Until": "2023-07-22T18:03:34"
+            }
+        ]
+    }
+    ```
+
+
+
+
+## Change User Send Status [/ChangeUpdateStatus]
+ 
+### Change User Status By Email [POST] 
+
+Change send status of a specific user in your account
+
+<b>If the user AskedRemoval is set , update to the status email is restriected.</b>
+
+
+####By UserID
+ 
+| Variable Name     |Required|Info                  |exmple value       |
+|:------------------|------------|-----------------------|-------------------|
+| UserID    |yes|UserId|121131|
+| StatusEmail  |yes|Active,Inactive,AskedRemoval,BadEmail|BadEmail|
+
+####By Email
+
+| Variable Name     |Required|Info                  |exmple value       |
+|:------------------|------------|-----------------------|-------------------|
+| EmailAddress|yes |User Email        |comstar@comstar.com|
+| StatusEmail  |yes|Active,Inactive,AskedRemoval,BadEmail|BadEmail|
+
+
+
++ Request 200 (application/json)
+
+
+    + Headers
+    
+             Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+
+    + body 
+        
+      {
+
+        "EmailAddress": "comstar@comstar.com",
+
+        "StatusEmail":"Active"
+
+     }
+
+### Change User Status By UserId [POST] 
+
++ Request 200 (application/json)
+
+
+    + Headers
+    
+             Authorization: 34234-34234234-fsdgdfg-34r5t343f334f
+
+    + body 
+        
+      {
+
+        "UserID": "1773",
+
+       "StatusEmail":"Active"
+      }
+
+
+       
+## CreateField [/CreateField]
+
+### CreateField [POST]
+
+####<u><b>Usage:</b></u>
+Create new Field in your account.
+
+### options
+
+| Type      | FieldUserInt  | description |
+| ----------| ------------- | ------------|
+| Text      | 1             |  |
+| Yes/No    | 2             ||
+| Dropdown  | 3             ||
+| Date      | 4             ||
+| Long text | 7             ||
+| Number    | 8             |On using Dropdown field, using [OptionToDDR] is required|
+
+#####<u><b>Input:</b></u>
+<pre>
+<code>
+        {
+        "FieldUserName":"Field Name",
+        "FieldUserType": 1,
+        }
+</code>   
+</pre>
+#### On using Dropdown field, using [OptionToDDR] is required
+
+Example:
+<pre>
+<code>
+        {
+        "FieldUserName":"Field Name",
+        "FieldUserType": 3,
+        "OptionToDDR":["item 1", "item 2", "item 3"]
+        }
+</code>   
+</pre>
++ Response 200 (application/json)
+
+            {
+            "FieldName":"Field Name",
+            "FieldType":1
+            }
+        
+        
+
+

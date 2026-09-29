@@ -1,6 +1,8 @@
 import type * as React from "react"
 
-declare global {
+// React 19 moved IntrinsicElements out of the global JSX namespace and into
+// React.JSX; declaring it globally no longer registers the custom element.
+declare module "react" {
   namespace JSX {
     interface IntrinsicElements {
       "sendmsg-register": React.DetailedHTMLProps<

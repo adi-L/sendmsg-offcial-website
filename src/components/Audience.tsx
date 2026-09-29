@@ -33,7 +33,7 @@ const centeredIndex = (t: HTMLElement): number => {
 
 const Audience: React.FC = () => {
   const trackRef = useRef<HTMLDivElement>(null)
-  const snapTimer = useRef<number>()
+  const snapTimer = useRef<number | undefined>(undefined)
   const [scrollable, setScrollable] = useState(false)
   const [atStart, setAtStart] = useState(true)
   const [atEnd, setAtEnd] = useState(false)
