@@ -41,14 +41,14 @@ const ApiPage: React.FC = () => (
         </p>
       </div>
 
-      <div className="doc-conventions">
+      <dl className="doc-conventions">
         {conventions.map((c) => (
           <div key={c.title} className="doc-convention">
-            <h3>{c.title}</h3>
-            <p>{c.body}</p>
+            <dt>{c.title}</dt>
+            <dd>{c.body}</dd>
           </div>
         ))}
-      </div>
+      </dl>
 
       <div className="doc-status" id="status-codes">
         <h2 className="doc-h2">Status codes</h2>
