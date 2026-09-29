@@ -76,33 +76,20 @@
   white-space: nowrap;
 }
 
-/* the logo's stamp, reduced to a punched square: deep blue body with the
-   brand gradient in the corner, and the serrated edge running down one side */
-.doc-brand-mark {
-  position: relative;
-  width: 19px;
-  height: 19px;
-  border-radius: 3px;
-  background:
-    linear-gradient(135deg, transparent 58%, var(--doc-magenta) 58%, var(--doc-purple)),
-    var(--doc-blue);
-}
-
-.doc-brand-mark::before {
-  content: '';
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 3px;
-  background-image: radial-gradient(
-    circle at 0 2.5px,
-    var(--doc-paper) 1.6px,
-    rgba(255, 255, 255, 0) 2px
-  );
-  background-size: 3px 5px;
+/* the real logo: a serrated stamp, so it needs no frame or background
+   of its own -- just room to breathe and a divider before the API label */
+.doc-brand-logo {
+  height: 30px;
+  width: auto;
 }
 
 .doc-brand-api {
-  color: var(--doc-blue);
+  padding-inline-start: 10px;
+  border-inline-start: 1px solid var(--doc-rule);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--doc-muted);
+  letter-spacing: 0.02em;
 }
 
 .doc-searchbtn {
@@ -501,13 +488,85 @@
   max-width: 1180px;
 }
 
+/* Endpoints are closed until asked for, so the page opens as a list you can
+   read down rather than every endpoint at once. <details> keeps the content
+   in the document either way, which matters for agents and for find-in-page. */
 .doc-endpoint {
+  border-bottom: 1px solid var(--doc-rule-soft);
+  scroll-margin-top: calc(var(--doc-topbar-h) + 12px);
+}
+
+.doc-summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 10px 11px 2px;
+  cursor: pointer;
+  list-style: none;
+  border-radius: 7px;
+}
+
+.doc-summary::-webkit-details-marker {
+  display: none;
+}
+
+.doc-summary:hover {
+  background: var(--doc-paper-sunk);
+}
+
+.doc-summary-title {
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--doc-ink);
+}
+
+.doc-summary-path {
+  font-size: 12.5px;
+  color: var(--doc-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.doc-summary-caret {
+  margin-inline-start: auto;
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  border-right: 1.5px solid var(--doc-muted);
+  border-bottom: 1.5px solid var(--doc-muted);
+  transform: rotate(-45deg);
+  transition: transform 0.15s ease;
+}
+
+.doc-endpoint[open] > .doc-summary {
+  background: var(--doc-paper-sunk);
+}
+
+.doc-endpoint[open] > .doc-summary .doc-summary-caret {
+  transform: rotate(45deg);
+}
+
+.doc-endpoint[open] {
+  border-bottom-color: var(--doc-rule);
+}
+
+.doc-endpoint-body {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 470px);
   gap: 44px;
-  padding: 38px 0;
-  border-bottom: 1px solid var(--doc-rule);
-  scroll-margin-top: calc(var(--doc-topbar-h) + 16px);
+  padding: 22px 0 40px;
+}
+
+.doc-permalink {
+  margin-inline-start: 8px;
+  color: var(--doc-rule);
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.doc-permalink:hover {
+  color: var(--doc-blue);
 }
 
 .doc-endpoint-main {
@@ -516,26 +575,6 @@
 
 .doc-endpoint-aside {
   min-width: 0;
-  position: sticky;
-  top: calc(var(--doc-topbar-h) + 20px);
-}
-
-.doc-endpoint-title {
-  font-size: 19px;
-  font-weight: 600;
-  color: var(--doc-ink);
-}
-
-.doc-anchor {
-  color: inherit;
-  text-decoration: none;
-}
-
-.doc-anchor:hover::after {
-  content: '#';
-  margin-left: 7px;
-  color: var(--doc-rule);
-  font-weight: 400;
 }
 
 .doc-route {
@@ -1038,13 +1077,9 @@
 /* ── narrower screens ────────────────────────────────────────────── */
 
 @media (max-width: 1180px) {
-  .doc-endpoint {
+  .doc-endpoint-body {
     grid-template-columns: minmax(0, 1fr);
     gap: 24px;
-  }
-
-  .doc-endpoint-aside {
-    position: static;
   }
 }
 

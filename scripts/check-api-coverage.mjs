@@ -14,9 +14,15 @@ import path from "node:path"
 
 const BLUEPRINT_URL = "https://sendmsgapi.docs.apiary.io/api-description-document"
 const DATA_DIR = path.join(process.cwd(), "src/data/api/endpoints")
+// The blueprint is vendored because the whole point of this work is to stop
+// depending on Apiary. Fetching it at check time would leave our build gated
+// on a service we are retiring, and it has already answered 502 once.
+const VENDORED = path.join(process.cwd(), "scripts/reference/sendmsg-api-4.0.apib")
 
 async function loadBlueprint(arg) {
-  if (arg && fs.existsSync(arg)) return fs.readFileSync(arg, "utf8")
+  const local = arg ?? VENDORED
+  if (fs.existsSync(local)) return fs.readFileSync(local, "utf8")
+  // Only reached if the vendored copy is deleted.
   const res = await fetch(BLUEPRINT_URL)
   if (!res.ok) throw new Error(`Could not fetch blueprint: HTTP ${res.status}`)
   return res.text()
