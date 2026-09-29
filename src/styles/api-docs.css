@@ -1173,12 +1173,52 @@
 /* ── foot ────────────────────────────────────────────────────────── */
 
 .doc-foot {
-  margin-top: 56px;
-  padding-top: 20px;
+  margin-top: 60px;
+  padding-top: 24px;
   border-top: 1px solid var(--doc-rule);
   max-width: 68ch;
+}
+
+/* The support procedure is an actual sequence, so it is numbered. */
+.doc-steps {
+  counter-reset: doc-step;
+  margin-top: 14px;
+}
+
+.doc-steps li {
+  counter-increment: doc-step;
+  position: relative;
+  padding-left: 27px;
   font-size: 13.5px;
+  color: var(--doc-text);
+}
+
+.doc-steps li + li {
+  margin-top: 6px;
+}
+
+.doc-steps li::before {
+  content: counter(doc-step);
+  position: absolute;
+  left: 0;
+  top: 1px;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--doc-paper-sunk);
+  font-size: 11px;
+  font-weight: 600;
   color: var(--doc-muted);
+}
+
+.doc-foot-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-top: 18px;
+  font-size: 13.5px;
 }
 
 /* ── narrower screens ────────────────────────────────────────────── */

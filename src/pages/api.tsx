@@ -7,10 +7,10 @@ import {
   API_BASE,
   API_VERSION,
   SUPPORT_EMAIL,
-  SUPPORT_TEMPLATE_URL,
   conventions,
   endpointsByGroup,
   statusCodes,
+  support,
 } from "../data/api"
 import "../styles/api-docs.css"
 
@@ -112,13 +112,22 @@ const ApiPage: React.FC = () => (
       </section>
     ))}
 
-    <footer className="doc-foot">
-      <p>
-        Something wrong or missing? Support requests are accepted on the{" "}
-        <a href={SUPPORT_TEMPLATE_URL} target="_blank" rel="noreferrer noopener">
-          support template
+    <footer className="doc-foot" id="support">
+      <h2 className="doc-h2">Support</h2>
+      <p className="doc-section-lede">{support.requirement}</p>
+
+      {/* A real sequence, so it is numbered. */}
+      <ol className="doc-steps">
+        {support.steps.map((step) => (
+          <li key={step}>{step}</li>
+        ))}
+      </ol>
+
+      <p className="doc-foot-links">
+        <a href={support.templateUrl} target="_blank" rel="noreferrer noopener">
+          Template for a support request
         </a>
-        , sent to <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>.
+        <a href={`mailto:${support.email}`}>{support.email}</a>
       </p>
     </footer>
   </DocsLayout>

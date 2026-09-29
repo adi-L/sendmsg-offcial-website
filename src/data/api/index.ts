@@ -16,6 +16,25 @@ export const SUPPORT_EMAIL = "send.help@comstar.co.il"
 export const SUPPORT_TEMPLATE_URL =
   "https://gconvertrest.sendmsg.co.il/views/apisupport.html"
 
+/**
+ * How to reach support.
+ *
+ * The template is a requirement, not a suggestion: the blueprint states
+ * that requests are only accepted on it. Softening that into "you can use
+ * the template" would leave someone waiting on a reply that never comes.
+ */
+export const support = {
+  email: SUPPORT_EMAIL,
+  templateUrl: SUPPORT_TEMPLATE_URL,
+  requirement:
+    "Support requests are only accepted on the proper template.",
+  steps: [
+    "Copy the template into your mail client.",
+    "Fill it in with the details it asks for.",
+    `Send it to ${SUPPORT_EMAIL}.`,
+  ],
+}
+
 export const groups: Group[] = [
   {
     id: "getting-started",

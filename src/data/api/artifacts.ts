@@ -8,6 +8,7 @@ import {
   groups,
   schemaById,
   statusCodes,
+  support,
 } from "./index"
 import type { Endpoint, Variant } from "./types"
 import { buildSample, LANGUAGES, LANGUAGE_LABELS } from "./samples"
@@ -54,7 +55,16 @@ export function buildLlmsTxt(): string {
 
   out.push("## Notes", "")
   for (const c of conventions) out.push(`- ${c.title}: ${c.body}`)
-  out.push("", `Support: ${SUPPORT_EMAIL}`, "")
+  out.push(
+    "",
+    "## Support",
+    "",
+    support.requirement,
+    "",
+    `Template: ${support.templateUrl}`,
+    `Email: ${support.email}`,
+    ""
+  )
   return out.join("\n")
 }
 
@@ -168,6 +178,11 @@ export function buildLlmsFullTxt(): string {
       }
     }
   }
+
+  out.push("## Support", "", support.requirement, "")
+  support.steps.forEach((step, i) => out.push(`${i + 1}. ${step}`))
+  out.push("", `Template: ${support.templateUrl}`, `Email: ${support.email}`, "")
+
   return out.join("\n")
 }
 
