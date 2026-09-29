@@ -741,7 +741,7 @@
 .doc-panel-label {
   font-size: 11.5px;
   font-weight: 500;
-  color: #8ba6bf;
+  color: var(--rail-muted);
 }
 
 .doc-langs {
@@ -755,7 +755,7 @@
   border-radius: 5px;
   font: inherit;
   font-size: 12px;
-  color: #8ba6bf;
+  color: var(--rail-muted);
   background: transparent;
 }
 
@@ -775,7 +775,7 @@
   border-radius: 5px;
   font: inherit;
   font-size: 11.5px;
-  color: #8ba6bf;
+  color: var(--rail-muted);
   background: transparent;
 }
 
@@ -831,14 +831,14 @@
 }
 
 .doc-resp-note dd {
-  color: #8ba6bf;
+  color: var(--rail-muted);
 }
 
 .doc-panel-empty {
   padding: 12px 14px;
   border-top: 1px solid var(--doc-code-rule);
   font-size: 12.5px;
-  color: #8ba6bf;
+  color: var(--rail-muted);
 }
 
 /* ── try it ──────────────────────────────────────────────────────── */
@@ -863,7 +863,7 @@
 
 .doc-tryit-hint {
   font-size: 11px;
-  color: #7794ad;
+  color: var(--rail-muted);
 }
 
 .doc-tryit {
@@ -881,7 +881,7 @@
   margin-left: auto;
   font: inherit;
   font-size: 11.5px;
-  color: #8ba6bf;
+  color: var(--rail-muted);
   background: transparent;
 }
 
@@ -905,7 +905,7 @@
   display: block;
   margin-bottom: 4px;
   font-size: 11.5px;
-  color: #8ba6bf;
+  color: var(--rail-muted);
 }
 
 .doc-tryit-field textarea,
@@ -960,7 +960,7 @@
   margin-bottom: 6px;
   font-family: 'JetBrains Mono', monospace;
   font-size: 11.5px;
-  color: #8ba6bf;
+  color: var(--rail-muted);
 }
 
 .doc-status-dot {
@@ -1128,52 +1128,109 @@
 }
 
 /* ── the rail ────────────────────────────────────────────────────
-   Credentials stay in view and the code for the open endpoint sits
-   beside it, so the page reads as a console rather than a document.
-   Every endpoint's panel stays mounted and only the active one shows,
-   which keeps all the samples in the built HTML for agents.
+   Dark, so the working surface reads as a console sitting beside the
+   reference rather than more of the same page. Three depths: the rail
+   itself is the floor, the credentials and code panels are raised on
+   it, and response bodies are sunk back into them.
+
+   Credentials fold away because they are set once; the summary still
+   reports whether they are filled in, so the state is never hidden.
    ---------------------------------------------------------------- */
+
+.api-docs {
+  --rail-floor: #0a2036;
+  --rail-raised: #0e2942;
+  --rail-line: #21486b;
+  --rail-text: #dce8f2;
+  /* 7.7:1 on the floor colour, so muted text still clears AAA */
+  --rail-muted: #a3bccf;
+}
 
 .doc-rail {
   position: sticky;
   top: var(--doc-topbar-h);
   max-height: calc(100vh - var(--doc-topbar-h));
   overflow-y: auto;
-  padding: 18px 18px 60px;
-  border-left: 1px solid var(--doc-rule);
-  background: var(--doc-paper-sunk);
+  padding: 16px 16px 60px;
+  border-left: 1px solid var(--rail-floor);
+  background: var(--rail-floor);
+  color: var(--rail-text);
 }
+
+.doc-rail ::selection {
+  background: rgba(168, 16, 126, 0.4);
+  color: #fff;
+}
+
+.doc-rail :focus-visible {
+  outline: 2px solid #ff8ad1;
+  outline-offset: 2px;
+}
+
+/* ── credentials ─────────────────────────────────────────────────── */
 
 .doc-creds {
-  padding: 13px 14px 12px;
-  border: 1px solid var(--doc-rule);
+  margin-bottom: 14px;
+  border: 1px solid var(--rail-line);
   border-radius: 9px;
-  background: #fff;
-  margin-bottom: 16px;
+  background: var(--rail-raised);
 }
 
-.doc-creds-head {
+.doc-creds-summary {
   display: flex;
   align-items: center;
-  margin-bottom: 9px;
+  gap: 9px;
+  padding: 10px 12px;
+  cursor: pointer;
+  list-style: none;
+  border-radius: 8px;
+}
+
+.doc-creds-summary::-webkit-details-marker {
+  display: none;
+}
+
+.doc-creds-summary:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.doc-creds-caret {
+  flex: 0 0 auto;
+  width: 6px;
+  height: 6px;
+  border-right: 1.5px solid var(--rail-muted);
+  border-bottom: 1.5px solid var(--rail-muted);
+  transform: rotate(-45deg);
+  transition: transform 0.15s ease;
+}
+
+.doc-creds[open] .doc-creds-caret {
+  transform: rotate(45deg);
 }
 
 .doc-creds-title {
   font-size: 12.5px;
   font-weight: 600;
-  color: var(--doc-ink);
+  color: var(--rail-text);
 }
 
-.doc-creds-clear {
+.doc-creds-status {
   margin-inline-start: auto;
-  font: inherit;
-  font-size: 11.5px;
-  color: var(--doc-muted);
-  background: transparent;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--rail-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 48%;
 }
 
-.doc-creds-clear:hover {
-  color: var(--doc-magenta);
+.doc-creds-status.is-set {
+  color: #6fd39a;
+}
+
+.doc-creds-body {
+  padding: 2px 12px 12px;
 }
 
 .doc-creds-field {
@@ -1186,41 +1243,63 @@
 .doc-creds-field > span {
   flex: 0 0 46px;
   font-size: 11.5px;
-  color: var(--doc-muted);
+  color: var(--rail-muted);
 }
 
 .doc-creds-field input {
   flex: 1;
   min-width: 0;
   padding: 6px 9px;
-  border: 1px solid var(--doc-rule);
+  border: 1px solid var(--rail-line);
   border-radius: 6px;
-  background: var(--doc-paper);
+  background: rgba(0, 0, 0, 0.26);
   font-family: 'JetBrains Mono', monospace;
   font-size: 12px;
-  color: var(--doc-ink);
+  color: var(--rail-text);
 }
 
-.doc-creds-field input:focus {
-  outline: 2px solid var(--doc-blue);
-  outline-offset: 1px;
-  border-color: var(--doc-blue);
+.doc-creds-field input::placeholder {
+  color: #6d8aa3;
+}
+
+.doc-creds-foot {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  margin-top: 9px;
 }
 
 .doc-creds-note {
-  margin-top: 9px;
   font-size: 11.5px;
   line-height: 1.5;
-  color: var(--doc-muted);
+  color: var(--rail-muted);
 }
+
+.doc-creds-clear {
+  flex: 0 0 auto;
+  padding: 4px 9px;
+  border: 1px solid var(--rail-line);
+  border-radius: 6px;
+  font: inherit;
+  font-size: 11.5px;
+  color: var(--rail-muted);
+  background: transparent;
+}
+
+.doc-creds-clear:hover {
+  border-color: #ff8ad1;
+  color: #ff8ad1;
+}
+
+/* ── panels ──────────────────────────────────────────────────────── */
 
 .doc-rail-empty {
   padding: 14px;
-  border: 1px dashed var(--doc-rule);
+  border: 1px dashed var(--rail-line);
   border-radius: 9px;
   font-size: 12.5px;
   line-height: 1.55;
-  color: var(--doc-muted);
+  color: var(--rail-muted);
 }
 
 .doc-rail-panel[hidden] {
@@ -1231,7 +1310,13 @@
   margin-bottom: 8px;
   font-size: 12px;
   font-weight: 600;
-  color: var(--doc-ink);
+  color: var(--rail-text);
+}
+
+/* the panel is raised off the rail floor, so it needs no outline of its own */
+.doc-rail .doc-panel {
+  border-color: var(--rail-line);
+  background: var(--rail-raised);
 }
 
 @media (max-width: 1400px) {
@@ -1251,7 +1336,6 @@
     position: static;
     max-height: none;
     border-left: none;
-    border-top: 1px solid var(--doc-rule);
   }
 }
 
