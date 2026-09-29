@@ -83,15 +83,6 @@
   width: auto;
 }
 
-.doc-brand-api {
-  padding-inline-start: 10px;
-  border-inline-start: 1px solid var(--doc-rule);
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--doc-muted);
-  letter-spacing: 0.02em;
-}
-
 .doc-searchbtn {
   display: inline-flex;
   align-items: center;
