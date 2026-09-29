@@ -32,7 +32,8 @@
   --doc-code-rule: #21486b;
 
   --doc-topbar-h: 60px;
-  --doc-sidebar-w: 258px;
+  --doc-sidebar-w: 250px;
+  --doc-rail-w: 440px;
 
   direction: ltr;
   text-align: left;
@@ -113,57 +114,6 @@
   color: var(--doc-muted);
 }
 
-.doc-tokenbar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-inline-start: auto;
-}
-
-.doc-tokenbar-field {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 12px;
-  color: var(--doc-muted);
-}
-
-.doc-tokenbar-field input {
-  width: 92px;
-  padding: 5px 8px;
-  border: 1px solid var(--doc-rule);
-  border-radius: 6px;
-  background: #fff;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-  color: var(--doc-ink);
-}
-
-.doc-tokenbar-token input {
-  width: 168px;
-}
-
-.doc-tokenbar-field input:focus {
-  outline: 2px solid var(--doc-blue);
-  outline-offset: 1px;
-  border-color: var(--doc-blue);
-}
-
-.doc-tokenbar-clear {
-  padding: 5px 9px;
-  border: 1px solid var(--doc-rule);
-  border-radius: 6px;
-  background: #fff;
-  font: inherit;
-  font-size: 12px;
-  color: var(--doc-muted);
-}
-
-.doc-tokenbar-clear:hover {
-  border-color: var(--doc-magenta);
-  color: var(--doc-magenta);
-}
-
 .doc-navtoggle {
   display: none;
   padding: 6px 11px;
@@ -179,7 +129,7 @@
 
 .doc-body {
   display: grid;
-  grid-template-columns: var(--doc-sidebar-w) minmax(0, 1fr);
+  grid-template-columns: var(--doc-sidebar-w) minmax(0, 1fr) var(--doc-rail-w);
   align-items: start;
 }
 
@@ -192,35 +142,88 @@
   border-right: 1px solid var(--doc-rule);
 }
 
+.doc-sidebar-group {
+  scroll-margin-top: calc(var(--doc-topbar-h) + 12px);
+}
+
 .doc-sidebar-group + .doc-sidebar-group {
-  margin-top: 22px;
+  margin-top: 2px;
 }
 
 .doc-sidebar-heading {
-  display: block;
-  margin-bottom: 6px;
-  font-size: 12.5px;
-  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 8px;
+  border-radius: 6px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: left;
   color: var(--doc-ink);
-  letter-spacing: 0.01em;
+  background: transparent;
+}
+
+.doc-sidebar-heading:hover {
+  background: var(--doc-paper-sunk);
+}
+
+.doc-sidebar-caret {
+  flex: 0 0 auto;
+  width: 6px;
+  height: 6px;
+  border-right: 1.5px solid var(--doc-muted);
+  border-bottom: 1.5px solid var(--doc-muted);
+  transform: rotate(-45deg);
+  transition: transform 0.15s ease;
+}
+
+.doc-sidebar-heading.is-open .doc-sidebar-caret {
+  transform: rotate(45deg);
+}
+
+.doc-sidebar-count {
+  margin-inline-start: auto;
+  font-size: 11px;
+  color: var(--doc-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.doc-sidebar-list {
+  padding: 2px 0 6px 15px;
+  border-left: 1px solid var(--doc-rule-soft);
+  margin-left: 11px;
 }
 
 .doc-sidebar-link {
-  display: block;
-  padding: 3px 10px;
-  border-left: 2px solid transparent;
-  margin-left: -2px;
-  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border-radius: 5px;
+  font-size: 12.5px;
   color: var(--doc-muted);
-  line-height: 1.5;
+  line-height: 1.45;
 }
 
+.doc-dot {
+  flex: 0 0 auto;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+}
+
+.doc-dot-get { background: var(--doc-blue); }
+.doc-dot-post { background: var(--doc-magenta); }
+
 .doc-sidebar-link:hover {
+  background: var(--doc-paper-sunk);
   color: var(--doc-ink);
 }
 
 .doc-sidebar-link.is-active {
-  border-left-color: var(--doc-magenta);
+  background: rgba(13, 89, 140, 0.08);
   color: var(--doc-blue);
   font-weight: 500;
 }
@@ -543,10 +546,11 @@
 }
 
 .doc-endpoint-body {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 470px);
-  gap: 44px;
-  padding: 22px 0 40px;
+  padding: 18px 2px 34px;
+}
+
+.doc-endpoint.is-active > .doc-summary {
+  box-shadow: inset 2px 0 0 var(--doc-magenta);
 }
 
 .doc-permalink {
@@ -1075,10 +1079,6 @@
 }
 
 @media (max-width: 900px) {
-  .doc-tokenbar {
-    display: none;
-  }
-
   .doc-navtoggle {
     display: inline-block;
     margin-inline-start: auto;
@@ -1124,5 +1124,139 @@
   .api-docs *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── the rail ────────────────────────────────────────────────────
+   Credentials stay in view and the code for the open endpoint sits
+   beside it, so the page reads as a console rather than a document.
+   Every endpoint's panel stays mounted and only the active one shows,
+   which keeps all the samples in the built HTML for agents.
+   ---------------------------------------------------------------- */
+
+.doc-rail {
+  position: sticky;
+  top: var(--doc-topbar-h);
+  max-height: calc(100vh - var(--doc-topbar-h));
+  overflow-y: auto;
+  padding: 18px 18px 60px;
+  border-left: 1px solid var(--doc-rule);
+  background: var(--doc-paper-sunk);
+}
+
+.doc-creds {
+  padding: 13px 14px 12px;
+  border: 1px solid var(--doc-rule);
+  border-radius: 9px;
+  background: #fff;
+  margin-bottom: 16px;
+}
+
+.doc-creds-head {
+  display: flex;
+  align-items: center;
+  margin-bottom: 9px;
+}
+
+.doc-creds-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--doc-ink);
+}
+
+.doc-creds-clear {
+  margin-inline-start: auto;
+  font: inherit;
+  font-size: 11.5px;
+  color: var(--doc-muted);
+  background: transparent;
+}
+
+.doc-creds-clear:hover {
+  color: var(--doc-magenta);
+}
+
+.doc-creds-field {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 7px;
+}
+
+.doc-creds-field > span {
+  flex: 0 0 46px;
+  font-size: 11.5px;
+  color: var(--doc-muted);
+}
+
+.doc-creds-field input {
+  flex: 1;
+  min-width: 0;
+  padding: 6px 9px;
+  border: 1px solid var(--doc-rule);
+  border-radius: 6px;
+  background: var(--doc-paper);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--doc-ink);
+}
+
+.doc-creds-field input:focus {
+  outline: 2px solid var(--doc-blue);
+  outline-offset: 1px;
+  border-color: var(--doc-blue);
+}
+
+.doc-creds-note {
+  margin-top: 9px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--doc-muted);
+}
+
+.doc-rail-empty {
+  padding: 14px;
+  border: 1px dashed var(--doc-rule);
+  border-radius: 9px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--doc-muted);
+}
+
+.doc-rail-panel[hidden] {
+  display: none;
+}
+
+.doc-rail-for {
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--doc-ink);
+}
+
+@media (max-width: 1400px) {
+  .api-docs {
+    --doc-rail-w: 380px;
+  }
+}
+
+@media (max-width: 1180px) {
+  .doc-body {
+    grid-template-columns: var(--doc-sidebar-w) minmax(0, 1fr);
+  }
+
+  /* The rail drops under the reference rather than squeezing it. */
+  .doc-rail {
+    grid-column: 1 / -1;
+    position: static;
+    max-height: none;
+    border-left: none;
+    border-top: 1px solid var(--doc-rule);
+  }
+}
+
+@media (max-width: 900px) {
+  .doc-body {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
