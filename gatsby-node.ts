@@ -1,5 +1,11 @@
+import fs from "fs"
 import path from "path"
 import { GatsbyNode } from "gatsby"
+import {
+  buildLlmsTxt,
+  buildLlmsFullTxt,
+  buildOpenApi,
+} from "./src/data/api/artifacts"
 
 export const createPages: GatsbyNode["createPages"] = async ({
   graphql,
@@ -46,4 +52,28 @@ export const createPages: GatsbyNode["createPages"] = async ({
       },
     })
   })
+}
+
+/**
+ * Writes the machine-readable faces of the API reference.
+ *
+ * Apiary renders as a JavaScript application, so fetching its URL returns a
+ * page title and nothing else -- the reference cannot be read by anything
+ * that does not run a browser. These files are generated from the same data
+ * the page renders, so an agent and a person are always reading the same API.
+ */
+export const onPostBuild: GatsbyNode["onPostBuild"] = async ({ reporter }) => {
+  const outDir = path.join(__dirname, "public", "api")
+  fs.mkdirSync(outDir, { recursive: true })
+
+  const artifacts: Array<[string, string]> = [
+    ["llms.txt", buildLlmsTxt()],
+    ["llms-full.txt", buildLlmsFullTxt()],
+    ["openapi.json", JSON.stringify(buildOpenApi(), null, 2)],
+  ]
+
+  for (const [name, contents] of artifacts) {
+    fs.writeFileSync(path.join(outDir, name), contents, "utf8")
+    reporter.info(`API reference: wrote /api/${name} (${contents.length} bytes)`)
+  }
 }

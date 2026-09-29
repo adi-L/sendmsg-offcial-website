@@ -1,0 +1,1524 @@
+/* ── SendMsg API reference ─────────────────────────────────────────
+   An LTR English island inside an RTL Hebrew site, so everything here
+   is scoped under .api-docs and the shell carries dir="ltr".
+
+   The page's job is retrieval, not persuasion: no hero, no marketing.
+   Its one signature device is the postal motif the rest of the site
+   already uses -- the stamp's serrated edge becomes the method badge,
+   and a perforated tear line separates the request you send from the
+   response that comes back.
+
+   The code panel is the brand's deep ink navy rather than black, so
+   the darkest surface on the page still belongs to the palette.
+   ------------------------------------------------------------------ */
+
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+.api-docs {
+  --doc-ink: #0e2942;
+  --doc-ink-soft: #1b3b59;
+  --doc-paper: #fbfcfd;
+  --doc-paper-sunk: #f4f7fb;
+  --doc-rule: #d8e2ec;
+  --doc-rule-soft: #e8eef4;
+  --doc-blue: #0d598c;
+  --doc-magenta: #a8107e;
+  --doc-purple: #6328a7;
+  /* reading variants: the brand hues darkened until white clears AAA on them */
+  --doc-magenta-deep: #9d0f75;
+  --doc-blue-read: #0b4f7d;
+  --doc-text: #21323f;
+  --doc-muted: #485663;
+  --doc-code-bg: #0e2942;
+  --doc-code-text: #dce8f2;
+  --doc-code-key: #8fc7f0;
+  --doc-code-rule: #21486b;
+
+  --doc-topbar-h: 60px;
+  --doc-sidebar-w: 250px;
+  --doc-rail-w: 440px;
+
+  direction: ltr;
+  text-align: left;
+  font-family: 'Rubik', 'Assistant', system-ui, sans-serif;
+  color: var(--doc-text);
+  background: var(--doc-paper);
+  min-height: 100vh;
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+/* The surfaces we did not draw still belong to the design: selection,
+   the caret, the scrollbars on both rails, and the figures in tables. */
+.api-docs ::selection {
+  background: rgba(168, 16, 126, 0.18);
+  color: var(--doc-ink);
+}
+
+.api-docs input,
+.api-docs textarea {
+  caret-color: var(--doc-magenta);
+}
+
+.doc-sidebar,
+.doc-rail,
+.doc-code,
+.doc-search-results {
+  scrollbar-width: thin;
+}
+
+.doc-sidebar,
+.doc-search-results {
+  scrollbar-color: var(--doc-rule) transparent;
+}
+
+.doc-rail,
+.doc-code {
+  scrollbar-color: #2b5578 transparent;
+}
+
+.doc-sidebar::-webkit-scrollbar,
+.doc-rail::-webkit-scrollbar,
+.doc-code::-webkit-scrollbar,
+.doc-search-results::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+
+.doc-sidebar::-webkit-scrollbar-track,
+.doc-rail::-webkit-scrollbar-track,
+.doc-code::-webkit-scrollbar-track,
+.doc-search-results::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.doc-sidebar::-webkit-scrollbar-thumb,
+.doc-search-results::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  background-clip: content-box;
+  border-radius: 6px;
+  background-color: var(--doc-rule);
+}
+
+.doc-rail::-webkit-scrollbar-thumb,
+.doc-code::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  background-clip: content-box;
+  border-radius: 6px;
+  background-color: #2b5578;
+}
+
+.doc-table,
+.doc-creds-status,
+.doc-tryit-status,
+.doc-sidebar-count {
+  font-variant-numeric: tabular-nums;
+}
+
+.api-docs code,
+.api-docs pre,
+.api-docs kbd {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-feature-settings: 'liga' 0;
+}
+
+/* ── top bar ─────────────────────────────────────────────────────── */
+
+.doc-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  height: var(--doc-topbar-h);
+  padding: 0 16px;
+  background: rgba(251, 252, 253, 0.92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--doc-rule);
+}
+
+.doc-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+
+
+/* the real logo: a serrated stamp, so it needs no frame or background
+   of its own -- just room to breathe and a divider before the API label */
+.doc-brand-logo {
+  height: 30px;
+  width: auto;
+}
+
+.doc-searchbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 270px;
+  padding: 7px 12px;
+  border: 1px solid var(--doc-rule);
+  border-radius: 7px;
+  background: var(--doc-paper-sunk);
+  color: var(--doc-muted);
+  font: inherit;
+  font-size: 13.5px;
+  text-align: left;
+}
+
+.doc-searchbtn:hover {
+  border-color: var(--doc-blue);
+  color: var(--doc-ink);
+}
+
+.doc-searchbtn kbd {
+  margin-inline-start: auto;
+  padding: 1px 6px;
+  border: 1px solid var(--doc-rule);
+  border-radius: 4px;
+  background: #fff;
+  font-size: 11px;
+  color: var(--doc-muted);
+}
+
+.doc-navtoggle {
+  display: none;
+  padding: 6px 11px;
+  border: 1px solid var(--doc-rule);
+  border-radius: 6px;
+  background: #fff;
+  font: inherit;
+  font-size: 13px;
+  color: var(--doc-ink);
+}
+
+/* ── frame ───────────────────────────────────────────────────────── */
+
+.doc-body {
+  display: grid;
+  grid-template-columns: var(--doc-sidebar-w) minmax(0, 1fr) var(--doc-rail-w);
+  align-items: start;
+  min-height: calc(100vh - var(--doc-topbar-h));
+}
+
+.doc-sidebar {
+  position: sticky;
+  top: var(--doc-topbar-h);
+  height: calc(100vh - var(--doc-topbar-h));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 18px 14px 40px 16px;
+  border-right: 1px solid var(--doc-rule);
+}
+
+.doc-sidebar-group {
+  scroll-margin-top: calc(var(--doc-topbar-h) + 12px);
+}
+
+.doc-sidebar-group + .doc-sidebar-group {
+  margin-top: 2px;
+}
+
+.doc-sidebar-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 8px;
+  border-radius: 6px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: left;
+  color: var(--doc-ink);
+  background: transparent;
+}
+
+.doc-sidebar-heading:hover {
+  background: var(--doc-paper-sunk);
+}
+
+.doc-sidebar-caret {
+  flex: 0 0 auto;
+  width: 6px;
+  height: 6px;
+  border-right: 1.5px solid var(--doc-muted);
+  border-bottom: 1.5px solid var(--doc-muted);
+  transform: rotate(-45deg);
+  transition: transform 0.15s ease;
+}
+
+.doc-sidebar-heading.is-open .doc-sidebar-caret {
+  transform: rotate(45deg);
+}
+
+.doc-sidebar-count {
+  margin-inline-start: auto;
+  font-size: 11px;
+  color: var(--doc-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.doc-sidebar-list {
+  padding: 2px 0 6px 15px;
+  border-left: 1px solid var(--doc-rule-soft);
+  margin-left: 11px;
+}
+
+.doc-sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border-radius: 5px;
+  font-size: 12.5px;
+  color: var(--doc-muted);
+  line-height: 1.45;
+}
+
+.doc-dot {
+  flex: 0 0 auto;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+}
+
+.doc-dot-get { background: var(--doc-blue); }
+.doc-dot-post { background: var(--doc-magenta); }
+
+.doc-sidebar-link:hover {
+  background: var(--doc-paper-sunk);
+  color: var(--doc-ink);
+}
+
+.doc-sidebar-link.is-active {
+  background: rgba(13, 89, 140, 0.09);
+  color: var(--doc-blue-read);
+  font-weight: 500;
+}
+
+.doc-main {
+  min-width: 0;
+  padding: 34px 32px 120px;
+}
+
+/* ── type ────────────────────────────────────────────────────────── */
+
+.doc-h1 {
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--doc-ink);
+  letter-spacing: -0.02em;
+}
+
+.doc-h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--doc-ink);
+  letter-spacing: -0.01em;
+}
+
+.doc-lede {
+  max-width: 62ch;
+  margin-top: 10px;
+  font-size: 17px;
+  color: var(--doc-muted);
+}
+
+.doc-section-lede {
+  max-width: 68ch;
+  margin-top: 5px;
+  color: var(--doc-muted);
+}
+
+.doc-main a,
+.doc-foot a {
+  color: var(--doc-blue-read);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+  text-decoration-color: rgba(13, 89, 140, 0.35);
+}
+
+.doc-main a:hover,
+.doc-foot a:hover {
+  text-decoration-color: currentColor;
+}
+
+/* Navigation, anchors and the permalink are controls, not prose. */
+.doc-sidebar a,
+.doc-brand,
+.doc-summary a,
+.doc-permalink {
+  text-decoration: none;
+}
+
+.api-docs :focus-visible {
+  outline: 2px solid var(--doc-magenta);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+/* ── intro ───────────────────────────────────────────────────────── */
+
+.doc-intro {
+  max-width: 1180px;
+}
+
+.doc-base {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 22px 0 26px;
+  padding: 11px 14px;
+  border: 1px solid var(--doc-rule);
+  border-radius: 8px;
+  background: #fff;
+  width: fit-content;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.doc-base-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--doc-muted);
+  white-space: nowrap;
+}
+
+.doc-base code {
+  font-size: 13.5px;
+  color: var(--doc-ink);
+  white-space: nowrap;
+}
+
+.doc-quickstart {
+  max-width: 68ch;
+}
+
+.doc-quickstart p + p {
+  margin-top: 10px;
+}
+
+.api-docs :is(.doc-quickstart, .doc-section-lede, td) code {
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--doc-paper-sunk);
+  font-size: 0.88em;
+  color: var(--doc-ink);
+}
+
+/* Four rules that apply to every request. They are a list, so they are set
+   as one -- term and gloss on a line -- rather than chopped into four
+   identical cards pretending to be structure. */
+.doc-conventions {
+  margin: 26px 0;
+  max-width: 760px;
+  border-top: 1px solid var(--doc-rule);
+}
+
+.doc-convention {
+  display: grid;
+  grid-template-columns: 210px minmax(0, 1fr);
+  gap: 18px;
+  padding: 11px 2px;
+  border-bottom: 1px solid var(--doc-rule-soft);
+}
+
+.doc-convention dt {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--doc-ink);
+}
+
+.doc-convention dd {
+  font-size: 13.5px;
+  color: var(--doc-muted);
+}
+
+@media (max-width: 700px) {
+  .doc-convention {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+  }
+}
+
+.doc-sub {
+  margin-top: 44px;
+  scroll-margin-top: calc(var(--doc-topbar-h) + 12px);
+}
+
+/* Intro links point at prose, not endpoints, so they carry no method dot
+   and need the indent the dot would otherwise provide. */
+.doc-sidebar-list a:not(:has(.doc-dot)) {
+  padding-left: 21px;
+}
+
+.doc-machine-links {
+  margin-top: 14px;
+  border-top: 1px solid var(--doc-rule);
+  max-width: 640px;
+}
+
+.doc-machine-links li {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--doc-rule-soft);
+}
+
+.doc-machine-links a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  min-width: 132px;
+}
+
+.doc-machine-links span {
+  font-size: 13px;
+  color: var(--doc-muted);
+}
+
+/* ── tables ──────────────────────────────────────────────────────── */
+
+.doc-table {
+  width: 100%;
+  margin-top: 12px;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+.doc-table th,
+.doc-table td {
+  padding: 9px 12px 9px 0;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--doc-rule-soft);
+}
+
+.doc-table thead th {
+  border-bottom: 1px solid var(--doc-rule);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--doc-muted);
+}
+
+.doc-table tbody th {
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.doc-table tbody th code {
+  font-size: 12.5px;
+  color: var(--doc-ink);
+  font-weight: 500;
+}
+
+.doc-type {
+  color: var(--doc-muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.doc-req {
+  display: inline-block;
+  margin-left: 7px;
+  font-family: 'Rubik', sans-serif;
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--doc-magenta);
+}
+
+.doc-default,
+.doc-note {
+  display: block;
+  margin-top: 3px;
+  font-size: 12.5px;
+  color: var(--doc-muted);
+}
+
+.doc-note {
+  color: var(--doc-blue);
+}
+
+.doc-code-chip {
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 12.5px;
+  background: var(--doc-paper-sunk);
+  color: var(--doc-ink);
+  white-space: nowrap;
+}
+
+.doc-code-chip.is-success { background: #e3f1e8; color: #1c5c33; }
+.doc-code-chip.is-partial { background: #fdf0dc; color: #7a4c05; }
+.doc-code-chip.is-client  { background: #fae7f2; color: #8a0d67; }
+.doc-code-chip.is-server  { background: #fae4e4; color: #8d1d1d; }
+
+.doc-table-status {
+  max-width: 560px;
+}
+
+/* ── endpoint ────────────────────────────────────────────────────── */
+
+.doc-group {
+  margin-top: 64px;
+}
+
+.doc-group-head {
+  padding-bottom: 14px;
+  border-bottom: 2px solid var(--doc-ink);
+  max-width: 1180px;
+}
+
+/* Endpoints are closed until asked for, so the page opens as a list you can
+   read down rather than every endpoint at once. <details> keeps the content
+   in the document either way, which matters for agents and for find-in-page. */
+.doc-endpoint {
+  border-bottom: 1px solid var(--doc-rule-soft);
+  scroll-margin-top: calc(var(--doc-topbar-h) + 12px);
+}
+
+.doc-summary {
+  --doc-summary-ground: var(--doc-paper);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 12px;
+  cursor: pointer;
+  list-style: none;
+  border-radius: 8px;
+}
+
+.doc-summary::-webkit-details-marker {
+  display: none;
+}
+
+.doc-summary:hover {
+  --doc-summary-ground: var(--doc-paper-sunk);
+  background: var(--doc-paper-sunk);
+}
+
+.doc-summary-title {
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--doc-ink);
+}
+
+.doc-summary-path {
+  font-size: 12.5px;
+  color: var(--doc-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.doc-summary-caret {
+  margin-inline-start: auto;
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  border-right: 1.5px solid var(--doc-muted);
+  border-bottom: 1.5px solid var(--doc-muted);
+  transform: rotate(-45deg);
+  transition: transform 0.15s ease;
+}
+
+.doc-endpoint[open] > .doc-summary {
+  --doc-summary-ground: var(--doc-paper-sunk);
+  background: var(--doc-paper-sunk);
+}
+
+.doc-endpoint[open] > .doc-summary .doc-summary-caret {
+  transform: rotate(45deg);
+}
+
+.doc-endpoint[open] {
+  border-bottom-color: var(--doc-rule);
+}
+
+.doc-endpoint-body {
+  padding: 18px 2px 34px;
+}
+
+/* Selection is carried by the row: its ground lifts to paper white against
+   the sunk page, the title takes the brand blue, and the badge saturates
+   from tint to solid. Nothing is bolted to the edge. */
+.doc-endpoint.is-active > .doc-summary .doc-summary-title {
+  color: var(--doc-blue-read);
+  font-weight: 600;
+}
+
+.doc-permalink {
+  margin-inline-start: 8px;
+  color: var(--doc-rule);
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.doc-permalink:hover {
+  color: var(--doc-blue);
+}
+
+.doc-endpoint-main {
+  min-width: 0;
+}
+
+.doc-endpoint-aside {
+  min-width: 0;
+}
+
+.doc-route {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 9px;
+  flex-wrap: wrap;
+}
+
+/* the method badge wears the stamp's serrated left edge */
+.doc-method {
+  position: relative;
+  padding: 3px 10px 3px 13px;
+  border-radius: 0 4px 4px 0;
+  font-family: 'Rubik', sans-serif;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: #fff;
+}
+
+.doc-method::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background-image: radial-gradient(
+    circle at 0 3px,
+    var(--doc-summary-ground, var(--doc-paper)) 2px,
+    rgba(255, 255, 255, 0) 2.4px
+  );
+  background-size: 4px 6px;
+}
+
+.doc-method-post {
+  background: #fbe8f4;
+  color: #8a0d67;
+}
+
+.doc-method-get {
+  background: #e2eef6;
+  color: #0a4770;
+}
+
+.doc-endpoint[open] > .doc-summary .doc-method-post {
+  background: var(--doc-magenta-deep);
+  color: #fff;
+}
+
+.doc-endpoint[open] > .doc-summary .doc-method-get {
+  background: var(--doc-blue);
+  color: #fff;
+}
+
+.doc-path {
+  font-size: 13px;
+  color: var(--doc-ink);
+  word-break: break-all;
+}
+
+.doc-path-base {
+  color: var(--doc-muted);
+}
+
+.doc-endpoint-desc {
+  max-width: 62ch;
+  margin-top: 12px;
+}
+
+.doc-variants {
+  display: inline-flex;
+  margin-top: 16px;
+  border: 1px solid var(--doc-rule);
+  border-radius: 7px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.doc-variant {
+  padding: 6px 14px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--doc-muted);
+  background: transparent;
+}
+
+.doc-variant + .doc-variant {
+  border-left: 1px solid var(--doc-rule);
+}
+
+.doc-variant.is-active {
+  background: var(--doc-ink);
+  color: #fff;
+}
+
+.doc-fields {
+  margin-top: 26px;
+}
+
+.doc-fields-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--doc-ink);
+}
+
+.doc-fields-desc {
+  max-width: 62ch;
+  margin-top: 3px;
+  font-size: 13px;
+  color: var(--doc-muted);
+}
+
+.doc-notes {
+  margin-top: 20px;
+  max-width: 64ch;
+}
+
+.doc-notes li {
+  position: relative;
+  padding-left: 16px;
+  font-size: 13.5px;
+  color: var(--doc-muted);
+}
+
+.doc-notes li + li {
+  margin-top: 5px;
+}
+
+.doc-notes li::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 9px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--doc-rule);
+}
+
+/* where the original documentation is silent or disagrees with itself */
+.doc-gap {
+  margin-top: 22px;
+  padding: 12px 15px;
+  border: 1px solid #e2d6ef;
+  border-radius: 7px;
+  background: #f9f6fc;
+  max-width: 64ch;
+}
+
+.doc-gap-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--doc-purple);
+}
+
+.doc-gap li {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--doc-text);
+}
+
+/* ── code panel ──────────────────────────────────────────────────── */
+
+.doc-panel {
+  border: 1px solid var(--doc-code-rule);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--doc-code-bg);
+}
+
+.doc-panel-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--doc-code-rule);
+}
+
+.doc-panel-head-sub {
+  border-top: 1px solid var(--doc-code-rule);
+}
+
+.doc-panel-label {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--rail-muted);
+}
+
+.doc-langs {
+  display: flex;
+  gap: 2px;
+  flex-wrap: wrap;
+}
+
+.doc-lang {
+  padding: 3px 9px;
+  border-radius: 5px;
+  font: inherit;
+  font-size: 12px;
+  color: var(--rail-muted);
+  background: transparent;
+}
+
+.doc-lang:hover {
+  color: #dce8f2;
+}
+
+.doc-lang.is-active {
+  background: var(--doc-ink-soft);
+  color: #fff;
+}
+
+.doc-copy {
+  margin-left: auto;
+  padding: 3px 9px;
+  border: 1px solid var(--doc-code-rule);
+  border-radius: 5px;
+  font: inherit;
+  font-size: 11.5px;
+  color: var(--rail-muted);
+  background: transparent;
+}
+
+.doc-copy:hover {
+  color: #fff;
+  border-color: #3d6488;
+}
+
+.doc-code {
+  margin: 0;
+  padding: 13px 14px;
+  overflow-x: auto;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--doc-code-text);
+  tab-size: 2;
+}
+
+.doc-code-response {
+  background: rgba(0, 0, 0, 0.16);
+}
+
+/* the tear line: request is the stub you keep, response is what returns */
+.doc-perf {
+  height: 7px;
+  background-image: radial-gradient(
+    circle closest-side,
+    var(--doc-code-rule) 92%,
+    rgba(33, 72, 107, 0)
+  );
+  background-size: 9px 7px;
+  background-repeat: repeat-x;
+  background-position: center;
+}
+
+.doc-resp-notes {
+  padding: 10px 14px 13px;
+  border-top: 1px solid var(--doc-code-rule);
+  font-size: 11.5px;
+}
+
+.doc-resp-note {
+  display: flex;
+  gap: 8px;
+  padding: 2px 0;
+}
+
+.doc-resp-note dt {
+  flex: 0 0 auto;
+  min-width: 150px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--doc-code-key);
+}
+
+.doc-resp-note dd {
+  color: var(--rail-muted);
+}
+
+.doc-panel-empty {
+  padding: 12px 14px;
+  border-top: 1px solid var(--doc-code-rule);
+  font-size: 12.5px;
+  color: var(--rail-muted);
+}
+
+/* ── try it ──────────────────────────────────────────────────────── */
+
+.doc-tryit-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-top: 1px solid var(--doc-code-rule);
+}
+
+.doc-tryit-open {
+  padding: 4px 12px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, var(--doc-magenta), var(--doc-purple));
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.doc-tryit-hint {
+  font-size: 11px;
+  color: var(--rail-muted);
+}
+
+.doc-tryit {
+  padding: 12px 14px;
+  border-top: 1px solid var(--doc-code-rule);
+}
+
+.doc-tryit-head {
+  display: flex;
+  align-items: center;
+  margin-bottom: 9px;
+}
+
+.doc-tryit-close {
+  margin-left: auto;
+  font: inherit;
+  font-size: 11.5px;
+  color: var(--rail-muted);
+  background: transparent;
+}
+
+.doc-tryit-close:hover { color: #fff; }
+
+.doc-tryit-warn {
+  margin-bottom: 9px;
+  padding: 7px 10px;
+  border-radius: 6px;
+  background: rgba(168, 16, 126, 0.16);
+  font-size: 12px;
+  color: #f2c8e4;
+}
+
+.doc-tryit-field {
+  display: block;
+  margin-bottom: 9px;
+}
+
+.doc-tryit-field > span {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 11.5px;
+  color: var(--rail-muted);
+}
+
+.doc-tryit-field textarea,
+.doc-tryit-field input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--doc-code-rule);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.22);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--doc-code-text);
+  resize: vertical;
+}
+
+.doc-tryit-confirm > span {
+  color: #f2c8e4;
+}
+
+.doc-tryit-run {
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px;
+  background: var(--doc-blue);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.doc-tryit-run:disabled {
+  background: var(--doc-ink-soft);
+  color: #6d8aa3;
+  cursor: not-allowed;
+}
+
+.doc-tryit-error {
+  margin-top: 9px;
+  font-size: 12px;
+  color: #f0a9a9;
+}
+
+.doc-tryit-result {
+  margin-top: 11px;
+}
+
+.doc-tryit-status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  color: var(--rail-muted);
+}
+
+.doc-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.doc-status-dot.is-ok  { background: #4ec27e; }
+.doc-status-dot.is-bad { background: #e5736f; }
+
+.doc-tryit-result .doc-code {
+  border: 1px solid var(--doc-code-rule);
+  border-radius: 6px;
+  max-height: 320px;
+  overflow: auto;
+}
+
+/* ── search ──────────────────────────────────────────────────────── */
+
+.doc-search-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  justify-content: center;
+  padding: 12vh 20px 20px;
+  background: rgba(14, 41, 66, 0.4);
+  backdrop-filter: blur(3px);
+}
+
+.doc-search {
+  width: min(560px, 100%);
+  height: fit-content;
+  max-height: 68vh;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--doc-rule);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 22px 60px rgba(14, 41, 66, 0.26);
+  overflow: hidden;
+}
+
+.doc-search-input {
+  padding: 15px 17px;
+  border: none;
+  border-bottom: 1px solid var(--doc-rule);
+  font-family: 'Rubik', sans-serif;
+  font-size: 15px;
+  color: var(--doc-ink);
+}
+
+.doc-search-input:focus {
+  outline: none;
+}
+
+.doc-search-results {
+  overflow-y: auto;
+  padding: 5px;
+}
+
+.doc-search-hit {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 7px;
+  font: inherit;
+  text-align: left;
+  background: transparent;
+}
+
+.doc-search-hit.is-active {
+  background: var(--doc-paper-sunk);
+}
+
+.doc-search-hit-title {
+  font-size: 13.5px;
+  color: var(--doc-ink);
+}
+
+.doc-search-hit-sub {
+  margin-left: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  color: var(--doc-muted);
+  white-space: nowrap;
+}
+
+.doc-search-empty {
+  padding: 16px 17px;
+  font-size: 13.5px;
+  color: var(--doc-muted);
+}
+
+/* ── foot ────────────────────────────────────────────────────────── */
+
+.doc-foot {
+  margin-top: 60px;
+  padding-top: 24px;
+  border-top: 1px solid var(--doc-rule);
+  max-width: 68ch;
+}
+
+/* The support procedure is an actual sequence, so it is numbered. */
+.doc-steps {
+  counter-reset: doc-step;
+  margin-top: 14px;
+}
+
+.doc-steps li {
+  counter-increment: doc-step;
+  position: relative;
+  padding-left: 27px;
+  font-size: 13.5px;
+  color: var(--doc-text);
+}
+
+.doc-steps li + li {
+  margin-top: 6px;
+}
+
+.doc-steps li::before {
+  content: counter(doc-step);
+  position: absolute;
+  left: 0;
+  top: 1px;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--doc-paper-sunk);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--doc-muted);
+}
+
+.doc-foot-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-top: 18px;
+  font-size: 13.5px;
+}
+
+/* ── narrower screens ────────────────────────────────────────────── */
+
+@media (max-width: 1180px) {
+  .doc-endpoint-body {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+  }
+}
+
+@media (max-width: 900px) {
+  .doc-navtoggle {
+    display: inline-block;
+    margin-inline-start: auto;
+  }
+
+  .doc-searchbtn {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .doc-searchbtn kbd {
+    display: none;
+  }
+
+  .doc-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .doc-sidebar {
+    display: none;
+    position: static;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--doc-rule);
+  }
+
+  .doc-body.nav-open .doc-sidebar {
+    display: block;
+  }
+
+  .doc-main {
+    padding: 24px 16px 80px;
+  }
+
+  .doc-h1 {
+    font-size: 27px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .api-docs *,
+  .api-docs *::before,
+  .api-docs *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── the rail ────────────────────────────────────────────────────
+   Dark, so the working surface reads as a console sitting beside the
+   reference rather than more of the same page. Three depths: the rail
+   itself is the floor, the credentials and code panels are raised on
+   it, and response bodies are sunk back into them.
+
+   Credentials fold away because they are set once; the summary still
+   reports whether they are filled in, so the state is never hidden.
+   ---------------------------------------------------------------- */
+
+.api-docs {
+  --rail-floor: #0a2036;
+  --rail-raised: #0e2942;
+  --rail-line: #21486b;
+  --rail-text: #dce8f2;
+  /* 7.7:1 on the floor colour, so muted text still clears AAA */
+  --rail-muted: #a3bccf;
+}
+
+.doc-rail {
+  position: sticky;
+  top: var(--doc-topbar-h);
+  height: calc(100vh - var(--doc-topbar-h));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 16px 16px 40px;
+  border-left: 1px solid var(--doc-rule);
+  background: var(--rail-floor);
+  color: var(--rail-text);
+}
+
+.doc-rail ::selection {
+  background: rgba(168, 16, 126, 0.4);
+  color: #fff;
+}
+
+.doc-rail :focus-visible {
+  outline: 2px solid #ff8ad1;
+  outline-offset: 2px;
+}
+
+/* ── credentials ─────────────────────────────────────────────────── */
+
+.doc-creds {
+  margin-bottom: 14px;
+  border: 1px solid var(--rail-line);
+  border-radius: 9px;
+  background: var(--rail-raised);
+}
+
+.doc-creds-summary {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 12px;
+  cursor: pointer;
+  list-style: none;
+  border-radius: 8px;
+}
+
+.doc-creds-summary::-webkit-details-marker {
+  display: none;
+}
+
+.doc-creds-summary:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.doc-creds-caret {
+  flex: 0 0 auto;
+  width: 6px;
+  height: 6px;
+  border-right: 1.5px solid var(--rail-muted);
+  border-bottom: 1.5px solid var(--rail-muted);
+  transform: rotate(-45deg);
+  transition: transform 0.15s ease;
+}
+
+.doc-creds[open] .doc-creds-caret {
+  transform: rotate(45deg);
+}
+
+.doc-creds-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--rail-text);
+}
+
+.doc-creds-status {
+  margin-inline-start: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--rail-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 48%;
+}
+
+.doc-creds-status.is-set {
+  color: #6fd39a;
+}
+
+.doc-creds-body {
+  padding: 2px 12px 12px;
+}
+
+.doc-creds-field {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 7px;
+}
+
+.doc-creds-field > span {
+  flex: 0 0 46px;
+  font-size: 11.5px;
+  color: var(--rail-muted);
+}
+
+.doc-creds-field input {
+  flex: 1;
+  min-width: 0;
+  padding: 6px 9px;
+  border: 1px solid var(--rail-line);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.26);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--rail-text);
+}
+
+.doc-creds-field input::placeholder {
+  color: #6d8aa3;
+}
+
+.doc-creds-foot {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  margin-top: 9px;
+}
+
+.doc-creds-note {
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--rail-muted);
+}
+
+.doc-creds-clear {
+  flex: 0 0 auto;
+  padding: 4px 9px;
+  border: 1px solid var(--rail-line);
+  border-radius: 6px;
+  font: inherit;
+  font-size: 11.5px;
+  color: var(--rail-muted);
+  background: transparent;
+}
+
+.doc-creds-clear:hover {
+  border-color: #ff8ad1;
+  color: #ff8ad1;
+}
+
+/* ── panels ──────────────────────────────────────────────────────── */
+
+.doc-rail-empty {
+  padding: 14px;
+  border: 1px dashed var(--rail-line);
+  border-radius: 9px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--rail-muted);
+}
+
+.doc-rail-panel[hidden] {
+  display: none;
+}
+
+/* The page's one authored movement: the rail answering a click by bringing
+   the endpoint's code up. Exponential ease-out, and it only ever runs in
+   response to a person opening something. */
+.doc-rail-panel:not([hidden]) {
+  animation: doc-rail-in 260ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes doc-rail-in {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+}
+
+.doc-rail-for {
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--rail-text);
+}
+
+/* the panel is raised off the rail floor, so it needs no outline of its own */
+.doc-rail .doc-panel,
+.doc-creds {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 22px rgba(0, 0, 0, 0.22);
+}
+
+.doc-rail .doc-panel {
+  border-color: var(--rail-line);
+  background: var(--rail-raised);
+}
+
+@media (max-width: 1400px) {
+  .api-docs {
+    --doc-rail-w: 380px;
+  }
+}
+
+@media (max-width: 1180px) {
+  .doc-body {
+    grid-template-columns: var(--doc-sidebar-w) minmax(0, 1fr);
+  }
+
+  /* The rail drops under the reference rather than squeezing it. */
+  .doc-rail {
+    grid-column: 1 / -1;
+    position: static;
+    height: auto;
+    border-left: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .doc-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
