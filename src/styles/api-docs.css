@@ -76,15 +76,29 @@
   white-space: nowrap;
 }
 
-/* the logo's stamp, reduced to a punched square */
+/* the logo's stamp, reduced to a punched square: deep blue body with the
+   brand gradient in the corner, and the serrated edge running down one side */
 .doc-brand-mark {
-  width: 20px;
-  height: 20px;
+  position: relative;
+  width: 19px;
+  height: 19px;
   border-radius: 3px;
   background:
-    radial-gradient(circle at 0 50%, transparent 3px, var(--doc-blue) 3.4px),
-    linear-gradient(135deg, var(--doc-magenta), var(--doc-purple));
-  background-size: 100% 100%;
+    linear-gradient(135deg, transparent 58%, var(--doc-magenta) 58%, var(--doc-purple)),
+    var(--doc-blue);
+}
+
+.doc-brand-mark::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background-image: radial-gradient(
+    circle at 0 2.5px,
+    var(--doc-paper) 1.6px,
+    rgba(255, 255, 255, 0) 2px
+  );
+  background-size: 3px 5px;
 }
 
 .doc-brand-api {
