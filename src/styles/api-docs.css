@@ -201,14 +201,16 @@
   display: grid;
   grid-template-columns: var(--doc-sidebar-w) minmax(0, 1fr) var(--doc-rail-w);
   align-items: start;
+  min-height: calc(100vh - var(--doc-topbar-h));
 }
 
 .doc-sidebar {
   position: sticky;
   top: var(--doc-topbar-h);
-  max-height: calc(100vh - var(--doc-topbar-h));
+  height: calc(100vh - var(--doc-topbar-h));
   overflow-y: auto;
-  padding: 26px 16px 60px 20px;
+  overscroll-behavior: contain;
+  padding: 18px 14px 40px 16px;
   border-right: 1px solid var(--doc-rule);
 }
 
@@ -333,16 +335,26 @@
   color: var(--doc-muted);
 }
 
-.api-docs a {
-  color: var(--doc-blue);
+.doc-main a,
+.doc-foot a {
+  color: var(--doc-blue-read);
   text-decoration: underline;
   text-underline-offset: 2px;
   text-decoration-thickness: 1px;
   text-decoration-color: rgba(13, 89, 140, 0.35);
 }
 
-.api-docs a:hover {
+.doc-main a:hover,
+.doc-foot a:hover {
   text-decoration-color: currentColor;
+}
+
+/* Navigation, anchors and the permalink are controls, not prose. */
+.doc-sidebar a,
+.doc-brand,
+.doc-summary a,
+.doc-permalink {
+  text-decoration: none;
 }
 
 .api-docs :focus-visible {
@@ -1200,7 +1212,7 @@
   .doc-sidebar {
     display: none;
     position: static;
-    max-height: none;
+    height: auto;
     border-right: none;
     border-bottom: 1px solid var(--doc-rule);
   }
@@ -1249,9 +1261,10 @@
 .doc-rail {
   position: sticky;
   top: var(--doc-topbar-h);
-  max-height: calc(100vh - var(--doc-topbar-h));
+  height: calc(100vh - var(--doc-topbar-h));
   overflow-y: auto;
-  padding: 16px 16px 60px;
+  overscroll-behavior: contain;
+  padding: 16px 16px 40px;
   border-left: 1px solid var(--rail-floor);
   background: var(--rail-floor);
   color: var(--rail-text);
@@ -1453,7 +1466,7 @@
   .doc-rail {
     grid-column: 1 / -1;
     position: static;
-    max-height: none;
+    height: auto;
     border-left: none;
   }
 }
