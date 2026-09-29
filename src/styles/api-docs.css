@@ -124,6 +124,8 @@
 
 /* ── top bar ─────────────────────────────────────────────────────── */
 
+/* The bar shares the rail's ground, so the dark surface reads as one piece
+   wrapping the reference rather than two unrelated panels. */
 .doc-topbar {
   position: sticky;
   top: 0;
@@ -132,19 +134,28 @@
   align-items: center;
   gap: 18px;
   height: var(--doc-topbar-h);
-  padding: 0 20px;
-  background: rgba(251, 252, 253, 0.92);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--doc-rule);
+  padding: 0 16px;
+  background: var(--rail-floor);
+  border-bottom: 1px solid #06172a;
+}
+
+.doc-topbar :focus-visible {
+  outline: 2px solid #ff8ad1;
+  outline-offset: 2px;
 }
 
 .doc-brand {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-weight: 600;
-  color: var(--doc-ink);
   white-space: nowrap;
+}
+
+/* The mark is a deep-blue stamp, so on the dark bar it takes the same lift
+   global.css already gives it over the site's ink hero. */
+.doc-brand-logo {
+  filter: brightness(1.2) saturate(1.08)
+    drop-shadow(0 2px 8px rgba(0, 0, 0, 0.45));
 }
 
 /* the real logo: a serrated stamp, so it needs no frame or background
@@ -158,41 +169,41 @@
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  min-width: 250px;
+  min-width: 270px;
   padding: 7px 12px;
-  border: 1px solid var(--doc-rule);
+  border: 1px solid var(--rail-line);
   border-radius: 7px;
-  background: var(--doc-paper-sunk);
-  color: var(--doc-muted);
+  background: rgba(0, 0, 0, 0.24);
+  color: var(--rail-muted);
   font: inherit;
   font-size: 13.5px;
   text-align: left;
 }
 
 .doc-searchbtn:hover {
-  border-color: var(--doc-blue);
-  color: var(--doc-ink);
+  border-color: #3d6488;
+  color: var(--rail-text);
 }
 
 .doc-searchbtn kbd {
   margin-inline-start: auto;
   padding: 1px 6px;
-  border: 1px solid var(--doc-rule);
+  border: 1px solid var(--rail-line);
   border-radius: 4px;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.06);
   font-size: 11px;
-  color: var(--doc-muted);
+  color: var(--rail-muted);
 }
 
 .doc-navtoggle {
   display: none;
   padding: 6px 11px;
-  border: 1px solid var(--doc-rule);
+  border: 1px solid var(--rail-line);
   border-radius: 6px;
-  background: #fff;
+  background: rgba(0, 0, 0, 0.24);
   font: inherit;
   font-size: 13px;
-  color: var(--doc-ink);
+  color: var(--rail-text);
 }
 
 /* ── frame ───────────────────────────────────────────────────────── */
@@ -1265,7 +1276,7 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: 16px 16px 40px;
-  border-left: 1px solid var(--rail-floor);
+  border-left: 1px solid #06172a;
   background: var(--rail-floor);
   color: var(--rail-text);
 }
