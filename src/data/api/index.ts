@@ -11,7 +11,7 @@ export * from "./types"
 export { schemas, schemaById } from "./schemas"
 
 export const API_BASE = "https://gconvertrest.sendmsg.co.il/api/Sendmsg"
-export const API_VERSION = "4.0"
+export const API_VERSION = "5.0"
 export const SUPPORT_EMAIL = "send.help@comstar.co.il"
 export const SUPPORT_TEMPLATE_URL =
   "https://gconvertrest.sendmsg.co.il/views/apisupport.html"

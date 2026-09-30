@@ -2,22 +2,57 @@ import React, { useState } from "react"
 import { Link } from "gatsby"
 import { openSignup, PANEL_URL } from "./SignupDialog"
 
-const CheckIcon = () => (
-  <span className="pp-check" aria-hidden="true">
-    <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
-      <path d="M2 6.5L4.5 9L10 3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  </span>
-)
+/* ── price tiers ─────────────────────────────────────────────────
+   Read straight off the live calculator at
+   sendmsg.co.il/pricelist/packages, which renders its prices in JS
+   behind a 17-step noUiSlider. Every figure below is quoted BEFORE
+   VAT, exactly as that page quotes them.
 
-const plans = [
-  {
+   Annual is a flat 10% off monthly at every tier, but both numbers
+   are stored rather than computed: a rounding rule is a guess, a
+   captured figure is a fact.
+
+   The monthly send allowance is contacts x 8 at every tier, which
+   holds across all 16 priced steps, so it is derived.
+
+   Re-check these against the live calculator when prices change. */
+type Tier = { contacts: number; month: number; year: number }
+
+const TIERS: Tier[] = [
+  { contacts: 250, month: 40, year: 36 },
+  { contacts: 500, month: 79, year: 71 },
+  { contacts: 1000, month: 89, year: 80 },
+  { contacts: 2000, month: 129, year: 116 },
+  { contacts: 3500, month: 169, year: 152 },
+  { contacts: 5000, month: 199, year: 179 },
+  { contacts: 7500, month: 229, year: 206 },
+  { contacts: 10000, month: 289, year: 260 },
+  { contacts: 15000, month: 379, year: 341 },
+  { contacts: 20000, month: 459, year: 413 },
+  { contacts: 25000, month: 539, year: 485 },
+  { contacts: 30000, month: 619, year: 557 },
+  { contacts: 40000, month: 769, year: 692 },
+  { contacts: 50000, month: 889, year: 800 },
+  { contacts: 75000, month: 1239, year: 1115 },
+  { contacts: 100000, month: 1569, year: 1412 },
+]
+
+/* One step past the top of the table: above 100,000 contacts the live
+   calculator stops quoting and asks you to talk to someone. */
+const CUSTOM_STEP = TIERS.length
+const SENDS_PER_CONTACT = 8
+
+const he = (n: number) => n.toLocaleString("he-IL")
+
+type Cycle = "year" | "month"
+
+const plan = {
+  free: {
     name: "חבילה למתחילים",
     tagline: "להכיר את המערכת בקצב שלכם",
-    price: { word: "חינם" },
+    price: "חינם",
     period: "לתמיד, בלי כרטיס אשראי",
-    lead: "מה מקבלים:",
-    highlight: false,
+    lead: "מה מקבלים",
     features: [
       "250 מנויים",
       "2,000 דיוורים בחודש",
@@ -25,15 +60,12 @@ const plans = [
       "בונה קורסים דיגיטליים",
       "תמיכה במייל",
     ],
-    cta: { label: "פתיחת חשבון בחינם", href: PANEL_URL, signup: true },
+    cta: "פתיחת חשבון בחינם",
   },
-  {
+  pro: {
     name: "חבילה משודרגת",
     tagline: "לעסק שרוצה לצמוח עם כל הכלים",
-    price: { num: "40", currency: "₪" },
-    period: "לחודש, בחיוב שנתי",
-    lead: "כל מה שבחבילה למתחילים, ובנוסף:",
-    highlight: true,
+    lead: "כל מה שבחבילה למתחילים, ובנוסף",
     features: [
       "שליחות יומיות ללא הגבלה",
       "דפי נחיתה ללא הגבלה",
@@ -41,41 +73,42 @@ const plans = [
       "API מלא וייצוא לאקסל",
       "תמיכה במייל, בצ׳אט ובטלפון",
     ],
-    cta: { label: "שדרגו עכשיו", href: PANEL_URL, signup: false },
+    cta: "שדרגו עכשיו",
   },
-  {
+  custom: {
     name: "חבילה מותאמת",
-    tagline: "לארגונים ולעסקים גדולים",
-    price: { word: "מותאם אישית" },
-    period: "מחיר שנקבע יחד איתכם",
-    lead: "כל מה שבחבילה המשודרגת, ובנוסף:",
-    highlight: false,
+    tagline: "לארגונים ולעסקים גדולים, מעל 100,000 אנשי קשר",
     features: [
-      "100,000+ אנשי קשר",
       "ליווי הקמה אישי",
       "מנהל חשבון ייעודי",
       "SLA מובטח",
       "אינטגרציות מותאמות",
     ],
-    cta: { label: "דברו איתנו", href: "/contact/", signup: false },
+    cta: "דברו איתנו",
   },
+}
+
+const trust = [
+  "בלי כרטיס אשראי",
+  "מעל 50,000 משתמשים מאז 2009",
+  "תקן אבטחת מידע ISO 27001",
 ]
 
 const included = [
   {
     title: "מצב שומר שבת",
-    text: "חסימת דפים ועיכוב דיוורים מכניסת שבת וחג ועד צאתם, מובנה בכל חבילה.",
+    text: "חסימת דפים ועיכוב דיוורים מכניסת שבת וחג ועד צאתם.",
     icon: (
-      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
       </svg>
     ),
   },
   {
     title: "אבטחת מידע ISO 27001",
-    text: "המערכת עומדת בתקן אבטחת המידע הבינלאומי ובתקנות הפרטיות.",
+    text: "עומדת בתקן אבטחת המידע הבינלאומי ובתקנות הפרטיות.",
     icon: (
-      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
         <path d="M9 12l2 2 4-4" />
       </svg>
@@ -83,9 +116,9 @@ const included = [
   },
   {
     title: "מותאם לכל מסך",
-    text: "ניוזלטרים, דפי נחיתה וקורסים שנראים מצוין בנייד, בטאבלט ובמחשב.",
+    text: "ניוזלטרים, דפי נחיתה וקורסים שנראים מצוין בכל מכשיר.",
     icon: (
-      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <rect x="7" y="2" width="10" height="20" rx="2" />
         <path d="M11 18h2" />
       </svg>
@@ -93,9 +126,9 @@ const included = [
   },
   {
     title: "מערכת ישראלית ותיקה",
-    text: "מאז 2009, עם ממשק בעברית ותמיכה בעברית מצוות שמכיר את העסקים כאן.",
+    text: "מאז 2009, עם ממשק ותמיכה בעברית מצוות שמכיר את השוק.",
     icon: (
-      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
         <circle cx="12" cy="7" r="4" />
       </svg>
@@ -130,26 +163,87 @@ const faqs = [
   },
 ]
 
+const Chevron = () => (
+  <svg
+    className="pp-faq-chevron"
+    viewBox="0 0 24 24"
+    width="18"
+    height="18"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M6 9l6 6 6-6" />
+  </svg>
+)
+
+/* One price block for both cards, so the figure, the currency and the period
+   all sit on the same baseline whichever plan you look at. "חינם" is a word
+   in a number's slot, so it takes the number's optical size rather than the
+   number's weight. */
+function Price({
+  amount,
+  period,
+  word,
+  note,
+}: {
+  amount?: string
+  period: string
+  word?: string
+  note?: string
+}) {
+  return (
+    <div className="pp-price">
+      <p className="pp-price-fig">
+        {word ? (
+          <span className="pp-price-word">{word}</span>
+        ) : (
+          <>
+            <span className="pp-price-cur" aria-hidden="true">₪</span>
+            <span className="pp-price-num">{amount}</span>
+            <span className="pp-sr">שקלים</span>
+          </>
+        )}
+      </p>
+      <p className="pp-price-period">{period}</p>
+      {note && <p className="pp-price-note">{note}</p>}
+    </div>
+  )
+}
+
 const PricingFAQ: React.FC = () => {
   const [open, setOpen] = useState<number | null>(0)
 
   return (
     <section className="pp-faq">
       <div className="container">
-        <h2>שאלות על המחירון</h2>
-        <p className="pp-faq-sub">ולא מצאתם תשובה? נשמח לעזור בצ׳אט או בטלפון</p>
+        <div className="pp-head">
+          <h2>שאלות על המחירון</h2>
+          <p>ולא מצאתם תשובה? נשמח לעזור בצ׳אט או בטלפון</p>
+        </div>
         <div className="pp-faq-list">
           {faqs.map((faq, i) => (
             <div key={faq.q} className="pp-faq-item" data-open={open === i}>
-              <button
-                className="pp-faq-q"
-                aria-expanded={open === i}
-                onClick={() => setOpen(open === i ? null : i)}
-              >
-                <span>{faq.q}</span>
-                <span className="pp-faq-arrow" aria-hidden="true">▾</span>
-              </button>
-              {open === i && <div className="pp-faq-a">{faq.a}</div>}
+              <h3>
+                <button
+                  type="button"
+                  className="pp-faq-q"
+                  aria-expanded={open === i}
+                  aria-controls={`pp-faq-a-${i}`}
+                  onClick={() => setOpen(open === i ? null : i)}
+                >
+                  <span>{faq.q}</span>
+                  <Chevron />
+                </button>
+              </h3>
+              {/* kept mounted so the row can animate open, and hidden from the
+                  a11y tree so a zero-height answer is not read aloud */}
+              <div className="pp-faq-a" id={`pp-faq-a-${i}`} aria-hidden={open !== i}>
+                <p>{faq.a}</p>
+              </div>
             </div>
           ))}
         </div>
@@ -158,103 +252,189 @@ const PricingFAQ: React.FC = () => {
   )
 }
 
-const Pricing: React.FC = () => (
-  <div className="pp" id="pricing">
-    <section className="pp-hero">
-      <div className="container">
-        <h1>מחירון פשוט ושקוף</h1>
-        <p className="pp-hero-sub">
-          מתחילים בחינם, בלי כרטיס אשראי ובלי התחייבות.
-          <br />
-          משדרגים רק כשזה מתאים לעסק שלכם.
-        </p>
-        <div className="pp-trust">
-          {["בלי כרטיס אשראי", "מעל 50,000 משתמשים מאז 2009", "תקן אבטחת מידע ISO 27001"].map((t) => (
-            <span key={t}>
-              <svg width="15" height="15" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                <path d="M2 6.5L4.5 9L10 3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              {t}
-            </span>
-          ))}
+const Pricing: React.FC = () => {
+  const [cycle, setCycle] = useState<Cycle>("year")
+  const [step, setStep] = useState(0)
+
+  const isCustom = step === CUSTOM_STEP
+  const tier = isCustom ? null : TIERS[step]
+  const proPrice = tier ? he(cycle === "month" ? tier.month : tier.year) : undefined
+  // every figure on the live calculator is quoted before VAT, so these are too
+  const proPeriod = isCustom
+    ? "מחיר שנקבע יחד איתכם"
+    : cycle === "month"
+      ? "לחודש בחיוב חודשי, לא כולל מע״מ"
+      : "לחודש בחיוב שנתי, לא כולל מע״מ"
+  const proNote = tier
+    ? `כולל עד ${he(tier.contacts * SENDS_PER_CONTACT)} שליחות בחודש`
+    : undefined
+  const contactsLabel = isCustom
+    ? "מעל 100,000"
+    : he(TIERS[step].contacts)
+
+  return (
+    <div className="pp" id="pricing">
+      <section className="pp-hero">
+        <div className="container">
+          <h1>מחירון פשוט ושקוף</h1>
+          <p className="pp-hero-sub">
+            מתחילים בחינם, בלי כרטיס אשראי ובלי התחייבות. משדרגים רק כשזה מתאים
+            לעסק שלכם.
+          </p>
+          <ul className="pp-trust">
+            {trust.map((t) => (
+              <li key={t}>{t}</li>
+            ))}
+          </ul>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section className="pp-plans">
-      <div className="container">
-        <div className="pp-grid">
-          {plans.map((plan) => (
-            <div key={plan.name} className={`pp-card${plan.highlight ? " pp-card-popular" : ""}`}>
-              {plan.highlight && <div className="pp-badge">הכי פופולרי</div>}
-              <h2 className="pp-plan-name">{plan.name}</h2>
-              <p className="pp-plan-tagline">{plan.tagline}</p>
+      <section className="pp-plans">
+        <div className="container">
+          <div className="pp-controls">
+            <div className="pp-billing" role="group" aria-label="מחזור חיוב">
+              <button
+                type="button"
+                aria-pressed={cycle === "year"}
+                onClick={() => setCycle("year")}
+              >
+                שנתי
+                <span className="pp-billing-save">10% הנחה</span>
+              </button>
+              <button
+                type="button"
+                aria-pressed={cycle === "month"}
+                onClick={() => setCycle("month")}
+              >
+                חודשי
+              </button>
+            </div>
+          </div>
 
-              <div className="pp-price-row">
-                {"num" in plan.price ? (
-                  <>
-                    <span className="pp-price-num">{plan.price.num}</span>
-                    <span className="pp-price-cur">{plan.price.currency}</span>
-                  </>
-                ) : (
-                  <span className="pp-price-word">{plan.price.word}</span>
-                )}
+          {/* Asymmetric on purpose: the plans are not equal, so they do not get
+              equal boxes. The recommended one carries the ink and the width;
+              the free one sits beside it as the way in. */}
+          <div className="pp-grid">
+            <div className="pp-card pp-card-pro">
+              <header>
+                <h2>
+                  {plan.pro.name}
+                  <span className="pp-tag">הכי פופולרי</span>
+                </h2>
+                <p className="pp-tagline">{plan.pro.tagline}</p>
+              </header>
+
+              {/* A native range input on purpose: keyboard, screen readers and
+                  touch all work without rebuilding any of it. */}
+              <div className="pp-sizer">
+                <label htmlFor="pp-contacts">כמה אנשי קשר יש לכם?</label>
+                <output htmlFor="pp-contacts" className="pp-sizer-value">
+                  {contactsLabel}
+                </output>
+                <input
+                  id="pp-contacts"
+                  type="range"
+                  min={0}
+                  max={CUSTOM_STEP}
+                  step={1}
+                  value={step}
+                  onChange={(e) => setStep(Number(e.target.value))}
+                  aria-valuetext={`${contactsLabel} אנשי קשר`}
+                  style={
+                    { "--fill": `${(step / CUSTOM_STEP) * 100}%` } as React.CSSProperties
+                  }
+                />
               </div>
-              <p className="pp-price-period">{plan.period}</p>
 
-              <div className="pp-tear" aria-hidden="true" />
+              <Price
+                amount={proPrice}
+                word={isCustom ? "מותאם אישית" : undefined}
+                period={proPeriod}
+                note={proNote}
+              />
 
-              <p className="pp-lead">{plan.lead}</p>
+              <p className="pp-lead">{plan.pro.lead}</p>
               <ul className="pp-features">
-                {plan.features.map((f) => (
-                  <li key={f}>
-                    <CheckIcon />
-                    {f}
-                  </li>
+                {plan.pro.features.map((f) => (
+                  <li key={f}>{f}</li>
                 ))}
               </ul>
 
-              {plan.cta.href.startsWith("/") ? (
-                <Link to={plan.cta.href} className="pp-btn-outline">
-                  {plan.cta.label}
+              {isCustom ? (
+                <Link to="/contact/" className="pp-btn pp-btn-accent">
+                  דברו איתנו
                 </Link>
-              ) : plan.highlight ? (
-                <a href={plan.cta.href} className="primary-btn">
-                  {plan.cta.label}
-                </a>
               ) : (
-                <a
-                  href={plan.cta.href}
-                  className="pp-btn-outline"
-                  onClick={plan.cta.signup ? openSignup : undefined}
-                >
-                  {plan.cta.label}
+                <a href={PANEL_URL} className="pp-btn pp-btn-accent">
+                  {plan.pro.cta}
                 </a>
               )}
             </div>
-          ))}
-        </div>
-        <p className="pp-plans-note">אפשר לשדרג או לעבור חבילה בכל שלב, בלי להקים שום דבר מחדש.</p>
-      </div>
-    </section>
 
-    <section className="pp-band">
-      <div className="container">
-        <h2>בכל חבילה, בלי קשר למחיר</h2>
-        <p className="pp-band-sub">הדברים שחשובים לנו לתת לכל עסק, מהיום הראשון</p>
-        <div className="pp-band-grid">
-          {included.map((item) => (
-            <div key={item.title} className="pp-band-item">
-              {item.icon}
-              <h3>{item.title}</h3>
-              <p>{item.text}</p>
+            <div className="pp-card pp-card-free">
+              <header>
+                <h2>{plan.free.name}</h2>
+                <p className="pp-tagline">{plan.free.tagline}</p>
+              </header>
+
+              <Price word={plan.free.price} period={plan.free.period} />
+
+              <p className="pp-lead">{plan.free.lead}</p>
+              <ul className="pp-features">
+                {plan.free.features.map((f) => (
+                  <li key={f}>{f}</li>
+                ))}
+              </ul>
+
+              <a href={PANEL_URL} className="pp-btn pp-btn-outline" onClick={openSignup}>
+                {plan.free.cta}
+              </a>
             </div>
-          ))}
+          </div>
+
+          {/* No price, so no price column: the custom plan is a conversation,
+              and it reads as one. */}
+          <div className="pp-custom">
+            <div>
+              <h2>{plan.custom.name}</h2>
+              <p>{plan.custom.tagline}</p>
+              <ul>
+                {plan.custom.features.map((f) => (
+                  <li key={f}>{f}</li>
+                ))}
+              </ul>
+            </div>
+            <Link to="/contact/" className="pp-btn pp-btn-outline">
+              {plan.custom.cta}
+            </Link>
+          </div>
+
+          <p className="pp-plans-note">
+            אפשר לשדרג או לעבור חבילה בכל שלב, בלי להקים שום דבר מחדש.
+          </p>
         </div>
-      </div>
-    </section>
-  </div>
-)
+      </section>
+
+      <section className="pp-band">
+        <div className="container">
+          <div className="pp-head">
+            <h2>בכל חבילה, בלי קשר למחיר</h2>
+            <p>הדברים שחשובים לנו לתת לכל עסק, מהיום הראשון</p>
+          </div>
+          <ul className="pp-band-row">
+            {included.map((item) => (
+              <li key={item.title}>
+                <span className="pp-band-mark">{item.icon}</span>
+                <h3>{item.title}</h3>
+                <p>{item.text}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    </div>
+  )
+}
 
 export { PricingFAQ }
 export default Pricing

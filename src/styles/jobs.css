@@ -1,0 +1,883 @@
+/* ============================================================
+   Jobs page (.jb-*)
+
+   Same world as /about/, /pricing/ and /contact/: Primary Blue
+   #0D598C as structural ink, the magenta-purple gradient as the
+   single accent, start-aligned editorial headings, deep ink hero.
+
+   Every section is a different layout family, so a page that is
+   essentially a list does not become five lists: ink band with a
+   live count, narrow claim beside a wide definition list, hairline
+   openings that open in place, a flow that reads across, and an
+   asymmetric form split.
+
+   One shape system (--jb-r / --jb-r-sm, buttons stay pills).
+   Motion is ease-out only, hover gated behind a real pointer, and
+   only transform / opacity / colour / grid-template-rows animate.
+
+   Logical properties throughout, so the RTL page holds.
+   ============================================================ */
+
+.jb {
+  --jb-ink: #0b1f33;
+  --jb-ink-2: #16324f;
+  --jb-blue: #0d598c;
+  --jb-sky: #e9eff6;
+  --jb-line: #d7e0ea;
+  --jb-line-2: #c8d5e2; /* the same hairline, one step darker, for the sky ground */
+  --jb-body: #4b6076;
+  --jb-on-ink: #c6d7e8;
+  --jb-on-ink-dim: #93aec9;
+  --jb-accent: #ff8ad1;
+
+  --jb-r: 14px;
+  --jb-r-sm: 8px;
+
+  --jb-ease: cubic-bezier(0.23, 1, 0.32, 1);
+  --jb-hover: 150ms;
+  --jb-press: 160ms;
+  --jb-disclose: 250ms;
+}
+
+/* Job titles in English, counts and addresses read left to right even
+   here. Isolating them keeps a dash or a colon at the right end.
+
+   text-align is physical on purpose: the page is RTL, so once direction
+   is flipped to ltr the logical `start` points at the wrong edge and a
+   block-level address or step number drifts away from the Hebrew it
+   belongs to. */
+.jb-ltr {
+  direction: ltr;
+  unicode-bidi: isolate;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* ── hero ───────────────────────────────────────────────────────
+   The page name, one claim, one line of subtext, and the number the
+   whole page counts off. */
+.jb-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(80px, 10vw, 120px) 0 clamp(60px, 7.5vw, 92px);
+  background: var(--jb-ink);
+  color: #fff;
+}
+
+.jb-hero::before {
+  content: "";
+  position: absolute;
+  inset: -55% -10% -35%;
+  z-index: -2;
+  background:
+    radial-gradient(42em 24em at 78% 26%, rgba(168, 16, 126, 0.38), transparent 62%),
+    radial-gradient(46em 26em at 18% -12%, rgba(99, 40, 167, 0.46), transparent 64%),
+    radial-gradient(52em 28em at 94% -16%, rgba(13, 89, 140, 0.44), transparent 66%);
+}
+
+.jb-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, 0.1) 1.2px,
+    transparent 1.3px
+  );
+  background-size: 26px 26px;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 38%, transparent 96%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 38%, transparent 96%);
+}
+
+.jb-hero ::selection {
+  background: rgba(255, 138, 209, 0.34);
+  color: #fff;
+}
+
+.jb-hero :focus-visible {
+  outline-color: var(--jb-accent);
+}
+
+.jb-hero-title {
+  font-size: var(--fs-display);
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  color: #fff;
+  margin: 0 0 clamp(12px, 1.6vw, 18px);
+}
+
+.jb-hero-claim {
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  line-height: 1.22;
+  letter-spacing: -0.026em;
+  color: #fff;
+  text-wrap: balance;
+  max-width: 22ch;
+  margin: 0;
+}
+
+.jb-hero-lede {
+  font-size: var(--fs-lg);
+  line-height: 1.62;
+  color: var(--jb-on-ink);
+  text-wrap: pretty;
+  max-width: 46ch;
+  margin: clamp(16px, 2vw, 22px) 0 0;
+}
+
+/* The count is the hero's one hard fact, so it is set as type rather
+   than filed into a pill with everything else. */
+.jb-count {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: clamp(26px, 3.2vw, 38px) 0 0;
+  font-size: var(--fs-md);
+  font-weight: 600;
+  color: #fff;
+}
+
+.jb-count-n {
+  display: grid;
+  place-items: center;
+  min-width: 52px;
+  padding: 6px 10px;
+  border-radius: var(--jb-r);
+  background: var(--primary-gradient);
+  font-size: 1.75rem;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  box-shadow: 0 10px 26px -14px rgba(168, 16, 126, 0.9);
+}
+
+/* ── shared heading ─────────────────────────────────────────────── */
+.jb-section {
+  padding: clamp(60px, 7.5vw, 92px) 0;
+}
+
+.jb-head {
+  max-width: 56ch;
+  margin-block-end: clamp(32px, 4vw, 48px);
+}
+
+.jb-head h2 {
+  font-size: var(--fs-2xl);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.028em;
+  color: var(--jb-ink-2);
+  text-wrap: balance;
+  margin: 0;
+}
+
+.jb-head h2::after {
+  content: "";
+  display: block;
+  width: 44px;
+  height: 3px;
+  margin-block-start: 16px;
+  border-radius: 2px;
+  background: var(--primary-gradient);
+}
+
+.jb-head p {
+  font-size: var(--fs-base);
+  line-height: 1.72;
+  color: var(--jb-body);
+  text-wrap: pretty;
+  margin: 16px 0 0;
+}
+
+/* ── why here ───────────────────────────────────────────────────
+   Narrow claim, wide evidence. A definition list, not four tiles:
+   the facts are label and explanation, and that is what a dl is. */
+.jb-split {
+  display: grid;
+  gap: clamp(32px, 4.5vw, 72px);
+  align-items: start;
+}
+
+.jb-split-why {
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+}
+
+.jb-why-said .jb-head {
+  margin-block-end: 0;
+}
+
+.jb-facts {
+  margin: 0;
+  padding: 0;
+  border-block-start: 1px solid var(--jb-line);
+}
+
+.jb-fact {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: clamp(14px, 2vw, 22px);
+  padding-block: clamp(18px, 2.2vw, 24px);
+  border-block-end: 1px solid var(--jb-line);
+}
+
+.jb-fact-icon {
+  grid-row: 1 / span 2;
+  color: var(--jb-blue);
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--jb-r-sm);
+  background: var(--jb-sky);
+}
+
+.jb-fact dt {
+  font-size: var(--fs-md);
+  font-weight: 700;
+  color: var(--jb-ink-2);
+  line-height: 1.4;
+}
+
+.jb-fact dd {
+  margin: 5px 0 0;
+  font-size: var(--fs-sm);
+  line-height: 1.68;
+  color: var(--jb-body);
+}
+
+/* ── the openings ───────────────────────────────────────────────
+   Hairline rows that open in place. The row is the button, so the
+   whole line is a 60px-tall target rather than a small caret. */
+.jb-roles-sec {
+  background: var(--jb-sky);
+}
+
+.jb-roles {
+  border-block-start: 1px solid var(--jb-line-2);
+}
+
+.jb-role {
+  border-block-end: 1px solid var(--jb-line-2);
+}
+
+.jb-role-h {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.jb-role-btn {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  column-gap: clamp(14px, 2vw, 26px);
+  width: 100%;
+  padding-block: clamp(20px, 2.4vw, 28px);
+  padding-inline: 0;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.jb-role-btn:focus-visible {
+  outline: 2px solid var(--jb-blue);
+  outline-offset: 4px;
+}
+
+.jb-role-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+}
+
+.jb-role-t {
+  font-size: var(--fs-xl);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.024em;
+  color: var(--jb-ink-2);
+  transition: color var(--jb-hover) var(--jb-ease);
+}
+
+/* The headcount, which is the whole point of the row. Blue on white
+   rather than a gradient chip: the gradient is the page's accent and
+   it is already spent on the hero count. */
+.jb-badge {
+  flex: none;
+  padding: 5px 12px;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--jb-blue);
+  background: var(--bg-white);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: var(--jb-blue);
+  white-space: nowrap;
+}
+
+.jb-role-meta {
+  display: block;
+  margin-block-start: 8px;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--jb-blue);
+}
+
+.jb-role-lede {
+  display: block;
+  margin-block-start: 6px;
+  max-width: 62ch;
+  font-size: var(--fs-base);
+  line-height: 1.66;
+  color: var(--jb-body);
+}
+
+.jb-role-sign {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--jb-line-2);
+  background: var(--bg-white);
+  color: var(--jb-blue);
+  transition:
+    border-color var(--jb-hover) var(--jb-ease),
+    background var(--jb-hover) var(--jb-ease);
+}
+
+/* The plus becomes a minus: the vertical stroke rotates out, which is
+   cheaper and calmer than swapping two icons. */
+.jb-plus-v {
+  transform-origin: 12px 12px;
+  transition: transform var(--jb-disclose) var(--jb-ease);
+}
+
+.jb-role[data-open="true"] .jb-plus-v {
+  transform: rotate(90deg);
+}
+
+/* Collapsed to 0fr and made invisible, so the panel is out of the tab
+   order rather than merely out of sight. */
+.jb-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition:
+    grid-template-rows var(--jb-disclose) var(--jb-ease),
+    visibility var(--jb-disclose) var(--jb-ease);
+}
+
+.jb-role[data-open="true"] .jb-panel {
+  grid-template-rows: 1fr;
+  visibility: visible;
+}
+
+.jb-panel-in {
+  overflow: hidden;
+  min-height: 0;
+  padding-block-end: clamp(24px, 3vw, 36px);
+}
+
+.jb-lists {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 0.9fr);
+  gap: clamp(20px, 3vw, 44px);
+  padding-block-start: 4px;
+}
+
+.jb-list h4 {
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--jb-blue);
+  margin: 0 0 12px;
+}
+
+.jb-list ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.jb-list li {
+  position: relative;
+  padding-inline-start: 17px;
+  margin-block-end: 9px;
+  font-size: var(--fs-sm);
+  line-height: 1.66;
+  color: var(--jb-body);
+}
+
+.jb-list li:last-child {
+  margin-block-end: 0;
+}
+
+/* A drawn tick-less marker: 5px square rotated, so no Unicode glyph
+   and no list-style leaking in from the blog prose rules. */
+.jb-list li::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: 0.62em;
+  width: 5px;
+  height: 5px;
+  border-radius: 1px;
+  background: var(--jb-blue);
+}
+
+.jb-role-apply {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-block-start: clamp(20px, 2.6vw, 28px);
+  padding: 13px 26px;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: var(--fs-base);
+  font-weight: 700;
+  color: #fff;
+  background: var(--primary-gradient);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 8px 24px -12px rgba(168, 16, 126, 0.75);
+  transition:
+    transform var(--jb-press) var(--jb-ease),
+    box-shadow var(--jb-hover) var(--jb-ease);
+}
+
+.jb-role-apply:active {
+  transform: scale(0.98);
+}
+
+.jb-none {
+  margin: clamp(26px, 3vw, 34px) 0 0;
+  max-width: 54ch;
+  font-size: var(--fs-base);
+  line-height: 1.7;
+  color: var(--jb-body);
+}
+
+/* ── the flow ───────────────────────────────────────────────────
+   Four steps read across under one rule, deliberately not the
+   numbered column /contact/ already uses. */
+.jb-flow {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(18px, 2.6vw, 34px);
+  margin: 0;
+  padding: 0;
+}
+
+.jb-flow-step {
+  position: relative;
+  padding-block-start: clamp(18px, 2.2vw, 24px);
+  border-block-start: 2px solid var(--jb-line);
+}
+
+/* only the first step's rule carries the accent, so the sequence has a
+   beginning without four gradients competing */
+.jb-flow-step:first-child {
+  border-image: var(--primary-gradient) 1;
+}
+
+.jb-flow-n {
+  display: block;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--jb-blue);
+}
+
+.jb-flow-t {
+  display: block;
+  margin-block-start: 8px;
+  font-size: var(--fs-md);
+  font-weight: 700;
+  line-height: 1.34;
+  color: var(--jb-ink-2);
+}
+
+.jb-flow-d {
+  display: block;
+  margin-block-start: 7px;
+  font-size: var(--fs-sm);
+  line-height: 1.68;
+  color: var(--jb-body);
+}
+
+/* ── apply ──────────────────────────────────────────────────────
+   Wide form, narrow alternative. The mail row stays visible: the
+   form has no backend behind it yet, and a person with a PDF needs
+   somewhere real to send it. */
+.jb-apply-sec {
+  background: var(--jb-sky);
+  scroll-margin-block-start: 90px;
+}
+
+.jb-split-apply {
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+}
+
+.jb-form {
+  background: var(--bg-white);
+  border: 1px solid var(--jb-line);
+  border-radius: var(--jb-r);
+  padding: clamp(24px, 3.2vw, 40px);
+  box-shadow: 0 22px 44px -32px rgba(11, 31, 51, 0.55);
+}
+
+.jb-form-intro {
+  font-size: var(--fs-md);
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--jb-ink-2);
+  margin: 0;
+}
+
+.jb-form-sub {
+  font-size: var(--fs-base);
+  line-height: 1.7;
+  color: var(--jb-body);
+  margin: 8px 0 clamp(22px, 2.6vw, 30px);
+}
+
+.jb-field {
+  margin-block-end: 18px;
+}
+
+.jb-field label {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--jb-ink-2);
+  margin-block-end: 7px;
+}
+
+.jb-field input,
+.jb-field textarea,
+.jb-select select {
+  display: block;
+  width: 100%;
+  padding: 13px 16px;
+  font-family: inherit;
+  font-size: var(--fs-base);
+  line-height: 1.55;
+  color: var(--jb-ink-2);
+  background: var(--bg-white);
+  border: 1px solid var(--jb-line);
+  border-radius: var(--jb-r-sm);
+  transition:
+    border-color var(--jb-hover) var(--jb-ease),
+    box-shadow var(--jb-hover) var(--jb-ease);
+}
+
+.jb-field textarea {
+  resize: vertical;
+  min-height: 112px;
+}
+
+.jb-field input::placeholder,
+.jb-field textarea::placeholder {
+  color: #66809a;
+}
+
+.jb-field input:focus-visible,
+.jb-field textarea:focus-visible,
+.jb-select select:focus-visible {
+  outline: none;
+  border-color: var(--jb-blue);
+  box-shadow: 0 0 0 3px rgba(13, 89, 140, 0.18);
+}
+
+/* The native menu keeps its keyboard behaviour; only the arrow is ours,
+   because the platform one lands on the wrong side in RTL. */
+.jb-select {
+  position: relative;
+}
+
+.jb-select select {
+  appearance: none;
+  padding-inline-end: 44px;
+  cursor: pointer;
+}
+
+.jb-select-caret {
+  position: absolute;
+  inset-inline-end: 14px;
+  inset-block-start: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  color: var(--jb-blue);
+  pointer-events: none;
+}
+
+.jb-opt {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--jb-body);
+}
+
+.jb-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 16px;
+}
+
+.jb-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 15px 30px;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.35;
+  text-align: center;
+  color: #fff;
+  background: var(--primary-gradient);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 8px 24px -10px rgba(168, 16, 126, 0.75);
+  transition:
+    transform var(--jb-press) var(--jb-ease),
+    box-shadow var(--jb-hover) var(--jb-ease);
+}
+
+.jb-submit:active {
+  transform: scale(0.98);
+}
+
+.jb-note {
+  font-size: var(--fs-sm);
+  line-height: 1.66;
+  color: var(--jb-body);
+  margin: 16px 0 0;
+}
+
+/* the sent state keeps the panel's footprint, so the column does not
+   jump when the form is replaced */
+.jb-sent {
+  display: grid;
+  place-items: center;
+  text-align: center;
+  min-height: 420px;
+  padding-block: 20px;
+}
+
+.jb-sent svg {
+  color: var(--jb-blue);
+  margin-block-end: 20px;
+}
+
+.jb-sent-ring {
+  stroke: var(--jb-blue);
+  stroke-width: 2;
+  stroke-dasharray: 152;
+  stroke-dashoffset: 152;
+  animation: jb-draw 620ms var(--jb-ease) forwards;
+}
+
+.jb-sent-tick {
+  stroke: var(--jb-blue);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  animation: jb-draw 320ms var(--jb-ease) 480ms forwards;
+}
+
+@keyframes jb-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.jb-sent h3 {
+  font-size: var(--fs-xl);
+  font-weight: 800;
+  letter-spacing: -0.024em;
+  color: var(--jb-ink-2);
+  margin: 0 0 10px;
+}
+
+.jb-sent p {
+  font-size: var(--fs-base);
+  line-height: 1.7;
+  color: var(--jb-body);
+  max-width: 38ch;
+  margin: 0;
+}
+
+.jb-aside .jb-head {
+  margin-block-end: clamp(20px, 2.4vw, 26px);
+}
+
+.jb-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: clamp(12px, 1.6vw, 18px);
+  padding-block: clamp(18px, 2.2vw, 22px);
+  border-block: 1px solid var(--jb-line-2);
+  color: inherit;
+}
+
+.jb-row-icon,
+.jb-row-go {
+  flex: none;
+  color: var(--jb-blue);
+  display: grid;
+  place-items: center;
+}
+
+.jb-row-go {
+  transition: transform var(--jb-hover) var(--jb-ease);
+}
+
+.jb-row-t {
+  display: block;
+  font-size: var(--fs-md);
+  font-weight: 700;
+  color: var(--jb-ink-2);
+  transition: color var(--jb-hover) var(--jb-ease);
+}
+
+.jb-row-v {
+  display: block;
+  margin-block-start: 2px;
+  font-size: var(--fs-base);
+  font-weight: 600;
+  color: var(--jb-blue);
+}
+
+.jb-row-note {
+  display: block;
+  margin-block-start: 4px;
+  font-size: var(--fs-sm);
+  color: var(--jb-body);
+}
+
+/* ── hover ──────────────────────────────────────────────────────
+   Gated behind a real pointer: on a touch screen these fire on tap
+   and leave the element stuck in its hover state. */
+@media (hover: hover) and (pointer: fine) {
+  .jb-role-btn:hover .jb-role-t {
+    color: var(--jb-blue);
+  }
+
+  .jb-role-btn:hover .jb-role-sign {
+    border-color: var(--jb-blue);
+    background: var(--jb-sky);
+  }
+
+  a.jb-row:hover .jb-row-t {
+    color: var(--jb-blue);
+  }
+
+  a.jb-row:hover .jb-row-go {
+    transform: translateX(-5px);
+  }
+
+  .jb-submit:hover,
+  .jb-role-apply:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px -12px rgba(168, 16, 126, 0.8);
+  }
+}
+
+/* ── responsive ────────────────────────────────────────────────── */
+@media (max-width: 1000px) {
+  .jb-lists {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .jb-flow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .jb-split-why,
+  .jb-split-apply {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* the form is the task; the mail row is the alternative to it */
+  .jb-form-col {
+    order: -1;
+  }
+}
+
+@media (max-width: 620px) {
+  .jb-hero-claim {
+    max-width: none;
+  }
+
+  .jb-count-n {
+    min-width: 46px;
+    font-size: 1.5rem;
+  }
+
+  .jb-lists,
+  .jb-flow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .jb-role-t {
+    font-size: var(--fs-md);
+  }
+
+  .jb-role-sign {
+    width: 34px;
+    height: 34px;
+  }
+
+  .jb-pair {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .jb-fact {
+    column-gap: 12px;
+  }
+
+  .jb-fact-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .jb-sent {
+    min-height: 320px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jb *,
+  .jb *::before,
+  .jb *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .jb-sent-ring,
+  .jb-sent-tick {
+    stroke-dashoffset: 0;
+  }
+}

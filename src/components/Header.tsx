@@ -100,7 +100,7 @@ const navItems: NavItem[] = [
     href: "/pricing/",
     items: [
       { label: "חבילות דיוור", href: "/pricing/", icon: "package", desc: "כל המסלולים, מהחבילה החינמית ועד הבלתי מוגבלת." },
-      { label: "בנק סמסים", href: "https://www.sendmsg.co.il/pricelist/smsbank/", icon: "messageSquare", desc: "רוכשים סמסים מראש ומשתמשים בקצב שלכם." },
+      { label: "בנק סמסים", href: "/sms-bank/", icon: "messageSquare", desc: "רוכשים סמסים מראש ומשתמשים בקצב שלכם." },
       { label: "בנק שליחות", href: "https://www.sendmsg.co.il/pricelist/emailbank/", icon: "send", desc: "בנק דיוורים ללא מנוי חודשי." },
       { label: "מספר וירטואלי", href: "https://www.sendmsg.co.il/virtualnumber/", icon: "hash", desc: "מספר ייעודי לשליחה וקבלה של הודעות." },
     ],
@@ -247,10 +247,10 @@ const Header: React.FC = () => {
     <>
       <div className="site-topbar" style={styles.topBar}>
         <div className="container" style={styles.topBarInner}>
-          <a href="tel:077-4600600" style={styles.topBarLink}>
+          <a href="tel:077-4600600" className="site-topbar-link" style={styles.topBarLink}>
             077-4600600 ☎
           </a>
-          <span style={styles.topBarText}>ספק מורשה מס׳ הגנה: 11011707</span>
+          <span className="site-topbar-note">ספק מורשה מס׳ הגנה: 11011707</span>
         </div>
       </div>
       <header ref={headerRef} className={`site-header${scrolled ? " site-header-scrolled" : ""}`}>
@@ -377,10 +377,10 @@ const Header: React.FC = () => {
 }
 
 const styles: Record<string, React.CSSProperties> = {
-  /* background lives in CSS so a page with an ink hero can take the bar
-     into the same field — see .site-topbar */
+  /* Colour lives in CSS, not here: inline styles would outrank it, and a page
+     with an ink hero has to be able to repaint the whole strip — see
+     .site-topbar */
   topBar: {
-    color: "#ccc",
     fontSize: "0.85rem",
     padding: "8px 0",
   },
@@ -390,11 +390,7 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: "center",
   },
   topBarLink: {
-    color: "#fff",
     fontWeight: 500,
-  },
-  topBarText: {
-    color: "#aaa",
   },
   logoImg: {
     height: 44,

@@ -1,0 +1,751 @@
+/* ============================================================
+   Creaditor page (.cr-*)
+
+   Same world as /about/, /pricing/, /contact/ and /jobs/: Primary
+   Blue #0D598C as structural ink, the magenta-purple gradient as the
+   single accent, start-aligned editorial headings, deep ink hero.
+
+   The page is a pitch for a product that lives somewhere else, so
+   every section is a different layout family and none of them is a
+   row of equal cards: an asymmetric ink hero with the product beside
+   the claim, a numbered hairline list of the five builders, a narrow
+   claim against a wide definition list, two facing panels for the
+   comparison, a symmetrical split for the two ways in, an ink band
+   holding one sentence, and a closing row that points out.
+
+   One shape system (--cr-r / --cr-r-sm, buttons stay pills).
+   Motion is ease-out only, hover gated behind a real pointer, and
+   only transform / opacity / colour animate.
+
+   Product names and framework names are Latin inside RTL Hebrew, so
+   they are isolated with .cr-ltr rather than left to the bidi
+   algorithm.
+
+   Logical properties throughout, so the RTL page holds.
+   ============================================================ */
+
+.cr {
+  --cr-ink: #0b1f33;
+  --cr-ink-2: #16324f;
+  --cr-blue: #0d598c;
+  --cr-sky: #e9eff6;
+  --cr-line: #d7e0ea;
+  --cr-line-2: #c8d5e2; /* the same hairline, one step darker, for the sky ground */
+  --cr-body: #4b6076;
+  --cr-on-ink: #c6d7e8;
+  --cr-on-ink-dim: #93aec9;
+  --cr-accent: #ff8ad1;
+
+  --cr-r: 14px;
+  --cr-r-sm: 8px;
+
+  --cr-ease: cubic-bezier(0.23, 1, 0.32, 1);
+  --cr-hover: 150ms;
+  --cr-press: 160ms;
+}
+
+/* Latin product and framework names inside RTL Hebrew. text-align is
+   physical on purpose: once direction flips to ltr the logical `start`
+   points at the wrong edge and the name drifts off the Hebrew it
+   belongs to. */
+.cr-ltr {
+  direction: ltr;
+  unicode-bidi: isolate;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* ── image slots ────────────────────────────────────────────────
+   Still placeholders. Each one carries the filename it is waiting
+   for plus a one-line brief, so the page is its own shot list. */
+.cr-shot {
+  position: relative;
+  display: grid;
+  place-content: center;
+  gap: 12px;
+  width: 100%;
+  margin: 0;
+  padding: clamp(16px, 2.4vw, 26px);
+  border: 1px dashed var(--cr-line-2);
+  border-radius: var(--cr-r);
+  background: var(--cr-sky);
+  text-align: center;
+  overflow: hidden;
+}
+
+.cr-shot-icon {
+  display: grid;
+  place-items: center;
+  color: var(--cr-blue);
+  opacity: 0.55;
+}
+
+.cr-shot-label {
+  display: grid;
+  gap: 6px;
+  justify-items: center;
+}
+
+.cr-shot-id {
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--cr-blue);
+}
+
+.cr-shot-text {
+  max-width: 34ch;
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+  color: var(--cr-body);
+  text-wrap: pretty;
+}
+
+/* On an ink ground the dashed sky block would punch a hole, so the
+   slot inverts instead. */
+.cr-shot[data-tone="ink"] {
+  border-color: rgba(198, 215, 232, 0.34);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.cr-shot[data-tone="ink"] .cr-shot-icon {
+  color: var(--cr-on-ink);
+  opacity: 0.7;
+}
+
+.cr-shot[data-tone="ink"] .cr-shot-id {
+  color: #fff;
+}
+
+.cr-shot[data-tone="ink"] .cr-shot-text {
+  color: var(--cr-on-ink);
+}
+
+/* ── hero ───────────────────────────────────────────────────────
+   The product name, one claim, one line of subtext, the two ways out
+   to the product, and the product itself alongside. */
+.cr-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(80px, 10vw, 120px) 0 clamp(60px, 7.5vw, 92px);
+  background: var(--cr-ink);
+  color: #fff;
+}
+
+.cr-hero::before {
+  content: "";
+  position: absolute;
+  inset: -55% -10% -35%;
+  z-index: -2;
+  background:
+    radial-gradient(42em 24em at 78% 26%, rgba(168, 16, 126, 0.38), transparent 62%),
+    radial-gradient(46em 26em at 18% -12%, rgba(99, 40, 167, 0.46), transparent 64%),
+    radial-gradient(52em 28em at 94% -16%, rgba(13, 89, 140, 0.44), transparent 66%);
+}
+
+.cr-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, 0.1) 1.2px,
+    transparent 1.3px
+  );
+  background-size: 26px 26px;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 38%, transparent 96%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 38%, transparent 96%);
+}
+
+.cr-hero ::selection {
+  background: rgba(255, 138, 209, 0.34);
+  color: #fff;
+}
+
+.cr-hero :focus-visible {
+  outline-color: var(--cr-accent);
+}
+
+.cr-hero-in {
+  display: grid;
+  grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
+  gap: clamp(32px, 4.5vw, 64px);
+  align-items: center;
+}
+
+.cr-hero-title {
+  font-size: var(--fs-display);
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  color: #fff;
+  margin: 0 0 clamp(12px, 1.6vw, 18px);
+}
+
+.cr-hero-claim {
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  line-height: 1.22;
+  letter-spacing: -0.026em;
+  color: #fff;
+  text-wrap: balance;
+  max-width: 22ch;
+  margin: 0;
+}
+
+.cr-hero-lede {
+  font-size: var(--fs-lg);
+  line-height: 1.62;
+  color: var(--cr-on-ink);
+  text-wrap: pretty;
+  max-width: 46ch;
+  margin: clamp(16px, 2vw, 22px) 0 0;
+}
+
+.cr-hero-acts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(12px, 1.6vw, 18px);
+  margin-block-start: clamp(26px, 3.2vw, 36px);
+}
+
+.cr-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cr-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 26px;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: var(--radius-xl);
+  font-size: var(--fs-base);
+  font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+  transition:
+    background-color var(--cr-hover) var(--cr-ease),
+    border-color var(--cr-hover) var(--cr-ease);
+}
+
+.cr-btn-ghost:active {
+  transform: scale(0.985);
+  transition-duration: var(--cr-press);
+}
+
+/* The five names, set once in the hero so the list below has a
+   shape to land in. */
+.cr-hero-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  margin: clamp(28px, 3.4vw, 40px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cr-hero-strip li {
+  position: relative;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--cr-on-ink);
+}
+
+.cr-hero-strip li + li::before {
+  content: "";
+  position: absolute;
+  inset-inline-end: -13px;
+  inset-block: 4px;
+  width: 1px;
+  background: rgba(198, 215, 232, 0.4);
+}
+
+.cr-hero-shot .cr-shot {
+  min-height: 0;
+}
+
+/* ── shared heading ─────────────────────────────────────────────── */
+.cr-section {
+  padding: clamp(60px, 7.5vw, 92px) 0;
+}
+
+.cr-head {
+  max-width: 56ch;
+  margin-block-end: clamp(32px, 4vw, 48px);
+}
+
+.cr-head h2 {
+  font-size: var(--fs-2xl);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.028em;
+  color: var(--cr-ink-2);
+  text-wrap: balance;
+  margin: 0;
+}
+
+.cr-head h2::after {
+  content: "";
+  display: block;
+  width: 44px;
+  height: 3px;
+  margin-block-start: 16px;
+  border-radius: 2px;
+  background: var(--primary-gradient);
+}
+
+.cr-head p {
+  font-size: var(--fs-base);
+  line-height: 1.72;
+  color: var(--cr-body);
+  text-wrap: pretty;
+  margin: 16px 0 0;
+}
+
+/* ── the five builders ──────────────────────────────────────────
+   Numbered hairline rows. Five named things with one claim each is
+   a list, so it is set as one. */
+.cr-builders {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: 1px solid var(--cr-line);
+}
+
+.cr-builder {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr) minmax(0, 216px);
+  align-items: center;
+  column-gap: clamp(14px, 2vw, 26px);
+  padding-block: clamp(20px, 2.6vw, 30px);
+  border-block-end: 1px solid var(--cr-line);
+}
+
+.cr-builder-n {
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--cr-blue);
+  opacity: 0.72;
+}
+
+.cr-builder-icon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: var(--cr-r-sm);
+  background: var(--cr-sky);
+  color: var(--cr-blue);
+}
+
+.cr-builder-main {
+  display: grid;
+  gap: 6px;
+}
+
+.cr-builder-name {
+  font-size: var(--fs-md);
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--cr-ink-2);
+}
+
+.cr-builder-claim {
+  font-size: var(--fs-sm);
+  line-height: 1.68;
+  color: var(--cr-body);
+  text-wrap: pretty;
+}
+
+.cr-builder-shot .cr-shot {
+  padding: 14px;
+  gap: 8px;
+}
+
+.cr-builder-shot .cr-shot-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.cr-builder-shot .cr-shot-text {
+  max-width: 24ch;
+  font-size: var(--fs-xs);
+  line-height: 1.5;
+}
+
+/* ── the brain ──────────────────────────────────────────────────
+   Narrow claim plus the product shot, against the wide list of what
+   the brain actually holds. A dl, because these are label and
+   explanation. */
+.cr-brain-sec {
+  background: var(--cr-sky);
+}
+
+.cr-split {
+  display: grid;
+  gap: clamp(32px, 4.5vw, 72px);
+  align-items: start;
+}
+
+.cr-split-brain {
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+}
+
+.cr-brain-said .cr-head {
+  margin-block-end: clamp(24px, 3vw, 32px);
+}
+
+.cr-brain-sec .cr-shot {
+  border-color: var(--cr-line-2);
+  background: #fff;
+}
+
+.cr-memory-kicker {
+  margin: 0 0 14px;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--cr-blue);
+}
+
+.cr-memory {
+  margin: 0;
+  padding: 0;
+  border-block-start: 1px solid var(--cr-line-2);
+}
+
+.cr-mem {
+  padding-block: clamp(16px, 2vw, 22px);
+  border-block-end: 1px solid var(--cr-line-2);
+}
+
+.cr-mem dt {
+  font-size: var(--fs-md);
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--cr-ink-2);
+}
+
+.cr-mem dd {
+  margin: 5px 0 0;
+  font-size: var(--fs-sm);
+  line-height: 1.68;
+  color: var(--cr-body);
+}
+
+/* ── the comparison ────────────────────────────────────────────
+   Two facing panels. The kicker is the product's own joke and it
+   earns its place, so it is set as type above them. */
+.cr-vs-kicker {
+  margin: 0 0 clamp(24px, 3vw, 34px);
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.024em;
+  color: var(--cr-ink-2);
+  text-wrap: balance;
+  max-width: 30ch;
+}
+
+.cr-vs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(18px, 2.4vw, 30px);
+  align-items: stretch;
+}
+
+.cr-vs-panel {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  padding: clamp(22px, 2.8vw, 32px);
+  border-radius: var(--cr-r);
+}
+
+.cr-vs-panel[data-side="other"] {
+  border: 1px solid var(--cr-line);
+  background: #fff;
+}
+
+.cr-vs-panel[data-side="brain"] {
+  background: var(--cr-ink);
+  color: #fff;
+}
+
+.cr-vs-who {
+  margin: 0;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--cr-blue);
+}
+
+.cr-vs-panel[data-side="brain"] .cr-vs-who {
+  color: var(--cr-accent);
+}
+
+.cr-vs-what {
+  margin: 0 0 6px;
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  line-height: 1.34;
+  letter-spacing: -0.02em;
+  color: var(--cr-ink-2);
+  text-wrap: balance;
+}
+
+.cr-vs-panel[data-side="brain"] .cr-vs-what {
+  color: #fff;
+}
+
+.cr-vs-panel[data-side="brain"] :focus-visible {
+  outline-color: var(--cr-accent);
+}
+
+/* ── two ways in ───────────────────────────────────────────────
+   The two halves really are symmetrical, so this is the one place a
+   even split is the honest layout. */
+.cr-ways-sec {
+  background: var(--cr-sky);
+}
+
+.cr-ways {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(24px, 3vw, 44px);
+}
+
+.cr-way {
+  padding-block-start: clamp(18px, 2.2vw, 24px);
+  border-block-start: 3px solid transparent;
+  border-image: var(--primary-gradient) 1;
+  border-inline: 0;
+  border-block-end: 0;
+}
+
+.cr-way-t {
+  margin: 0;
+  font-size: var(--fs-md);
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--cr-ink-2);
+}
+
+.cr-way-d {
+  margin: 8px 0 0;
+  font-size: var(--fs-sm);
+  line-height: 1.7;
+  color: var(--cr-body);
+  text-wrap: pretty;
+  max-width: 44ch;
+}
+
+.cr-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: clamp(16px, 2vw, 22px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cr-chips li {
+  padding: 6px 12px;
+  border: 1px solid var(--cr-line-2);
+  border-radius: var(--cr-r-sm);
+  background: #fff;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--cr-ink-2);
+}
+
+/* The one line that ties the product back to this site. A hairline
+   note, not a section. */
+.cr-proof {
+  margin: clamp(32px, 4vw, 48px) 0 0;
+  padding-block-start: clamp(18px, 2.2vw, 24px);
+  border-block-start: 1px solid var(--cr-line-2);
+  font-size: var(--fs-base);
+  line-height: 1.7;
+  color: var(--cr-body);
+  text-wrap: pretty;
+  max-width: 62ch;
+}
+
+.cr-proof strong {
+  color: var(--cr-ink-2);
+}
+
+/* ── white label ───────────────────────────────────────────────
+   One sentence, set as display type on ink. */
+.cr-label-sec {
+  padding: clamp(56px, 7vw, 86px) 0;
+  background: var(--cr-ink);
+  color: #fff;
+}
+
+.cr-label-in {
+  display: grid;
+  gap: clamp(14px, 1.8vw, 20px);
+}
+
+.cr-label-claim {
+  margin: 0;
+  font-size: var(--fs-2xl);
+  font-weight: 800;
+  line-height: 1.16;
+  letter-spacing: -0.028em;
+  color: #fff;
+  text-wrap: balance;
+  max-width: 26ch;
+}
+
+.cr-label-d {
+  margin: 0;
+  font-size: var(--fs-md);
+  line-height: 1.68;
+  color: var(--cr-on-ink);
+  text-wrap: pretty;
+  max-width: 52ch;
+}
+
+.cr-label-sec :focus-visible {
+  outline-color: var(--cr-accent);
+}
+
+/* ── out ───────────────────────────────────────────────────────
+   The page ends where the product lives. */
+.cr-out {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: clamp(24px, 3vw, 48px);
+  align-items: center;
+}
+
+.cr-out-said h2 {
+  margin: 0;
+  font-size: var(--fs-2xl);
+  font-weight: 800;
+  line-height: 1.16;
+  letter-spacing: -0.028em;
+  color: var(--cr-ink-2);
+  text-wrap: balance;
+}
+
+.cr-out-said p {
+  margin: 12px 0 0;
+  font-size: var(--fs-md);
+  line-height: 1.68;
+  color: var(--cr-body);
+}
+
+.cr-out-acts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(12px, 1.6vw, 20px);
+}
+
+.cr-out-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--fs-base);
+  font-weight: 600;
+  color: var(--cr-blue);
+  text-decoration: none;
+  transition: color var(--cr-hover) var(--cr-ease);
+}
+
+/* ── hover, behind a real pointer ──────────────────────────────── */
+@media (hover: hover) and (pointer: fine) {
+  .cr-btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.72);
+  }
+
+  .cr-out-link:hover {
+    color: var(--cr-ink-2);
+  }
+}
+
+/* ── narrower ───────────────────────────────────────────────────── */
+@media (max-width: 1040px) {
+  .cr-builder {
+    grid-template-columns: auto auto minmax(0, 1fr);
+    row-gap: clamp(14px, 2vw, 18px);
+  }
+
+  .cr-builder-shot {
+    grid-column: 1 / -1;
+  }
+
+  .cr-builder-shot .cr-shot-text {
+    max-width: 40ch;
+  }
+}
+
+@media (max-width: 900px) {
+  .cr-hero-in,
+  .cr-split-brain,
+  .cr-vs,
+  .cr-ways,
+  .cr-out {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cr-hero-claim,
+  .cr-hero-lede {
+    max-width: none;
+  }
+
+  .cr-out {
+    justify-items: start;
+  }
+}
+
+@media (max-width: 560px) {
+  .cr-builder {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .cr-builder-n {
+    grid-row: 1;
+  }
+
+  .cr-builder-icon {
+    display: none;
+  }
+
+  .cr-hero-acts .primary-btn,
+  .cr-hero-acts .cr-btn-ghost,
+  .cr-out-acts .primary-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ── reduced motion ─────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .cr *,
+  .cr *::before,
+  .cr *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+
+  .cr-btn-ghost:active {
+    transform: none;
+  }
+}

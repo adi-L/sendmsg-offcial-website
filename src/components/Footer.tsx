@@ -10,11 +10,13 @@ const serviceLinks = [
   { label: "CRM", href: "https://www.sendmsg.co.il/crm/" },
   { label: "פגישות", href: "https://www.sendmsg.co.il/meetings/" },
   { label: "AI דיוור", href: "https://ai.sendmsg.co.il/" },
+  { label: "Creaditor", href: "/creaditor/" },
 ]
 
 const supportLinks = [
   { label: "צרו קשר", href: "/contact/" },
   { label: "מרכז הידע", href: "/blog/" },
+  { label: "דרושים", href: "/jobs/" },
   { label: "שותפים", href: "/affiliate/" },
   { label: "API", href: "/api/" },
   { label: "נגישות", href: "/accessibility/" },

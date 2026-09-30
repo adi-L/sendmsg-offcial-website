@@ -65,7 +65,7 @@ const AIAssistant: React.FC = () => {
             <span className="ai-panel-avatar">
               <img src={alexAvatar} alt="" />
             </span>
-            <span className="ai-panel-title">אלכס, העוזר של שלח מסר</span>
+            <span className="ai-panel-title">שי, העוזר של שלח מסר</span>
             <button
               type="button"
               className="ai-panel-close"
@@ -80,7 +80,7 @@ const AIAssistant: React.FC = () => {
           </div>
           {/* TODO: replace the static starter with the real AI chat when ready */}
           <p className="ai-panel-message">
-            היי! אני אלכס, העוזר החכם של שלח מסר. במה אפשר לעזור לך היום?
+            היי! אני שי, העוזר החכם של שלח מסר. במה אפשר לעזור לך היום?
           </p>
           <div className="ai-panel-actions">
             <a href={withPrefix("/contact")} className="ai-panel-action">
@@ -111,7 +111,7 @@ const AIAssistant: React.FC = () => {
         type="button"
         className="ai-avatar"
         onClick={() => setOpen((v) => !v)}
-        aria-label="פתיחת צ'אט עם אלכס, העוזר החכם של שלח מסר"
+        aria-label="פתיחת צ'אט עם שי, העוזר החכם של שלח מסר"
         aria-expanded={open}
       >
         <img src={alexAvatar} alt="" />

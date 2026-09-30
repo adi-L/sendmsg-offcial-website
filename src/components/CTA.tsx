@@ -38,13 +38,15 @@ const styles: Record<string, React.CSSProperties> = {
     textAlign: "center",
   },
   title: {
-    fontSize: "2.4rem",
+    // the section-heading step, so this h2 matches every other h2 on the
+    // page instead of sitting 1.6px under them
+    fontSize: "var(--fs-2xl)",
     fontWeight: 800,
     lineHeight: 1.3,
     marginBottom: "16px",
   },
   subtitle: {
-    fontSize: "1.1rem",
+    fontSize: "var(--fs-base)",
     color: "var(--text-gray)",
     marginBottom: "32px",
   },

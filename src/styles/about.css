@@ -1,570 +1,83 @@
 /* ============================================================
    About page (.ab-*)
-   Runs the home page's world: deep ink bands with magenta/purple
-   blooms and a 26px dot lattice, white sections carrying the same
-   lattice, Primary Blue #0D598C as the structural ink and the
-   magenta-purple gradient as the accent.
-   Signature kept from this page alone: the postage-stamp motif
-   (punched hero edge, stamp year markers, perforated values sheet),
-   which is the logo's own shape.
+
+   Runs the site's own world: deep ink bands with magenta/purple
+   blooms, the 26px dot lattice, Primary Blue #0D598C as structural
+   ink, the magenta-purple gradient as accent. Paced differently
+   from the product pages: start-aligned editorial headings, and a
+   different layout family per section rather than one card grid
+   repeated eight times.
+
+   One shape system. One accent. Motion is ease-out only, hover is
+   gated behind a real pointer, and only transform/opacity/filter
+   are ever animated.
+
+   Logical properties throughout, so the RTL page and any LTR
+   embedding both hold.
    ============================================================ */
 
 .ab {
+  --ab-ink: #0b1f33;
+  --ab-ink-2: #16324f;
   --ab-blue: #0d598c;
-  --ab-ink: #16324f;
+  --ab-blue-wall: #10649c; /* the portraits' own ground */
   --ab-sky: #e9eff6;
-  --ab-line: #dbe4ee;
-  /* the ink band's own palette, shared with .ab-band */
-  --ab-night: #091d31;
-  --ab-on-night: #c3d5e8;
-  --ab-on-night-dim: #a6bdd6;
+  --ab-line: #d7e0ea;
+  --ab-body: #4b6076; /* blue-tinted, never gray */
+  --ab-on-ink: #c6d7e8;
+  --ab-on-ink-dim: #93aec9;
   --ab-accent: #ff8ad1;
+
+  /* One radius system: surfaces take --ab-r, small controls --ab-r-sm.
+     Nothing on this page invents a third value. */
+  --ab-r: 14px;
+  --ab-r-sm: 8px;
+
+  /* One easing family. Entrances and hovers both ease out; nothing
+     on this page eases in, which reads as sluggish exactly when the
+     eye is on it. */
+  --ab-ease: cubic-bezier(0.23, 1, 0.32, 1);
+  --ab-hover: 150ms;
+  --ab-press: 160ms;
+  --ab-disclose: 250ms;
+  --ab-reveal: 480ms;
 }
 
-/* ── hero: the page's title plate ───────────────────────────────
-   A visitor who clicked "אודות" in the nav should see the word back.
-   So the ink band is a nameplate, not a pitch: the page says what it
-   is, then hands straight off to the substance. Short on purpose —
-   it orients and gets out of the way. */
+/* Numerals line up and stop jittering while a count runs, and the "50,000+"
+   is isolated so RTL neighbours can never drag the "+" round to the front. */
+.ab-num {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  unicode-bidi: isolate;
+  direction: ltr;
+}
+
+/* ── hero ───────────────────────────────────────────────────────
+   Name, claim, one line of subtext, three facts. Nothing else gets
+   into the band. */
 .ab-hero {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  padding: 64px 0 76px;
-  background: var(--ab-night);
+  padding: clamp(84px, 11vw, 128px) 0 clamp(64px, 8vw, 96px);
+  background: var(--ab-ink);
   color: #fff;
-  text-align: center;
 }
 
-/* blooms re-aimed to sit behind the nameplate now that no artwork
-   anchors the left of the band */
 .ab-hero::before {
-  content: '';
+  content: "";
   position: absolute;
-  inset: -60% -12% -30%;
+  inset: -55% -10% -35%;
   z-index: -2;
   background:
-    radial-gradient(40em 22em at 50% 40%, rgba(168, 16, 126, 0.4), transparent 62%),
-    radial-gradient(46em 26em at 16% -10%, rgba(99, 40, 167, 0.5), transparent 64%),
-    radial-gradient(50em 26em at 86% -14%, rgba(13, 89, 140, 0.46), transparent 66%);
+    radial-gradient(42em 24em at 78% 26%, rgba(168, 16, 126, 0.38), transparent 62%),
+    radial-gradient(46em 26em at 18% -12%, rgba(99, 40, 167, 0.46), transparent 64%),
+    radial-gradient(52em 28em at 94% -16%, rgba(13, 89, 140, 0.44), transparent 66%);
 }
 
-/* the same 26px lattice as .dot-grid, inverted and fading out before
-   the punched edge so the band hands off cleanly */
+/* the site's 26px lattice, inverted, fading out before the band ends */
 .ab-hero::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background-image: radial-gradient(
-    circle at center,
-    rgba(255, 255, 255, 0.11) 1.2px,
-    transparent 1.3px
-  );
-  background-size: 26px 26px;
-  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 40%, transparent 94%);
-  mask-image: linear-gradient(to bottom, #000 0%, #000 40%, transparent 94%);
-}
-
-.ab-hero ::selection {
-  background: rgba(255, 138, 209, 0.32);
-  color: #fff;
-}
-
-.ab-hero :focus-visible {
-  outline-color: var(--ab-accent);
-}
-
-/* the stamp's punched edge; --edge-color must match whatever section
-   follows, or the perforation reads as a row of stray dots */
-.ab-hero-edge {
-  --edge-color: var(--ab-sky);
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  right: 0;
-  height: 14px;
-  z-index: 1;
-  background-image: radial-gradient(
-    circle at 9px 14px,
-    var(--edge-color) 7px,
-    transparent 7.7px
-  );
-  background-size: 18px 14px;
-  background-repeat: repeat-x;
-  background-position: center bottom;
-  pointer-events: none;
-}
-
-.ab-hero-title {
-  font-size: clamp(2.6rem, 6.4vw, 4.2rem);
-  font-weight: 800;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-  color: #fff;
-  margin-bottom: 14px;
-}
-
-.ab-hero-desc {
-  font-size: 1.12rem;
-  color: var(--ab-on-night);
-  line-height: 1.6;
-  max-width: 34em;
-  margin: 0 auto;
-}
-
-/* ── who we are ────────────────────────────────────────────────
-   What used to open the page, now sitting where it belongs: after
-   the page has said its name. The artwork reads on the pale ground
-   as well as it did on the ink, so this section takes --bg-soft and
-   the page keeps its light/dark alternation. */
-.ab-intro {
-  background: var(--ab-sky);
-}
-
-.ab-intro-grid {
-  display: grid;
-  grid-template-columns: 1.02fr 0.98fr;
-  align-items: center;
-  gap: 52px;
-}
-
-.ab-intro-text {
-  min-width: 0;
-}
-
-.ab-intro-text h2 {
-  font-size: clamp(1.9rem, 3.6vw, 2.6rem);
-  font-weight: 800;
-  line-height: 1.2;
-  letter-spacing: -0.015em;
-  color: var(--ab-ink);
-  margin-bottom: 20px;
-  text-wrap: balance;
-}
-
-/* on the pale ground the hero's light accent would wash out, so the
-   year takes the full-strength brand magenta */
-.ab-since {
-  display: block;
-  color: var(--primary-pink);
-  font-weight: 900;
-}
-
-.ab-intro-lede {
-  font-size: 1.16rem;
-  color: var(--ab-ink);
-  line-height: 1.72;
-  max-width: 32em;
-  margin-bottom: 16px;
-}
-
-.ab-intro-note {
-  font-size: 1rem;
-  color: var(--text-gray);
-  line-height: 1.7;
-  max-width: 34em;
-}
-
-.ab-intro-art {
-  justify-self: center;
-  width: 100%;
-  max-width: 540px;
-  line-height: 0;
-}
-
-.ab-intro-art img {
-  width: 100%;
-  height: auto;
-  filter: drop-shadow(0 22px 38px rgba(22, 50, 79, 0.22));
-}
-
-/* ── shared section bits ── */
-.ab-section {
-  padding: 76px 0;
-}
-
-.ab-section-title {
-  font-size: 2.4rem;
-  font-weight: 800;
-  color: var(--text-dark);
-  text-align: center;
-  margin-bottom: 16px;
-  text-wrap: balance;
-}
-
-/* the home page's rule under every section heading */
-.ab-section-title + .ab-rule {
-  width: 40px;
-  height: 3px;
-  background: var(--primary-pink);
-  border-radius: 2px;
-  margin: 16px auto 20px;
-}
-
-.ab-section-sub {
-  font-size: 1.08rem;
-  color: var(--text-gray);
-  text-align: center;
-  max-width: 620px;
-  margin: 0 auto 44px;
-  line-height: 1.7;
-}
-
-/* ── story timeline ── */
-.ab-story-grid {
-  display: flex;
-  gap: 56px;
-  align-items: flex-start;
-}
-
-.ab-timeline {
-  flex: 1;
-  min-width: 300px;
-  margin-inline-start: 44px;
-  border-inline-start: 2px dashed #c2cfdf;
-  padding-inline-start: 34px;
-  display: flex;
-  flex-direction: column;
-  gap: 36px;
-}
-
-.ab-stop {
-  position: relative;
-}
-
-/* stamp-shaped year marker sitting on the perforated line */
-.ab-stamp {
-  position: absolute;
-  inset-inline-start: -64px;
-  top: -2px;
-  background: var(--ab-blue);
-  color: #fff;
-  font-weight: 700;
-  font-size: 0.85rem;
-  padding: 6px 10px;
-  border-radius: 5px;
-  outline: 1.5px dashed rgba(255, 255, 255, 0.75);
-  outline-offset: -4px;
-  transform: rotate(-2deg);
-  box-shadow: 0 6px 14px -6px rgba(13, 89, 140, 0.6);
-  white-space: nowrap;
-}
-
-.ab-stop h3 {
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--ab-ink);
-  margin-bottom: 6px;
-}
-
-.ab-stop p {
-  font-size: 1rem;
-  color: var(--text-gray);
-  line-height: 1.75;
-  max-width: 520px;
-}
-
-.ab-story-side {
-  flex: 0 0 340px;
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
-  align-items: center;
-}
-
-.ab-story-side img {
-  width: 100%;
-  max-width: 320px;
-}
-
-/* founder quote */
-.ab-quote {
-  background: #fff;
-  border: 1px solid var(--ab-line);
-  border-radius: 20px;
-  padding: 28px;
-  box-shadow: 0 14px 34px -20px rgba(22, 50, 79, 0.3);
-  position: relative;
-  overflow: hidden;
-}
-
-.ab-quote::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 30px;
-  height: 30px;
-  background: var(--primary-gradient);
-  clip-path: polygon(0 100%, 100% 100%, 0 0);
-  border-radius: 0 0 0 18px;
-  opacity: 0.9;
-}
-
-.ab-quote blockquote {
-  font-size: 1.05rem;
-  color: var(--ab-ink);
-  line-height: 1.8;
-  font-weight: 600;
-  margin-bottom: 18px;
-}
-
-.ab-quote-person {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.ab-quote-person img {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.ab-quote-person strong {
-  display: block;
-  font-size: 0.95rem;
-  color: var(--ab-ink);
-}
-
-.ab-quote-person span {
-  font-size: 0.85rem;
-  color: var(--text-light);
-}
-
-/* ── platform tools ── */
-.ab-tools {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px;
-  max-width: 820px;
-  margin: 0 auto;
-}
-
-.ab-tool {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  background: #fff;
-  border: 1px solid var(--ab-line);
-  border-radius: 999px;
-  padding: 11px 20px;
-  font-size: 0.98rem;
-  font-weight: 600;
-  color: var(--ab-ink);
-  box-shadow: 0 4px 14px -10px rgba(22, 50, 79, 0.35);
-  transition: transform 0.2s ease, border-color 0.2s ease;
-}
-
-.ab-tool:hover {
-  transform: translateY(-2px);
-  border-color: var(--ab-blue);
-}
-
-.ab-tool svg {
-  color: var(--success);
-  flex-shrink: 0;
-}
-
-/* ── values ── */
-/* ── values: a perforated sheet of stamps ──────────────────────────
-   The page's motif is postal (scalloped hero edge, stamp year markers,
-   perforated timeline), so the values are printed as one sheet rather
-   than six separate cards: punched outer edge, perforation lines
-   between cells, and a single cancellation mark over the corner.
-   One ink for every mark — the sheet is one printing. */
-.ab-values {
-  background: var(--ab-sky);
-}
-
-.ab-sheet {
-  position: relative;
-  max-width: 960px;
-  margin: 0 auto;
-  background: #fdfdfb;
-  border-radius: 5px;
-  padding: 14px;
-  box-shadow: 0 22px 46px -34px rgba(22, 50, 79, 0.75);
-}
-
-/* punched edge, all four sides: half-circles in the section colour */
-.ab-sheet::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  border-radius: inherit;
-  background-image:
-    radial-gradient(circle at 8px 0, var(--ab-sky) 4.6px, rgba(233, 239, 246, 0) 5.2px),
-    radial-gradient(circle at 8px 100%, var(--ab-sky) 4.6px, rgba(233, 239, 246, 0) 5.2px),
-    radial-gradient(circle at 0 8px, var(--ab-sky) 4.6px, rgba(233, 239, 246, 0) 5.2px),
-    radial-gradient(circle at 100% 8px, var(--ab-sky) 4.6px, rgba(233, 239, 246, 0) 5.2px);
-  background-size: 16px 10px, 16px 10px, 10px 16px, 10px 16px;
-  background-position: top left, bottom left, top left, top right;
-  background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
-}
-
-.ab-sheet-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-}
-
-.ab-stamp-cell {
-  padding: 28px 24px 30px;
-  text-align: right;
-  transition: background 0.25s ease;
-}
-
-/* perforation between stamps, never along the punched outer edge */
-.ab-stamp-cell:not(:nth-child(3n)) {
-  border-inline-end: 2px dotted #cfdae6;
-}
-
-.ab-stamp-cell:nth-child(-n + 3) {
-  border-block-end: 2px dotted #cfdae6;
-}
-
-.ab-stamp-cell:hover {
-  background: rgba(13, 89, 140, 0.035);
-}
-
-.ab-stamp-cell h3 {
-  font-size: 1.06rem;
-  font-weight: 700;
-  color: var(--ab-ink);
-  margin-bottom: 8px;
-}
-
-.ab-stamp-cell p {
-  font-size: 0.92rem;
-  color: var(--text-gray);
-  line-height: 1.75;
-}
-
-.ab-mark {
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  border: 1.5px dashed rgba(13, 89, 140, 0.34);
-  color: var(--ab-blue);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 16px;
-  transition: border-color 0.25s ease, background 0.25s ease;
-}
-
-.ab-stamp-cell:hover .ab-mark {
-  border-color: var(--ab-blue);
-  background: rgba(13, 89, 140, 0.07);
-}
-
-.ab-mark-letter {
-  font-size: 1.35rem;
-  font-weight: 700;
-  line-height: 1;
-  color: var(--ab-blue);
-}
-
-/* cancellation mark, parked over the far corner of the sheet */
-.ab-postmark {
-  position: absolute;
-  top: -22px;
-  inset-inline-end: -26px;
-  width: 104px;
-  height: 104px;
-  border-radius: 50%;
-  border: 2px solid var(--ab-blue);
-  color: var(--ab-blue);
-  opacity: 0.22;
-  transform: rotate(-11deg);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  pointer-events: none;
-  z-index: 2;
-}
-
-.ab-postmark::before {
-  content: '';
-  position: absolute;
-  inset: 6px;
-  border: 1px solid currentColor;
-  border-radius: 50%;
-}
-
-.ab-postmark span {
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-}
-
-.ab-postmark b {
-  font-size: 1.05rem;
-  font-weight: 800;
-  line-height: 1;
-  padding: 3px 0;
-  border-block: 1px solid currentColor;
-  width: 54px;
-  text-align: center;
-}
-
-.ab-sheet-note {
-  max-width: 960px;
-  margin: 18px auto 0;
-  font-size: 0.86rem;
-  color: var(--text-light);
-  text-align: center;
-}
-
-/* the shared dark inline CTA ships on --bg-dark, a touch warmer than this
-   page's ink; on a page with three dark bands the difference reads as a
-   mistake, so it takes the same ground as the other two */
-.ab .inline-cta.is-dark {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  background: var(--ab-night);
-}
-
-.ab .inline-cta.is-dark::before {
-  content: '';
-  position: absolute;
-  inset: -60% -20%;
-  z-index: -1;
-  background: radial-gradient(34em 18em at 50% 50%, rgba(99, 40, 167, 0.42), transparent 62%);
-}
-
-/* ── numbers band ──
-   The page's second ink band, built on the hero's recipe so the two
-   read as the same surface returning, not as two different darks. */
-.ab-band {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  background: var(--ab-night);
-  color: #fff;
-  padding: 68px 0;
-}
-
-.ab-band::before {
-  content: '';
-  position: absolute;
-  inset: -40% -12%;
-  z-index: -2;
-  background:
-    radial-gradient(40em 22em at 18% 108%, rgba(99, 40, 167, 0.5), transparent 64%),
-    radial-gradient(38em 20em at 84% -10%, rgba(168, 16, 126, 0.34), transparent 62%);
-}
-
-.ab-band::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   z-index: -1;
@@ -575,476 +88,1013 @@
     transparent 1.3px
   );
   background-size: 26px 26px;
-  -webkit-mask-image: radial-gradient(70% 120% at 50% 50%, #000 30%, transparent 100%);
-  mask-image: radial-gradient(70% 120% at 50% 50%, #000 30%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 38%, transparent 96%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 38%, transparent 96%);
 }
 
-.ab-band ::selection {
-  background: rgba(255, 138, 209, 0.32);
+/* the browser surfaces we did not draw still have to carry the band */
+.ab-hero ::selection,
+.ab-quote ::selection {
+  background: rgba(255, 138, 209, 0.34);
   color: #fff;
 }
 
-.ab-band-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 28px;
-  text-align: center;
+.ab-hero :focus-visible,
+.ab-quote :focus-visible {
+  outline-color: var(--ab-accent);
 }
 
-/* one hairline between figures, so three numbers read as one reading
-   rather than three loose cards */
-.ab-band-grid > div + div {
-  border-inline-end: 1px solid rgba(255, 255, 255, 0.14);
-}
-
-.ab-band-num {
-  font-size: 2.9rem;
+.ab-hero-title {
+  font-size: var(--fs-display);
   font-weight: 800;
-  line-height: 1.15;
-  direction: ltr;
-  font-variant-numeric: tabular-nums;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  color: #fff;
+  margin: 0 0 clamp(12px, 1.6vw, 18px);
+}
+
+.ab-hero-claim {
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.026em;
+  color: #fff;
+  max-width: 20ch;
+  text-wrap: balance;
+  margin: 0 0 clamp(16px, 2vw, 24px);
+}
+
+.ab-hero-year {
+  display: block;
   color: var(--ab-accent);
 }
 
-.ab-band-label {
-  font-size: 0.98rem;
-  color: var(--ab-on-night-dim);
-  margin-top: 6px;
+.ab-hero-lede {
+  font-size: var(--fs-md);
+  line-height: 1.7;
+  color: var(--ab-on-ink);
+  max-width: 46ch;
+  text-wrap: pretty;
+  margin: 0;
 }
 
-/* ── certifications ── */
-/* ── certifications: one document, read at full size ──────────────
-   Both assets are full pages of text; at thumbnail size they were
-   noise. The picker chooses which document the viewer shows, and the
-   facts beside it are read off that document. */
-.ab-certs {
+/* An index strip, read as one line, not a row of metric tiles.
+   Grid rather than flex-wrap: a wrapped entry would carry its divider
+   rule down with it and leave a hairline dangling in open space. */
+.ab-facts {
   display: grid;
-  grid-template-columns: minmax(270px, 380px) minmax(0, 1fr);
-  gap: 44px;
-  align-items: start;
+  grid-template-columns: repeat(3, max-content);
+  align-items: baseline;
+  column-gap: clamp(18px, 2.6vw, 30px);
+  margin: clamp(32px, 4vw, 44px) 0 0;
+  padding-block-start: 20px;
+  border-block-start: 1px solid rgba(255, 255, 255, 0.16);
+  font-size: var(--fs-sm);
+  color: var(--ab-on-ink-dim);
 }
 
-.ab-cert-card {
+.ab-facts li {
   display: flex;
-  align-items: center;
-  gap: 15px;
-  width: 100%;
-  padding: 15px 17px;
-  background: #fff;
-  border: 1px solid var(--ab-line);
-  border-radius: 14px;
-  font: inherit;
-  color: inherit;
-  text-align: right;
-  cursor: pointer;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  align-items: baseline;
+  gap: 8px;
 }
 
-.ab-cert-card + .ab-cert-card {
-  margin-top: 12px;
+/* the thin rules between entries, drawn rather than typed as a separator */
+.ab-facts li + li {
+  padding-inline-start: clamp(18px, 2.6vw, 30px);
+  border-inline-start: 1px solid rgba(255, 255, 255, 0.16);
 }
 
-.ab-cert-card:hover {
-  border-color: #b3c6da;
-}
-
-.ab-cert-card[aria-pressed='true'] {
-  border-color: var(--ab-blue);
-  box-shadow: inset 0 0 0 1px var(--ab-blue), 0 16px 32px -28px rgba(13, 89, 140, 0.9);
-}
-
-.ab-cert-card[aria-pressed='true'] .ab-mark {
-  background: var(--ab-blue);
-  border-color: var(--ab-blue);
-  border-style: solid;
+.ab-facts .ab-num {
+  font-size: var(--fs-md);
+  font-weight: 800;
+  letter-spacing: -0.02em;
   color: #fff;
 }
 
-.ab-cert-card .ab-mark {
-  margin-bottom: 0;
-  flex-shrink: 0;
+/* ── clients ────────────────────────────────────────────────────
+   The real marks, in motion, bleeding past both edges of the page.
+   The label stays inside the container so it lines up with every
+   other heading on the page; only the wall itself breaks out, which
+   is what sells it as a wall rather than a row that happens to end. */
+.ab-clients {
+  padding: clamp(26px, 3.2vw, 36px) 0 clamp(30px, 3.6vw, 42px);
+  background: var(--bg-white);
+  border-block-end: 1px solid var(--ab-line);
 }
 
-.ab-cert-card strong {
-  display: block;
-  font-size: 1rem;
-  color: var(--ab-ink);
-  margin-bottom: 3px;
-}
-
-.ab-cert-desc {
-  display: block;
-  font-size: 0.86rem;
-  color: var(--text-gray);
+.ab-clients h2 {
+  font-size: var(--fs-xs);
+  font-weight: 700;
   line-height: 1.5;
+  color: var(--ab-body);
+  margin: 0 0 clamp(18px, 2.2vw, 26px);
 }
 
-/* facts read off the document currently on screen */
-.ab-cert-facts {
-  margin: 18px 0 0;
-  padding: 6px 18px;
-  border: 1px dashed #cfdae6;
-  border-radius: 14px;
+/* ── shared section frame ──────────────────────────────────────── */
+.ab-section {
+  padding: clamp(64px, 8vw, 96px) 0;
+}
+
+.ab-soft {
   background: var(--ab-sky);
 }
 
-.ab-cert-facts > div {
-  display: grid;
-  grid-template-columns: 82px 1fr;
-  gap: 12px;
-  padding: 11px 0;
+/* Start-aligned, with one accent rule under the heading: the eye finds
+   the same edge at every section. */
+.ab-head {
+  max-width: 56ch;
+  margin-block-end: clamp(36px, 4.4vw, 52px);
 }
 
-.ab-cert-facts > div + div {
-  border-top: 1px dotted #c3d2e1;
+.ab-head h2 {
+  font-size: var(--fs-2xl);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.028em;
+  color: var(--ab-ink-2);
+  text-wrap: balance;
+  margin: 0;
 }
 
-.ab-cert-facts dt {
-  font-size: 0.82rem;
+.ab-head h2::after {
+  content: "";
+  display: block;
+  width: 44px;
+  height: 3px;
+  margin-block-start: 16px;
+  border-radius: 2px;
+  background: var(--primary-gradient);
+}
+
+.ab-head p {
+  font-size: var(--fs-base);
+  line-height: 1.72;
+  color: var(--ab-body);
+  text-wrap: pretty;
+  margin: 16px 0 0;
+}
+
+/* ── what we do ─────────────────────────────────────────────────
+   A ledger, not a stack. Five lines at one size and one weight was
+   a wall the eye slid off: nothing said where to start, and the
+   last line looked exactly as important as the first.
+
+   So the outcomes are indexed and each row is drawn — number, a
+   connector rule, then the line. The numbers are load-bearing: the
+   five are a sequence a business moves through, and reading them
+   in order is the argument. The rule is what stops the index from
+   floating loose beside the type.
+
+   The label above the list is a sentence opening, not an eyebrow:
+   "אנחנו עוזרים לעסקים" only completes inside each row below it. */
+.ab-do-label {
+  font-size: var(--fs-xs);
   font-weight: 700;
+  line-height: 1.5;
+  color: var(--ab-body);
+  margin: 0 0 clamp(18px, 2.4vw, 28px);
+}
+
+.ab-outcomes {
+  display: grid;
+  gap: clamp(9px, 1.2vw, 15px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  /* Deliberately well under .ab-head h2. These five are the section's
+     content, not a second set of section headings; at anything near
+     the heading's size, five of them in a row simply outvote it and
+     the block reads as a wall of display type. Set on the list so
+     .ab-outcome-rule can size its offset in em of this type rather
+     than of an unrelated 1rem. */
+  font-size: var(--fs-md);
+}
+
+.ab-outcomes li {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(10px, 1.4vw, 16px);
+}
+
+.ab-outcome-n {
+  flex: none;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.04em;
   color: var(--ab-blue);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  unicode-bidi: isolate;
+  direction: ltr;
 }
 
-.ab-cert-facts dd {
-  margin: 0;
-  font-size: 0.88rem;
-  color: var(--ab-ink);
-  line-height: 1.55;
+/* An empty inline-block sits with its bottom edge on the baseline,
+   so the rule needs only a lift to land on the middle of the
+   Hebrew letterform rather than under it. */
+.ab-outcome-rule {
+  flex: none;
+  display: inline-block;
+  width: clamp(18px, 3vw, 44px);
+  height: 1px;
+  background: var(--ab-line);
+  transform: translateY(-0.34em);
 }
 
-.ab-cert-viewer {
-  margin: 0;
+.ab-outcome-t {
+  flex: 0 1 auto;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.026em;
+  color: var(--ab-ink-2);
+  text-wrap: balance;
+  min-width: 0;
 }
 
-.ab-cert-frame {
+/* The leader runs the line out to the end of the measure. Without it
+   the rows stopped wherever the Hebrew happened to stop and left the
+   far half of the section empty above a full-width tool sheet, which
+   read as two unrelated blocks rather than one ledger. */
+.ab-outcome-lead {
+  flex: 1 1 auto;
+  display: inline-block;
+  height: 1px;
+  background: var(--ab-line);
+  transform: translateY(-0.34em);
+}
+
+/* The tooling is the answer to "how", so it never competes with the
+   ledger above it — but a grid of white cells with one short label
+   pinned to the far edge is not restraint, it is an empty table. So
+   the inventory takes the page's other register instead: one ink
+   panel, cut from the same band as the hero and the quote, with the
+   seven modules running across it as a rail.
+
+   Items are sized to their own label and separated by hairlines, so
+   there are no cells to leave empty and no seventh-item hole to
+   patch. It is also the only dark thing between the hero and the
+   quote, which is what stops three pale-blue screens running
+   together. */
+.ab-do-tools {
+  margin-block-start: clamp(40px, 5vw, 64px);
+}
+
+.ab-do-tools .ab-do-label {
+  margin-block-end: clamp(14px, 1.8vw, 20px);
+}
+
+.ab-tools {
   position: relative;
-  display: block;
-  background: #fff;
-  border: 1px solid var(--ab-line);
-  border-radius: 16px;
-  padding: 14px;
-  box-shadow: 0 20px 44px -30px rgba(22, 50, 79, 0.55);
-  cursor: zoom-in;
-  transition: box-shadow 0.25s ease;
-}
-
-.ab-cert-frame:hover {
-  box-shadow: 0 24px 50px -28px rgba(22, 50, 79, 0.65);
-}
-
-/* both documents share one frame height so switching never jumps the layout;
-   the wider report letterboxes against the frame's own white */
-.ab-cert-frame img {
-  display: block;
-  width: 100%;
-  aspect-ratio: 1.386 / 1;
-  object-fit: contain;
-  border-radius: 7px;
-}
-
-.ab-cert-card:focus-visible,
-.ab-cert-frame:focus-visible {
-  outline: 2px solid var(--ab-blue);
-  outline-offset: 3px;
-}
-
-.ab-cert-viewer figcaption {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 6px 14px;
-  margin-top: 14px;
-  font-size: 0.86rem;
-  color: var(--text-light);
-}
-
-.ab-cert-viewer figcaption a {
-  color: var(--ab-blue);
-  font-weight: 600;
-  text-decoration: none;
-  border-bottom: 1px solid currentColor;
-}
-
-.ab-cert-viewer figcaption a::after {
-  content: ' ↗';
-}
-
-.ab-cert-hint {
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: var(--text-light);
-  margin-bottom: 10px;
-}
-
-/* ── team ── */
-.ab-team-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 28px 16px;
-}
-
-.ab-member {
-  text-align: center;
-}
-
-.ab-member img {
-  width: 104px;
-  height: 104px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin: 0 auto 12px;
-  border: 3px solid #fff;
-  box-shadow: 0 6px 18px -8px rgba(22, 50, 79, 0.35);
-  transition: transform 0.2s ease;
-}
-
-.ab-member:hover img {
-  transform: translateY(-4px) rotate(-2deg);
-}
-
-.ab-member h3 {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--ab-ink);
-  margin-bottom: 3px;
-}
-
-.ab-member p {
-  font-size: 0.82rem;
-  color: var(--text-gray);
-}
-
-/* ── FAQ ── */
-.ab-faq-list {
-  max-width: 760px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.ab-faq-item {
-  background: #fff;
-  border: 1px solid var(--ab-line);
-  border-radius: 12px;
+  isolation: isolate;
   overflow: hidden;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(18px, 2.2vw, 26px) clamp(20px, 2.6vw, 40px);
+  margin: 0;
+  padding: clamp(24px, 3vw, 36px) clamp(22px, 2.8vw, 38px);
+  list-style: none;
+  background: var(--ab-ink-2);
+  border-radius: var(--ab-r);
 }
 
-.ab-faq-q {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  padding: 18px 22px;
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: var(--ab-ink);
-  text-align: right;
-  background: transparent;
+/* the hero's bloom, dialled well down: this panel is an echo of that
+   band, not a second performance of it */
+.ab-tools::before {
+  content: "";
+  position: absolute;
+  inset: -60% -8%;
+  z-index: -1;
+  background:
+    radial-gradient(30em 16em at 88% 0%, rgba(168, 16, 126, 0.26), transparent 66%),
+    radial-gradient(32em 18em at 6% 118%, rgba(99, 40, 167, 0.28), transparent 68%);
 }
 
-.ab-faq-arrow {
-  display: flex;
-  color: var(--ab-blue);
-  flex-shrink: 0;
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.ab-faq-item[data-open='true'] .ab-faq-arrow {
-  transform: rotate(180deg);
-}
-
-.ab-faq-a {
-  padding: 0 22px 18px;
-  font-size: 0.96rem;
-  color: var(--text-gray);
-  line-height: 1.75;
-}
-
-/* ── entry animation ── */
-@keyframes ab-rise {
-  from {
-    opacity: 0;
-    transform: translateY(22px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-.ab-hero-title,
-.ab-hero-desc {
-  animation: ab-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) backwards;
-}
-
-.ab-hero-desc { animation-delay: 0.1s; }
-
-@media (prefers-reduced-motion: reduce) {
-  .ab-hero-title,
-  .ab-hero-desc {
-    animation: none;
-  }
-
-  .ab-stamp-cell,
-  .ab-stamp-cell:hover,
-  .ab-mark,
-  .ab-cert-card,
-  .ab-cert-frame,
-  .ab-tool:hover,
-  .ab-member:hover img {
-    transform: none;
-    transition: none;
-  }
-}
-
-/* ── responsive ── */
-@media (max-width: 980px) {
-  .ab-hero {
-    padding: 52px 0 66px;
-  }
-
-  .ab-intro-grid {
-    grid-template-columns: 1fr;
-    gap: 36px;
-    text-align: center;
-  }
-
-  /* art first when stacked: it establishes the section before the prose */
-  .ab-intro-art {
-    grid-row: 1;
-    max-width: 440px;
-  }
-
-  .ab-intro-lede,
-  .ab-intro-note {
-    margin-inline: auto;
-  }
-
-  .ab-band-grid > div + div {
-    border-inline-end: none;
-    border-block-start: 1px solid rgba(255, 255, 255, 0.14);
-    padding-block-start: 28px;
-  }
-
-  .ab-story-grid {
-    flex-direction: column;
-  }
-
-  .ab-story-side {
-    flex: 1;
-    width: 100%;
-    max-width: 460px;
-    margin: 0 auto;
-  }
-
-  .ab-certs {
-    grid-template-columns: 1fr;
-    gap: 30px;
-    max-width: 520px;
-    margin-inline: auto;
-  }
-
-  .ab-sheet-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .ab-stamp-cell:not(:nth-child(3n)),
-  .ab-stamp-cell:nth-child(-n + 3) {
-    border-inline-end: none;
-    border-block-end: none;
-  }
-
-  .ab-stamp-cell:not(:nth-child(2n)) {
-    border-inline-end: 2px dotted #cfdae6;
-  }
-
-  .ab-stamp-cell:nth-child(-n + 4) {
-    border-block-end: 2px dotted #cfdae6;
-  }
-
-  .ab-postmark {
-    width: 88px;
-    height: 88px;
-    inset-inline-end: -14px;
-    top: -18px;
-  }
-
-  .ab-band-grid {
-    grid-template-columns: 1fr;
-    gap: 32px;
-  }
-
-  .ab-team-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@media (max-width: 768px) {
-  .ab-section {
-    padding: 52px 0;
-  }
-
-  .ab-section-title {
-    font-size: 1.8rem;
-  }
-
-  .ab-hero {
-    padding: 40px 0 56px;
-  }
-
-  .ab-hero-desc {
-    font-size: 1rem;
-  }
-
-  .ab-intro-lede {
-    font-size: 1.06rem;
-  }
-
-  .ab-intro-note {
-    font-size: 0.96rem;
-  }
-
-  .ab-intro-art {
-    max-width: min(86vw, 380px);
+/* Fixed columns rather than a wrapping rail: seven items wrap 6 + 1
+   at this width, and the orphan looked like a mistake. Four and
+   three is a deliberate shape, and the one unused slot costs
+   nothing because the panel behind it is continuous — that is the
+   whole reason this is a field and not a sheet of white cells. */
+@media (min-width: 1040px) {
+  .ab-tools {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 560px) {
-  .ab-sheet-grid {
-    grid-template-columns: 1fr;
+  .ab-tools {
+    grid-template-columns: minmax(0, 1fr);
   }
+}
 
-  .ab-stamp-cell:not(:nth-child(2n)) {
-    border-inline-end: none;
-  }
+.ab-tools li {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: -0.012em;
+  color: #fff;
+  text-wrap: pretty;
+}
 
-  .ab-stamp-cell:nth-child(-n + 5) {
-    border-block-end: 2px dotted #cfdae6;
-  }
+/* bare mark in the accent, the same way .ab-mark carries the blue
+   elsewhere on the page: nothing on this page puts an icon in a box */
+.ab-tool-icon {
+  display: flex;
+  flex: none;
+  color: var(--ab-accent);
+}
 
-  .ab-stamp-cell:last-child {
-    border-block-end: none;
-  }
-
-  .ab-postmark {
+@media (max-width: 700px) {
+  /* nothing to lead into: the type already fills the row */
+  .ab-outcome-lead {
     display: none;
+  }
+}
+
+/* ── story ──────────────────────────────────────────────────────
+   Two hairline-ruled rows, the year as the display element, then the
+   "why" as a closing statement rather than a third dated row: it is
+   present tense, so a date would misfile it. */
+.ab-story {
+  border-block-start: 1px solid var(--ab-line);
+}
+
+.ab-stop {
+  display: grid;
+  grid-template-columns: minmax(130px, 190px) 1fr;
+  gap: clamp(18px, 3.6vw, 52px);
+  align-items: baseline;
+  padding-block: clamp(26px, 3.1vw, 38px);
+  border-block-end: 1px solid var(--ab-line);
+}
+
+.ab-stop-year {
+  font-size: var(--fs-2xl);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--ab-blue);
+  font-variant-numeric: tabular-nums;
+}
+
+.ab-stop p {
+  font-size: var(--fs-base);
+  line-height: 1.75;
+  color: var(--ab-body);
+  max-width: 62ch;
+  text-wrap: pretty;
+  margin: 0;
+  min-width: 0;
+}
+
+.ab-why {
+  margin-block-start: clamp(34px, 4.4vw, 54px);
+  max-width: 54ch;
+}
+
+.ab-why-lead {
+  font-size: var(--fs-md);
+  line-height: 1.7;
+  color: var(--ab-body);
+  text-wrap: pretty;
+  margin: 0 0 clamp(18px, 2.2vw, 26px);
+}
+
+/* Each clause on its own line, as written. The last one runs long and is
+   allowed to wrap; the first two are the beat. */
+.ab-why-lines {
+  display: grid;
+  gap: clamp(5px, 0.7vw, 9px);
+  margin: 0;
+}
+
+.ab-why-lines span {
+  font-size: var(--fs-xl);
+  font-weight: 800;
+  line-height: 1.3;
+  letter-spacing: -0.028em;
+  color: var(--ab-ink-2);
+  text-wrap: pretty;
+}
+
+.ab-why-lines span:last-child {
+  font-size: var(--fs-md);
+  font-weight: 600;
+  line-height: 1.55;
+  color: var(--ab-blue);
+}
+
+/* ── founder quote: the page's one pause ───────────────────────── */
+.ab-quote {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(66px, 9vw, 104px) 0;
+  background: var(--ab-ink-2);
+  color: #fff;
+}
+
+.ab-quote::before {
+  content: "";
+  position: absolute;
+  inset: -40% -10%;
+  z-index: -1;
+  background:
+    radial-gradient(38em 20em at 84% 8%, rgba(168, 16, 126, 0.3), transparent 64%),
+    radial-gradient(40em 22em at 10% 110%, rgba(99, 40, 167, 0.34), transparent 66%);
+}
+
+.ab-quote figure {
+  margin: 0;
+  max-width: min(46ch, 100%);
+}
+
+.ab-quote blockquote {
+  font-size: var(--fs-xl);
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -0.02em;
+  color: #fff;
+  text-wrap: pretty;
+  margin: 0;
+}
+
+.ab-quote figcaption {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-block-start: clamp(26px, 3vw, 36px);
+  padding-block-start: clamp(22px, 2.6vw, 30px);
+  border-block-start: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.ab-quote figcaption img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: top;
+  background: var(--ab-blue-wall);
+  flex: none;
+}
+
+.ab-quote figcaption > span {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ab-quote figcaption strong {
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: #fff;
+}
+
+.ab-quote figcaption span span {
+  font-size: var(--fs-xs);
+  color: var(--ab-on-ink-dim);
+}
+
+/* ── vision ───────────────────────────────────────
+   One sentence, standing on its own. It is the company's claim about
+   where it is going, so it is set at statement scale rather than at
+   the body size a section intro would take. */
+/* .ab-head caps its measure at 56ch of 1rem; this paragraph is set much
+   larger, so that cap wrapped it into a narrow stack. It takes its own
+   measure in em of its own type instead. */
+.ab-head.ab-vision {
+  max-width: none;
+}
+
+.ab-vision p {
+  max-width: 30em;
+  font-size: var(--fs-lg);
+  line-height: 1.66;
+  color: var(--ab-ink-2);
+  margin-block-start: clamp(20px, 2.4vw, 28px);
+}
+
+/* ── values ──────────────────────────────────────
+   Six entries at one weight in two ruled columns. The earlier version
+   promoted the first into a white card, which read as an unexplained
+   box rather than as the first of six — it was the section's only
+   bordered surface in a page that otherwise argues in ruled type. The
+   list's order already says which value comes first. */
+.ab-value-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: clamp(30px, 4.4vw, 68px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ab-value-list li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(12px, 1.5vw, 18px);
+  align-content: start;
+  padding-block: clamp(17px, 2.1vw, 24px);
+  border-block-start: 1px solid var(--ab-line);
+}
+
+/* the top row sits flush under the heading rather than a rule's worth
+   below it; grid areas in one row share a top edge, so the two rules
+   always line up across the columns */
+.ab-value-list li:nth-child(-n + 2) {
+  padding-block-start: 0;
+  border-block-start: 0;
+}
+
+.ab-value-list .ab-mark {
+  width: 22px;
+  height: 22px;
+  margin-block-start: 2px;
+}
+
+.ab-value-list .ab-mark svg {
+  width: 100%;
+  height: 100%;
+}
+
+.ab-value-list h3 {
+  font-size: var(--fs-base);
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: -0.014em;
+  color: var(--ab-ink-2);
+  margin: 0 0 6px;
+}
+
+.ab-value-list p {
+  font-size: var(--fs-sm);
+  line-height: 1.7;
+  color: var(--ab-body);
+  text-wrap: pretty;
+  margin: 0;
+}
+
+@media (max-width: 860px) {
+  .ab-value-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* back to one column, so only the true first row is flush */
+  .ab-value-list li:nth-child(2) {
+    padding-block-start: clamp(17px, 2.1vw, 24px);
+    border-block-start: 1px solid var(--ab-line);
+  }
+}
+
+.ab-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  flex: none;
+  color: var(--ab-blue);
+}
+
+.ab-mark-sm {
+  width: 22px;
+  height: 22px;
+}
+
+/* ── certifications: the documents are the evidence ────────────── */
+.ab-certs {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+  gap: clamp(26px, 3.6vw, 48px);
+  align-items: start;
+}
+
+.ab-cert-doc {
+  margin: 0;
+  min-width: 0;
+}
+
+.ab-cert-plate {
+  display: block;
+  padding: clamp(10px, 1.4vw, 16px);
+  background: var(--bg-white);
+  border: 1px solid var(--ab-line);
+  border-radius: var(--ab-r);
+  box-shadow:
+    0 18px 40px -22px rgba(11, 31, 51, 0.42),
+    0 2px 6px rgba(11, 31, 51, 0.06);
+  transition:
+    transform var(--ab-hover) var(--ab-ease),
+    box-shadow var(--ab-hover) var(--ab-ease);
+}
+
+.ab-cert-plate img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--ab-r-sm);
+}
+
+.ab-cert-doc figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 18px;
+  margin-block-start: 14px;
+  font-size: var(--fs-xs);
+  color: var(--ab-body);
+}
+
+.ab-cert-doc figcaption a {
+  font-weight: 700;
+  color: var(--ab-blue);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  transition: color var(--ab-hover) var(--ab-ease);
+}
+
+.ab-cert-side {
+  min-width: 0;
+}
+
+.ab-cert-picker {
+  display: grid;
+  gap: 10px;
+}
+
+.ab-cert-opt {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 16px 18px;
+  text-align: start;
+  background: var(--bg-white);
+  border: 1px solid var(--ab-line);
+  border-radius: var(--ab-r);
+  color: var(--ab-body);
+  transition:
+    border-color var(--ab-hover) var(--ab-ease),
+    box-shadow var(--ab-hover) var(--ab-ease),
+    transform var(--ab-press) var(--ab-ease);
+}
+
+.ab-cert-opt:active {
+  transform: scale(0.98);
+}
+
+.ab-cert-opt[aria-pressed="true"] {
+  border-color: var(--ab-blue);
+  color: var(--ab-ink-2);
+  box-shadow:
+    inset 0 0 0 1px var(--ab-blue),
+    0 6px 18px -10px rgba(13, 89, 140, 0.55);
+}
+
+.ab-cert-opt > span {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.ab-cert-opt strong {
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--ab-ink-2);
+}
+
+.ab-cert-opt > span > span {
+  font-size: var(--fs-xs);
+  line-height: 1.5;
+  color: var(--ab-body);
+}
+
+.ab-cert-facts {
+  margin: 22px 0 0;
+  border-block-start: 1px solid var(--ab-line);
+}
+
+.ab-cert-facts > div {
+  display: grid;
+  grid-template-columns: minmax(84px, auto) 1fr;
+  gap: 4px 18px;
+  padding-block: 13px;
+  border-block-end: 1px solid var(--ab-line);
+}
+
+.ab-cert-facts dt {
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: var(--ab-body);
+}
+
+.ab-cert-facts dd {
+  margin: 0;
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+  color: var(--ab-ink-2);
+}
+
+/* ── team ───────────────────────────────────────────────────────
+   The portraits share one blue ground, so each tile keeps that blue
+   inside its own rounded frame: the set still reads as one family,
+   without the colour taking the whole section over. */
+.ab-team {
+  background: var(--ab-sky);
+}
+
+.ab-team-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(18px, 2.2vw, 28px) clamp(14px, 1.8vw, 24px);
+}
+
+.ab-team-grid li {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.ab-portrait {
+  display: block;
+  aspect-ratio: 300 / 332;
+  overflow: hidden;
+  border-radius: var(--ab-r);
+  background: var(--ab-blue-wall);
+  box-shadow:
+    0 12px 26px -18px rgba(11, 31, 51, 0.55),
+    0 1px 3px rgba(11, 31, 51, 0.07);
+  transition:
+    transform var(--ab-hover) var(--ab-ease),
+    box-shadow var(--ab-hover) var(--ab-ease);
+}
+
+.ab-portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+
+.ab-team-grid strong {
+  display: block;
+  margin-block-start: 13px;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--ab-ink-2);
+}
+
+.ab-member-role {
+  display: block;
+  margin-block-start: 3px;
+  font-size: var(--fs-xs);
+  line-height: 1.45;
+  color: var(--ab-body);
+}
+
+/* The page's one authored motion. Tiles are visible by default and only
+   hidden once JS has confirmed itself, so a failed script never swallows
+   the team. Stagger stays inside the 30-80ms band; anything longer reads
+   as a queue rather than a settle. */
+.ab-team-grid[data-state="armed"] li,
+.ab-team-grid[data-state="in"] li {
+  transition:
+    opacity var(--ab-reveal) var(--ab-ease),
+    transform var(--ab-reveal) var(--ab-ease),
+    filter var(--ab-reveal) var(--ab-ease);
+  transition-delay: calc(var(--i) * 45ms);
+}
+
+.ab-team-grid[data-state="armed"] li {
+  opacity: 0;
+  transform: translateY(16px) scale(1.02);
+  filter: blur(6px);
+}
+
+.ab-team-grid[data-state="in"] li {
+  opacity: 1;
+  transform: none;
+  filter: blur(0);
+}
+
+/* ── FAQ: ruled rows, no boxes ─────────────────────────────────── */
+.ab-faq {
+  border-block-start: 1px solid var(--ab-line);
+  max-width: 78ch;
+}
+
+.ab-faq-item {
+  border-block-end: 1px solid var(--ab-line);
+}
+
+.ab-faq-item h3 {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.ab-faq-q {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+  padding: 21px 4px;
+  text-align: start;
+  font-size: var(--fs-base);
+  font-weight: 700;
+  line-height: 1.45;
+  color: var(--ab-ink-2);
+  transition: color var(--ab-hover) var(--ab-ease);
+}
+
+.ab-faq-chevron {
+  flex: none;
+  color: var(--ab-blue);
+  transition: transform var(--ab-disclose) var(--ab-ease);
+}
+
+.ab-faq-item[data-open="true"] .ab-faq-chevron {
+  transform: rotate(180deg);
+}
+
+.ab-faq-a {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--ab-disclose) var(--ab-ease);
+}
+
+.ab-faq-body {
+  overflow: hidden;
+  max-width: 68ch;
+}
+
+.ab-faq-body p {
+  margin: 0;
+  font-size: var(--fs-sm);
+  line-height: 1.75;
+  color: var(--ab-body);
+  text-wrap: pretty;
+}
+
+.ab-faq-body ul {
+  margin: 12px 0 0;
+  display: grid;
+  gap: 8px;
+}
+
+.ab-faq-body li {
+  position: relative;
+  padding-inline-start: 18px;
+  font-size: var(--fs-sm);
+  line-height: 1.7;
+  color: var(--ab-body);
+}
+
+.ab-faq-body li::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0.72em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--ab-blue);
+}
+
+.ab-faq-item[data-open="true"] .ab-faq-a {
+  grid-template-rows: 1fr;
+}
+
+.ab-faq-item[data-open="true"] .ab-faq-body {
+  padding-block-end: 24px;
+}
+
+/* ── hover ──────────────────────────────────────────────────────
+   Gated: a touch device fires :hover on tap and leaves the element
+   stuck in its hover state afterwards. */
+@media (hover: hover) and (pointer: fine) {
+  .ab-cert-plate:hover {
+    transform: translateY(-3px);
+    box-shadow:
+      0 26px 52px -22px rgba(11, 31, 51, 0.48),
+      0 3px 8px rgba(11, 31, 51, 0.08);
+  }
+
+  .ab-cert-doc figcaption a:hover {
+    color: var(--primary-pink);
+  }
+
+  .ab-cert-opt:hover {
+    border-color: #b9c9db;
+  }
+
+  .ab-team-grid li:hover .ab-portrait {
+    transform: translateY(-4px);
+    box-shadow:
+      0 20px 34px -18px rgba(11, 31, 51, 0.62),
+      0 2px 5px rgba(11, 31, 51, 0.09);
+  }
+
+  .ab-faq-q:hover {
+    color: var(--ab-blue);
+  }
+}
+
+/* ── responsive ────────────────────────────────────────────────── */
+@media (max-width: 960px) {
+  .ab-certs {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ab-cert-side {
+    order: -1;
   }
 
   .ab-team-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .ab-facts {
+    grid-template-columns: minmax(0, 1fr);
+    column-gap: 0;
   }
 
-  .ab-timeline {
-    padding-inline-start: 24px;
+  .ab-facts li + li {
+    padding-inline-start: 0;
+    border-inline-start: 0;
   }
 
-  .ab-stamp {
-    position: static;
-    display: inline-block;
-    margin-bottom: 10px;
+  .ab-facts li {
+    padding-block: 11px;
+    border-block-end: 1px solid rgba(255, 255, 255, 0.14);
+  }
+
+  .ab-facts li:last-child {
+    border-block-end: 0;
+    padding-block-end: 0;
+  }
+}
+
+@media (max-width: 720px) {
+  .ab-hero-claim {
+    max-width: 100%;
+  }
+
+  /* the wall gets a shorter box on a phone, so a tall stacked mark
+     cannot push the band into a second row of dead space */
+  .ab-clients .cm {
+    --cm-h: 28px;
+  }
+
+  .ab-stop {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .ab-stop-year {
+    line-height: 1.1;
+  }
+
+  .ab-team-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ab-cert-doc figcaption {
+    justify-content: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ab-team-grid[data-state="armed"] li,
+  .ab-team-grid[data-state="in"] li {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+
+  .ab-team-grid li:hover .ab-portrait,
+  .ab-cert-plate:hover,
+  .ab-cert-opt:active {
+    transform: none;
+  }
+
+  .ab-faq-a,
+  .ab-faq-chevron,
+  .ab-portrait,
+  .ab-cert-plate,
+  .ab-cert-opt {
+    transition: none;
   }
 }
