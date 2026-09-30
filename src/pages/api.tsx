@@ -2,6 +2,7 @@ import React from "react"
 import type { HeadFC } from "gatsby"
 import DocsLayout from "../components/docs/DocsLayout"
 import EndpointSection from "../components/docs/EndpointSection"
+import ScrollArea from "../components/docs/ScrollArea"
 import SEO from "../components/SEO"
 import {
   API_BASE,
@@ -18,7 +19,7 @@ import "../styles/api-docs.css"
 const ApiPage: React.FC = () => (
   <DocsLayout>
     <section className="doc-intro" id="introduction">
-      <h1 className="doc-h1">SendMsg API {API_VERSION}</h1>
+      <h1 className="doc-h1">Sendmsg API {API_VERSION}</h1>
       <p className="doc-lede">
         Manage subscribers and mailing lists, and send newsletters and SMS
         campaigns, from your own code.
@@ -37,7 +38,7 @@ const ApiPage: React.FC = () => (
           lasts twelve hours.
         </p>
         <p>
-          SiteID is your SendMsg account number. The API password comes from
+          SiteID is your Sendmsg account number. The API password comes from
           support, at <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>.
         </p>
       </div>
@@ -88,24 +89,26 @@ const ApiPage: React.FC = () => (
         <p className="doc-section-lede">
           Whatever the code, <code>result.ResultMessage</code> carries the detail.
         </p>
-        <table className="doc-table doc-table-status">
-          <thead>
-            <tr>
-              <th scope="col">Code</th>
-              <th scope="col">Meaning</th>
-            </tr>
-          </thead>
-          <tbody>
-            {statusCodes.map((s) => (
-              <tr key={s.code}>
-                <th scope="row">
-                  <code className={`doc-code-chip is-${s.kind}`}>{s.code}</code>
-                </th>
-                <td>{s.meaning}</td>
+        <ScrollArea label="Status codes">
+          <table className="doc-table doc-table-status">
+            <thead>
+              <tr>
+                <th scope="col">Code</th>
+                <th scope="col">Meaning</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {statusCodes.map((s) => (
+                <tr key={s.code}>
+                  <th scope="row">
+                    <code className={`doc-code-chip is-${s.kind}`}>{s.code}</code>
+                  </th>
+                  <td>{s.meaning}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </ScrollArea>
       </section>
 
       <section className="doc-sub" id="for-agents">
@@ -159,7 +162,7 @@ export default ApiPage
 export const Head: HeadFC = () => (
   <SEO
     title="API Reference"
-    description="SendMsg API 4.0 reference. Manage subscribers and mailing lists, and send email and SMS campaigns, from your own code."
+    description="Sendmsg API 5.0 reference. Manage subscribers and mailing lists, and send email and SMS campaigns, from your own code."
     pathname="/api/"
   />
 )

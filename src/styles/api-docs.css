@@ -1,4 +1,4 @@
-/* ── SendMsg API reference ─────────────────────────────────────────
+/* ── Sendmsg API reference ─────────────────────────────────────────
    An LTR English island inside an RTL Hebrew site, so everything here
    is scoped under .api-docs and the shell carries dir="ltr".
 
@@ -110,8 +110,7 @@
 
 .doc-table,
 .doc-creds-status,
-.doc-tryit-status,
-.doc-sidebar-count {
+.doc-tryit-status {
   font-variant-numeric: tabular-nums;
 }
 
@@ -184,14 +183,32 @@
   color: var(--doc-muted);
 }
 
+/* The one way into the contents on a phone, sitting beside a search field
+   that is far larger than it. Outlined in white it read as a hint; filled,
+   it reads as the control it is. */
 .doc-navtoggle {
   display: none;
-  padding: 6px 11px;
-  border: 1px solid var(--doc-rule);
-  border-radius: 6px;
-  background: #fff;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  min-height: 40px;
+  padding: 8px 13px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: var(--doc-ink);
   font: inherit;
-  font-size: 13px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.doc-navtoggle-icon {
+  flex: 0 0 auto;
+}
+
+.doc-navtoggle.is-open {
+  background: var(--doc-paper-sunk);
+  border-color: var(--doc-rule);
   color: var(--doc-ink);
 }
 
@@ -253,13 +270,6 @@
 
 .doc-sidebar-heading.is-open .doc-sidebar-caret {
   transform: rotate(45deg);
-}
-
-.doc-sidebar-count {
-  margin-inline-start: auto;
-  font-size: 11px;
-  color: var(--doc-muted);
-  font-variant-numeric: tabular-nums;
 }
 
 .doc-sidebar-list {
@@ -1238,7 +1248,7 @@
 
 @media (max-width: 900px) {
   .doc-navtoggle {
-    display: inline-block;
+    display: inline-flex;
     margin-inline-start: auto;
   }
 
@@ -1255,16 +1265,32 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
+  /* A drawer in from the left, mirroring the console on the right, rather
+     than a list shoved into the top of the document. Tapping the button
+     used to just make the page taller, which read as nothing happening;
+     sliding a panel over the reference reads as a menu opening, and the
+     scrim gives it somewhere obvious to be dismissed. */
   .doc-sidebar {
-    display: none;
-    position: static;
-    height: auto;
-    border-right: none;
-    border-bottom: 1px solid var(--doc-rule);
+    position: fixed;
+    z-index: 60;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: min(320px, 86vw);
+    height: 100dvh;
+    padding: 18px 14px calc(28px + env(safe-area-inset-bottom));
+    border-right: 1px solid var(--doc-rule);
+    background: var(--doc-paper);
+    transform: translateX(-100%);
+    visibility: hidden;
+    transition:
+      transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
+      visibility 380ms;
   }
 
   .doc-body.nav-open .doc-sidebar {
-    display: block;
+    transform: translateX(0);
+    visibility: visible;
   }
 
   .doc-main {
@@ -1503,22 +1529,321 @@
   }
 }
 
+/* ── the console below the three-column breakpoint ───────────────────
+   The rail used to drop to the foot of the document. On a phone that put
+   the credentials form and every code sample roughly 5,700px down, under
+   all twenty-six endpoints: present in the DOM, unreachable in practice.
+
+   So below this width it stops being a column and becomes a panel that
+   slides in over the reference, with a permanent handle docked at the
+   bottom of the viewport. The reference keeps the full width for reading;
+   the console is one tap away from anywhere on the page.
+   ------------------------------------------------------------------- */
+
 @media (max-width: 1180px) {
   .doc-body {
     grid-template-columns: var(--doc-sidebar-w) minmax(0, 1fr);
   }
 
-  /* The rail drops under the reference rather than squeezing it. */
   .doc-rail {
-    grid-column: 1 / -1;
-    position: static;
-    height: auto;
-    border-left: none;
+    position: fixed;
+    z-index: 60;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(440px, 100vw);
+    height: 100dvh;
+    border-left: 1px solid var(--rail-line);
+    padding-bottom: calc(24px + env(safe-area-inset-bottom));
+    transform: translateX(100%);
+    /* Shut, it is not just off-screen: no tab stops, nothing for a screen
+       reader. `visibility` is what does that, and it transitions discretely
+       so it stays visible for the whole slide out. */
+    visibility: hidden;
+    transition:
+      transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
+      visibility 420ms;
+  }
+
+  .doc-rail.is-open {
+    transform: translateX(0);
+    visibility: visible;
+  }
+
+  /* The dock sits over the foot of the reference, so the last of it needs
+     room to clear. */
+  .doc-main {
+    padding-bottom: calc(96px + env(safe-area-inset-bottom));
   }
 }
 
 @media (max-width: 900px) {
   .doc-body {
     grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ── the console dock and its panel chrome ───────────────────────────
+   All of this is inert above 1180px, where the rail is still a column:
+   the dock and the panel's own header are display:none until the
+   breakpoint above turns them on.
+   ------------------------------------------------------------------- */
+
+.doc-rail-head {
+  display: none;
+  align-items: center;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  margin: -16px -16px 16px;
+  padding: 14px 16px;
+  background: var(--rail-floor);
+  border-bottom: 1px solid var(--rail-line);
+}
+
+.doc-rail-head-title {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--rail-muted);
+}
+
+.doc-rail-close {
+  margin-inline-start: auto;
+  padding: 7px 14px;
+  min-height: 34px;
+  border: 1px solid var(--rail-line);
+  border-radius: 7px;
+  background: var(--rail-raised);
+  color: var(--rail-text);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.doc-rail-close:hover {
+  border-color: #3d6f9c;
+  color: #fff;
+}
+
+.doc-rail-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(7, 21, 35, 0.55);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 320ms ease;
+}
+
+.doc-dock {
+  display: none;
+  align-items: center;
+  gap: 12px;
+  position: fixed;
+  z-index: 55;
+  left: 12px;
+  right: 12px;
+  bottom: calc(12px + env(safe-area-inset-bottom));
+  /* Comfortably past the 44px touch floor. */
+  min-height: 52px;
+  padding: 10px 14px;
+  border: 1px solid var(--rail-line);
+  border-radius: 12px;
+  background: var(--rail-floor);
+  color: var(--rail-text);
+  font: inherit;
+  font-size: 14px;
+  text-align: left;
+  box-shadow:
+    0 2px 6px rgba(7, 21, 35, 0.3),
+    0 14px 34px rgba(7, 21, 35, 0.34);
+}
+
+.doc-dock-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-weight: 500;
+}
+
+.doc-dock-action {
+  margin-inline-start: auto;
+  flex: 0 0 auto;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: var(--rail-raised);
+  font-size: 12.5px;
+  color: var(--rail-muted);
+}
+
+/* ── tables that outgrow the column ──────────────────────────────────
+   Three columns of field documentation do not survive being squeezed
+   into a phone: the description, which is the part worth reading, ends
+   up narrower than the type beside it. So the table keeps a floor width
+   and the box around it scrolls instead.
+
+   The fades are the only signal that there is more to the right, since
+   a touch device shows no scrollbar until you move. They are driven by
+   scroll position, so each one appears only while that direction still
+   has something in it.
+   ------------------------------------------------------------------- */
+
+.doc-scroll {
+  position: relative;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--doc-rule) transparent;
+}
+
+.doc-scroll::-webkit-scrollbar {
+  height: 9px;
+}
+
+.doc-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.doc-scroll::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  background-clip: content-box;
+  border-radius: 6px;
+  background-color: var(--doc-rule);
+}
+
+.doc-scroll:focus-visible {
+  outline: 2px solid var(--doc-blue);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Masked rather than painted over, so the fade works on the paper the
+   table actually sits on and needs no colour of its own. */
+.doc-scroll.is-scrollable.at-end {
+  mask-image: linear-gradient(to right, #000 calc(100% - 44px), transparent 100%);
+}
+
+.doc-scroll.is-scrollable.at-start {
+  mask-image: linear-gradient(to left, #000 calc(100% - 44px), transparent 100%);
+}
+
+.doc-scroll.is-scrollable.at-start.at-end {
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 44px,
+    #000 calc(100% - 44px),
+    transparent 100%
+  );
+}
+
+@media (max-width: 1180px) {
+  .doc-scroll .doc-table {
+    /* Enough that the description column stops being the one that loses. */
+    min-width: 520px;
+  }
+
+  .doc-scroll .doc-table-status {
+    /* Two columns, and the meanings are short: it fits far sooner. */
+    min-width: 340px;
+  }
+
+  /* These three are declared above with display:none / opacity:0 as their
+     resting state, so the rules that switch them on have to come after
+     those declarations rather than beside the rail's own breakpoint. */
+  .doc-rail-head {
+    display: flex;
+  }
+
+  .doc-dock {
+    display: flex;
+  }
+
+  .doc-rail-scrim.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+/* ── the console owns its full edge ──────────────────────────────────
+   Above the breakpoint the top bar used to run the whole width, laying a
+   strip of paper across the top of the dark console and cutting it off
+   from the top of the window. The console is a different surface from
+   the reference, so it should read as one unbroken column: it now runs
+   the full height of the viewport, and the bar stops where it starts.
+
+   The rail leaves the grid to do this, so the third column it used to
+   occupy stays behind as the spacer the fixed panel sits over.
+   ------------------------------------------------------------------- */
+
+@media (min-width: 1181px) {
+  .doc-topbar {
+    width: calc(100% - var(--doc-rail-w));
+  }
+
+  .doc-rail {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: var(--doc-rail-w);
+    height: 100vh;
+    z-index: 45;
+  }
+}
+
+/* ── the contents drawer's own header ────────────────────────────────
+   Inert while the contents are a column; it appears only at the width
+   where they become a panel laid over the page.
+   ------------------------------------------------------------------- */
+
+.doc-sidebar-head {
+  display: none;
+  align-items: center;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  margin: -18px -14px 14px;
+  padding: 13px 16px;
+  background: var(--doc-paper);
+  border-bottom: 1px solid var(--doc-rule);
+}
+
+.doc-sidebar-head-title {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--doc-muted);
+}
+
+.doc-sidebar-close {
+  margin-inline-start: auto;
+  min-height: 34px;
+  padding: 7px 14px;
+  border: 1px solid var(--doc-rule);
+  border-radius: 7px;
+  background: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--doc-ink);
+}
+
+.doc-sidebar-close:hover {
+  border-color: var(--doc-blue);
+}
+
+@media (max-width: 900px) {
+  .doc-sidebar-head {
+    display: flex;
   }
 }

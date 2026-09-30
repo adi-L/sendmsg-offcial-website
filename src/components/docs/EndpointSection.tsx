@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { API_BASE, schemaById, type Endpoint, type Field } from "../../data/api"
 import { useDocsState } from "./useDocsState"
+import ScrollArea from "./ScrollArea"
 
 const FieldTable: React.FC<{ title: string; fields: Field[]; description?: string }> = ({
   title,
@@ -10,37 +11,39 @@ const FieldTable: React.FC<{ title: string; fields: Field[]; description?: strin
   <div className="doc-fields">
     <h4 className="doc-fields-title">{title}</h4>
     {description ? <p className="doc-fields-desc">{description}</p> : null}
-    <table className="doc-table">
-      <thead>
-        <tr>
-          <th scope="col">Field</th>
-          <th scope="col">Type</th>
-          <th scope="col">Description</th>
-        </tr>
-      </thead>
-      <tbody>
-        {fields.map((field) => (
-          <tr key={field.name}>
-            <th scope="row">
-              <code>{field.name}</code>
-              {field.required ? (
-                <span className="doc-req">required</span>
-              ) : null}
-            </th>
-            <td className="doc-type">{field.type ?? "—"}</td>
-            <td>
-              {field.description}
-              {field.default ? (
-                <span className="doc-default">
-                  Defaults to <code>{field.default}</code>
-                </span>
-              ) : null}
-              {field.note ? <span className="doc-note">{field.note}</span> : null}
-            </td>
+    <ScrollArea label={title}>
+      <table className="doc-table">
+        <thead>
+          <tr>
+            <th scope="col">Field</th>
+            <th scope="col">Type</th>
+            <th scope="col">Description</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {fields.map((field) => (
+            <tr key={field.name}>
+              <th scope="row">
+                <code>{field.name}</code>
+                {field.required ? (
+                  <span className="doc-req">required</span>
+                ) : null}
+              </th>
+              <td className="doc-type">{field.type ?? "—"}</td>
+              <td>
+                {field.description}
+                {field.default ? (
+                  <span className="doc-default">
+                    Defaults to <code>{field.default}</code>
+                  </span>
+                ) : null}
+                {field.note ? <span className="doc-note">{field.note}</span> : null}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </ScrollArea>
   </div>
 )
 
