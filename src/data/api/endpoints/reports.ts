@@ -14,7 +14,7 @@ export const reports: Endpoint[] = [
         name: "messageID",
         required: true,
         type: "number",
-        description: "ID of the past message in your SendMsg account.",
+        description: "ID of the past message in your Sendmsg account.",
         example: "2050763",
       },
     ],
@@ -47,7 +47,7 @@ export const reports: Endpoint[] = [
           success: true,
           res: true,
           result: { ResultID: 200, ResultMessage: "Passed OK", Tin: "" },
-          SendMsgJoinersDate: [
+          SendmsgJoinersDate: [
             { From: "2023-07-22T18:03:33", Sum: 2, Until: "2023-08-11T18:03:33" },
             { From: "2023-07-02T18:03:34", Sum: 1, Until: "2023-07-22T18:03:34" },
           ],

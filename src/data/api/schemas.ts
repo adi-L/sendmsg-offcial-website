@@ -65,13 +65,13 @@ export const schemas: Schema[] = [
   {
     id: "user-by-userid",
     title: "User object, identified by UserID",
-    description: "Identifies an existing subscriber by their SendMsg UserID.",
+    description: "Identifies an existing subscriber by their Sendmsg UserID.",
     fields: [
       {
         name: "UserID",
         required: true,
         type: "number",
-        description: "UserID from your SendMsg account.",
+        description: "UserID from your Sendmsg account.",
         example: "19407",
       },
       {
@@ -139,7 +139,7 @@ export const schemas: Schema[] = [
         name: "MessageInnerName",
         required: true,
         type: "string",
-        description: "Name of the message inside your SendMsg account.",
+        description: "Name of the message inside your Sendmsg account.",
         example: "MessageName",
       },
       {
@@ -229,7 +229,7 @@ export const schemas: Schema[] = [
         name: "MessageInnerName",
         required: true,
         type: "string",
-        description: "Name of the message inside your SendMsg account.",
+        description: "Name of the message inside your Sendmsg account.",
         example: "MessageName",
       },
       {

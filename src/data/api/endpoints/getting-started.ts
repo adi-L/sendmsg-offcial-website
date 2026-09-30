@@ -11,7 +11,7 @@ export const gettingStarted: Endpoint[] = [
     auth: false,
     description:
       "Exchange your account SiteID and API password for a bearer token. " +
-      "SiteID is your SendMsg account number. The API password comes from " +
+      "SiteID is your Sendmsg account number. The API password comes from " +
       "the support team. Send the token as the Authorization header on every " +
       "other call.",
     notes: [

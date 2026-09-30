@@ -81,7 +81,7 @@ export const subscribers: Endpoint[] = [
         name: "userID",
         required: true,
         type: "number",
-        description: "ID of the subscriber in your SendMsg account.",
+        description: "ID of the subscriber in your Sendmsg account.",
         example: "43998",
       },
     ],

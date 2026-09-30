@@ -287,7 +287,7 @@ export const sending: Endpoint[] = [
         name: "MsgID",
         required: true,
         type: "number",
-        description: "ID of the past message in your SendMsg account.",
+        description: "ID of the past message in your Sendmsg account.",
         example: "2052217",
       },
     ],

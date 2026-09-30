@@ -31,7 +31,7 @@ const describe = (e: Endpoint) => `${e.method} ${e.path} — ${e.title}`
 /** Short index. The convention is that an agent reads this one first. */
 export function buildLlmsTxt(): string {
   const out: string[] = [
-    `# SendMsg API ${API_VERSION}`,
+    `# Sendmsg API ${API_VERSION}`,
     "",
     "> REST API for managing subscribers and mailing lists and for sending",
     "> email and SMS campaigns. All requests are JSON over HTTPS.",
@@ -120,7 +120,7 @@ function variantMarkdown(e: Endpoint, v: Variant, showLabel: boolean): string[] 
 /** The complete reference as one markdown file. */
 export function buildLlmsFullTxt(): string {
   const out: string[] = [
-    `# SendMsg API ${API_VERSION}`,
+    `# Sendmsg API ${API_VERSION}`,
     "",
     "REST API for managing subscribers and mailing lists and for sending email",
     "and SMS campaigns.",
@@ -289,7 +289,7 @@ export function buildOpenApi(): unknown {
   return {
     openapi: "3.1.0",
     info: {
-      title: "SendMsg API",
+      title: "Sendmsg API",
       version: API_VERSION,
       description:
         "Manage subscribers and mailing lists, and send email and SMS campaigns.",

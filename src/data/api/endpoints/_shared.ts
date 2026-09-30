@@ -23,7 +23,7 @@ export const envelopeNotes: Record<string, string> = {
   success: "true or false",
   res: "true or false",
   "result.ResultID": "status code",
-  "result.ResultMessage": "SendMsg result message",
+  "result.ResultMessage": "Sendmsg result message",
   "result.Tin": "deprecated, always empty",
 }
 

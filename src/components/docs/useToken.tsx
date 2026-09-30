@@ -13,7 +13,7 @@ import React, {
  * their real values instead of the placeholders.
  *
  * Kept in localStorage, which means it stays in this browser. It is sent
- * nowhere except the SendMsg API itself, and only when the reader runs a
+ * nowhere except the Sendmsg API itself, and only when the reader runs a
  * request from the console.
  */
 

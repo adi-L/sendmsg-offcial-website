@@ -1,5 +1,5 @@
 /**
- * Content model for the SendMsg API reference.
+ * Content model for the Sendmsg API reference.
  *
  * Every artifact the docs produce -- the page, the five code-sample
  * languages, the search index, llms.txt, llms-full.txt and openapi.json --

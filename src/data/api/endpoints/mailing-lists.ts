@@ -82,7 +82,7 @@ export const mailingLists: Endpoint[] = [
         name: "listID",
         required: true,
         type: "number",
-        description: "ID of the mailing list in your SendMsg account.",
+        description: "ID of the mailing list in your Sendmsg account.",
         example: "172595",
       },
       {
