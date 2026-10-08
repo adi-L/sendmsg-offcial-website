@@ -1,5 +1,6 @@
 import React from "react"
 import { graphql, withPrefix, PageProps, HeadFC } from "gatsby"
+import { prepareArticleImages, ImageSizes } from "../utils/article-images"
 import Layout from "../components/Layout"
 import SEO from "../components/SEO"
 
@@ -18,12 +19,12 @@ interface BlogPostData {
   }
 }
 
-/* Imported articles reference their images by absolute path into
-   static/, which nothing prefixes. See the same note in kb-article. */
-const prefixImages = (html: string) =>
-  html.replace(/(src|srcset)="\/blog-images\//g, `$1="${withPrefix("/blog-images/")}`)
+type Context = { imageSizes?: ImageSizes }
 
-const BlogPostTemplate: React.FC<PageProps<BlogPostData>> = ({ data }) => {
+const BlogPostTemplate: React.FC<PageProps<BlogPostData, Context>> = ({
+  data,
+  pageContext,
+}) => {
   const post = data.markdownRemark
 
   return (
@@ -49,7 +50,13 @@ const BlogPostTemplate: React.FC<PageProps<BlogPostData>> = ({ data }) => {
 
           <div
             style={styles.content}
-            dangerouslySetInnerHTML={{ __html: prefixImages(post.html) }}
+            dangerouslySetInnerHTML={{
+              __html: prepareArticleImages(
+                post.html,
+                "blog-images",
+                pageContext.imageSizes
+              ),
+            }}
           />
         </div>
       </article>

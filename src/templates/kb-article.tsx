@@ -1,5 +1,6 @@
 import React from "react"
-import { graphql, Link, withPrefix, PageProps, HeadFC } from "gatsby"
+import { graphql, Link, PageProps, HeadFC } from "gatsby"
+import { prepareArticleImages, ImageSizes } from "../utils/article-images"
 import Layout from "../components/Layout"
 import CTA from "../components/CTA"
 import SEO from "../components/SEO"
@@ -37,15 +38,13 @@ const BackIcon = () => (
   </svg>
 )
 
-/* The screenshots are plain files under static/, referenced by absolute
-   path from the markdown, so they do not go through webpack and nothing
-   applies the site's pathPrefix to them. This site deploys to GitHub
-   Pages under /sendmsg-offcial-website/, where an unprefixed /kb-images/
-   path resolves to the domain root and every screenshot 404s. */
-const prefixImages = (html: string) =>
-  html.replace(/(src|srcset)="\/kb-images\//g, `$1="${withPrefix("/kb-images/")}`)
 
-const KbArticle: React.FC<PageProps<Data>> = ({ data }) => {
+type Context = { imageSizes?: ImageSizes }
+
+const KbArticle: React.FC<PageProps<Data, Context>> = ({
+  data,
+  pageContext,
+}) => {
   const g = data.markdownRemark
   const { title, author, categories, tags } = g.frontmatter
 
@@ -77,7 +76,13 @@ const KbArticle: React.FC<PageProps<Data>> = ({ data }) => {
           <div className="container">
             <div
               className="kba-prose"
-              dangerouslySetInnerHTML={{ __html: prefixImages(g.html) }}
+              dangerouslySetInnerHTML={{
+                __html: prepareArticleImages(
+                  g.html,
+                  "kb-images",
+                  pageContext.imageSizes
+                ),
+              }}
             />
 
             {tags && tags.length > 0 && (

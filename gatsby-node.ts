@@ -1,11 +1,50 @@
 import fs from "fs"
 import path from "path"
 import { GatsbyNode } from "gatsby"
+import sharp from "sharp"
 import {
   buildLlmsTxt,
   buildLlmsFullTxt,
   buildOpenApi,
 } from "./src/data/api/artifacts"
+import { articleImageSrcs, ImageSizes } from "./src/utils/article-images"
+
+/**
+ * Measures the screenshots an article references, so the template can give
+ * every <img> a real width and height and the page stops reflowing as they
+ * arrive. These files live under static/, outside the image pipeline, so
+ * nothing else knows their size.
+ *
+ * Memoised across pages: the guides share a handful of images, and sharp
+ * opening the same file 98 times is the slowest thing in the build.
+ */
+const measured = new Map<string, [number, number] | null>()
+
+const measureArticleImages = async (
+  html: string,
+  dir: string
+): Promise<ImageSizes> => {
+  const sizes: ImageSizes = {}
+
+  for (const src of articleImageSrcs(html, dir)) {
+    if (!measured.has(src)) {
+      // the markup percent-encodes the Hebrew directory names
+      const file = path.join(__dirname, "static", decodeURIComponent(src))
+      try {
+        const { width, height } = await sharp(file).metadata()
+        measured.set(src, width && height ? [width, height] : null)
+      } catch {
+        // a missing or unreadable file is check-links.py's business, not ours
+        measured.set(src, null)
+      }
+    }
+
+    const size = measured.get(src)
+    if (size) sizes[src] = size
+  }
+
+  return sizes
+}
 
 export const createPages: GatsbyNode["createPages"] = async ({
   graphql,
@@ -23,6 +62,7 @@ export const createPages: GatsbyNode["createPages"] = async ({
       nodes: Array<{
         frontmatter: { slug: string }
         fileAbsolutePath: string
+        html: string
         id: string
       }>
     }
@@ -37,6 +77,7 @@ export const createPages: GatsbyNode["createPages"] = async ({
             slug
           }
           fileAbsolutePath
+          html
           id
         }
       }
@@ -54,25 +95,31 @@ export const createPages: GatsbyNode["createPages"] = async ({
   const posts = nodes.filter((n) => inDir(n.fileAbsolutePath, "blog"))
   const guides = nodes.filter((n) => inDir(n.fileAbsolutePath, "kb"))
 
-  posts.forEach((post) => {
-    createPage({
-      path: `/blog/${post.frontmatter.slug}/`,
-      component: blogPostTemplate,
-      context: {
-        id: post.id,
-      },
+  await Promise.all(
+    posts.map(async (post) => {
+      createPage({
+        path: `/blog/${post.frontmatter.slug}/`,
+        component: blogPostTemplate,
+        context: {
+          id: post.id,
+          imageSizes: await measureArticleImages(post.html, "blog-images"),
+        },
+      })
     })
-  })
+  )
 
-  guides.forEach((guide) => {
-    createPage({
-      path: `/kb/${guide.frontmatter.slug}/`,
-      component: kbArticleTemplate,
-      context: {
-        id: guide.id,
-      },
+  await Promise.all(
+    guides.map(async (guide) => {
+      createPage({
+        path: `/kb/${guide.frontmatter.slug}/`,
+        component: kbArticleTemplate,
+        context: {
+          id: guide.id,
+          imageSizes: await measureArticleImages(guide.html, "kb-images"),
+        },
+      })
     })
-  })
+  )
 }
 
 /**
