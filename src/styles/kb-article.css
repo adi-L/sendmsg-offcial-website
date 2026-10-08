@@ -1,0 +1,361 @@
+/* ============================================================
+   A single guide (.kba-*)
+
+   The site's second Read surface, after the legal pages. Same
+   tokens, same rules, but this one carries screenshots, so the
+   typography has to hold a column of alternating text and image
+   without the images taking over.
+
+   A guide is read while the reader is doing the thing, with the
+   product open in another window. So: no hero artwork, no colour
+   flooding, one measured column, and screenshots that sit on the
+   page as objects rather than floating in it.
+
+   Motion: ease-out only, hover gated behind a real pointer.
+   ============================================================ */
+
+.kba {
+  --kba-ink: #0b1f33;
+  --kba-ink-2: #16324f;
+  --kba-blue: #0d598c;
+  --kba-sky: #e9eff6;
+  --kba-line: #d7e0ea;
+  --kba-line-2: #c8d5e3;
+  --kba-body: #4b6076;
+  --kba-on-ink: #c6d7e8;
+  --kba-on-ink-dim: #93aec9;
+
+  --kba-r: 14px;
+  --kba-r-sm: 8px;
+
+  --kba-ease: cubic-bezier(0.23, 1, 0.32, 1);
+  --kba-hover: 150ms;
+}
+
+.kba ::selection {
+  background: rgba(13, 89, 140, 0.18);
+}
+
+.kba-ltr {
+  unicode-bidi: isolate;
+  direction: ltr;
+  white-space: nowrap;
+}
+
+/* ── hero ───────────────────────────────────────────────────────── */
+.kba-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--kba-ink);
+  padding: clamp(28px, 3.6vw, 40px) 0 clamp(40px, 5vw, 60px);
+}
+
+.kba-hero::before {
+  content: "";
+  position: absolute;
+  inset: -60% -10% auto;
+  height: 160%;
+  z-index: -1;
+  background:
+    radial-gradient(34em 18em at 88% 4%, rgba(168, 16, 126, 0.26), transparent 62%),
+    radial-gradient(30em 16em at 4% 96%, rgba(99, 40, 167, 0.26), transparent 64%);
+}
+
+.kba-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-block-end: clamp(20px, 2.6vw, 28px);
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--kba-on-ink);
+  transition: color var(--kba-hover) var(--kba-ease);
+}
+
+.kba-back span {
+  display: inline-flex;
+  transition: transform var(--kba-hover) var(--kba-ease);
+}
+
+.kba-hero h1 {
+  font-size: clamp(1.8rem, 3.6vw, 2.7rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: #fff;
+  text-wrap: balance;
+  max-width: 28ch;
+  margin: 0;
+}
+
+.kba-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 10px;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--kba-on-ink-dim);
+  margin: 18px 0 0;
+  padding-block-start: 16px;
+  border-block-start: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* A separator that is drawn, not typed, so it never lands at the
+   start or end of a wrapped line. */
+.kba-meta span + span::before {
+  content: "";
+  display: inline-block;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  margin-inline-end: 10px;
+  vertical-align: 0.3em;
+  background: currentColor;
+  opacity: 0.6;
+}
+
+/* ── the guide itself ───────────────────────────────────────────── */
+.kba-body {
+  padding: clamp(40px, 5vw, 64px) 0 clamp(52px, 6.5vw, 80px);
+  background: var(--bg-white);
+}
+
+/* The measure belongs to the text, not to the column. A UI screenshot
+   squeezed into a 68ch reading measure is too small to read, and
+   reading the screenshot is the point of a guide. So prose keeps its
+   measure and images are allowed the full column. */
+.kba-prose {
+  max-width: 92ch;
+}
+
+.kba-prose p,
+.kba-prose h2,
+.kba-prose h3,
+.kba-prose h4,
+.kba-prose ul,
+.kba-prose ol,
+.kba-prose blockquote {
+  max-width: 68ch;
+}
+
+.kba-prose > :first-child {
+  margin-block-start: 0;
+}
+
+.kba-prose p {
+  font-size: 1.06rem;
+  line-height: 1.85;
+  color: var(--kba-body);
+  text-wrap: pretty;
+  margin: 0 0 1.1em;
+}
+
+.kba-prose h2 {
+  font-size: clamp(1.35rem, 2.2vw, 1.7rem);
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -0.026em;
+  color: var(--kba-ink-2);
+  text-wrap: balance;
+  /* More room above a heading than below it, so it binds to the
+     section it opens rather than floating between two. */
+  margin: 2.2em 0 0.1em;
+}
+
+.kba-prose h2::after {
+  content: "";
+  display: block;
+  width: 36px;
+  height: 3px;
+  margin-block: 14px 22px;
+  border-radius: 2px;
+  background: var(--primary-gradient);
+}
+
+.kba-prose h3 {
+  font-size: clamp(1.14rem, 1.7vw, 1.3rem);
+  font-weight: 800;
+  line-height: 1.3;
+  letter-spacing: -0.022em;
+  color: var(--kba-ink-2);
+  text-wrap: balance;
+  margin: 1.9em 0 0.6em;
+}
+
+.kba-prose h4 {
+  font-size: 1.06rem;
+  font-weight: 800;
+  line-height: 1.4;
+  color: var(--kba-ink-2);
+  margin: 1.7em 0 0.5em;
+}
+
+.kba-prose strong {
+  font-weight: 800;
+  color: var(--kba-ink-2);
+}
+
+.kba-prose a {
+  color: var(--kba-blue);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  text-decoration-color: rgba(13, 89, 140, 0.4);
+  overflow-wrap: anywhere;
+  transition: text-decoration-color var(--kba-hover) var(--kba-ease);
+}
+
+/* The guides step through a procedure, so their lists are the
+   content, not an aside. */
+.kba-prose ul,
+.kba-prose ol {
+  margin: 0 0 1.2em;
+  padding-inline-start: 1.4em;
+}
+
+.kba-prose li {
+  font-size: 1.06rem;
+  line-height: 1.8;
+  color: var(--kba-body);
+  text-wrap: pretty;
+  margin-block-end: 0.5em;
+}
+
+.kba-prose ul li {
+  list-style: disc;
+}
+
+.kba-prose ol li {
+  list-style: decimal;
+}
+
+.kba-prose li::marker {
+  color: var(--kba-blue);
+  font-weight: 700;
+}
+
+/* ── screenshots ────────────────────────────────────────────────
+   A screenshot of a UI is evidence, so it gets a frame and a ground
+   rather than bleeding into the page: without the border, a white
+   application screenshot dissolves into the white page and the
+   reader cannot tell where the product ends. */
+.kba-prose img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1.6em 0;
+  border: 1px solid var(--kba-line);
+  border-radius: var(--kba-r-sm);
+  background: var(--kba-sky);
+}
+
+/* A paragraph that only wraps a screenshot is not a paragraph: it
+   keeps neither the reading measure nor the paragraph spacing. */
+.kba-prose p:has(> img) {
+  max-width: none;
+  margin: 0;
+}
+
+.kba-prose hr {
+  border: 0;
+  border-block-start: 1px solid var(--kba-line);
+  margin: 2.4em 0;
+}
+
+.kba-prose blockquote {
+  margin: 1.6em 0;
+  padding-inline-start: 1.1em;
+  border-inline-start: 1px solid var(--kba-line-2);
+  color: var(--kba-body);
+}
+
+/* ── tags ───────────────────────────────────────────────────────── */
+.kba-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 68ch;
+  margin-block-start: clamp(32px, 4vw, 44px);
+  padding-block-start: clamp(20px, 2.6vw, 28px);
+  border-block-start: 1px solid var(--kba-line);
+}
+
+.kba-tags li {
+  padding: 5px 12px;
+  border: 1px solid var(--kba-line-2);
+  border-radius: var(--kba-r-sm);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--kba-body);
+}
+
+/* ── foot ───────────────────────────────────────────────────────── */
+.kba-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px 28px;
+  max-width: 68ch;
+  margin-block-start: clamp(28px, 3.4vw, 40px);
+  padding-block-start: clamp(20px, 2.6vw, 28px);
+  border-block-start: 1px solid var(--kba-line);
+}
+
+.kba-foot-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--kba-blue);
+}
+
+.kba-foot-link span {
+  display: inline-flex;
+  transition: transform var(--kba-hover) var(--kba-ease);
+}
+
+.kba-foot p {
+  font-size: 0.98rem;
+  line-height: 1.7;
+  color: var(--kba-body);
+  margin: 0;
+}
+
+.kba-foot a:not(.kba-foot-link) {
+  color: var(--kba-blue);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ── hover ──────────────────────────────────────────────────────
+   Gated: a touch device fires :hover on tap and then leaves the
+   element stuck in its hover state. */
+@media (hover: hover) and (pointer: fine) {
+  .kba-back:hover {
+    color: #fff;
+  }
+
+  .kba-back:hover span,
+  .kba-foot-link:hover span {
+    transform: translateX(-4px);
+  }
+
+  .kba-prose a:hover {
+    text-decoration-color: currentColor;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kba-back,
+  .kba-back span,
+  .kba-foot-link span,
+  .kba-prose a {
+    transition: none;
+  }
+}

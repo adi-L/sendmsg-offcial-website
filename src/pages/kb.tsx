@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react"
-import { Link } from "gatsby"
+import { graphql, Link, PageProps } from "gatsby"
 import type { HeadFC } from "gatsby"
 import Layout from "../components/Layout"
 import CTA from "../components/CTA"
@@ -8,9 +8,10 @@ import { KB_ARTICLES, KB_CATEGORIES, KbArticle } from "../data/kb"
 import "../styles/kb.css"
 
 /* ── /kb/ — מרכז ההדרכה ─────────────────────────────────────────
-   An index, and only an index. The guides themselves still live on
-   sendmsg.co.il, so every row leaves the site; src/data/kb.ts says
-   how the set was crawled and what changes when they are migrated.
+   The index over every guide. src/data/kb.ts holds the full crawled
+   catalogue; the ones imported into content/kb/ are matched to it by
+   source url and linked internally, the rest still open on
+   sendmsg.co.il. That keeps the index whole while the migration runs.
 
    The live page shows 30 cards at a time behind a filter, which hides
    most of what exists — you cannot tell from it that there are 98
@@ -48,9 +49,24 @@ const ExternalIcon = () => (
   </svg>
 )
 
-const Row: React.FC<{ a: KbArticle; showCats?: boolean }> = ({ a, showCats }) => (
-  <li>
-    <a href={a.url} target="_blank" rel="noopener noreferrer">
+const GoIcon = () => (
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
+    <path d="M19 12H5" />
+    <path d="m12 19-7-7 7-7" />
+  </svg>
+)
+
+/* The guides are being migrated in batches, so the index is mixed for
+   a while: a guide that lives in the repo gets an internal link, one
+   that does not still opens on sendmsg.co.il. The row says which it
+   is rather than leaving the reader to find out by clicking. */
+const Row: React.FC<{
+  a: KbArticle
+  showCats?: boolean
+  localSlug?: string
+}> = ({ a, showCats, localSlug }) => {
+  const inner = (
+    <>
       <span className="kb-row-t">{a.title}</span>
       {showCats && (
         <span className="kb-row-cats">
@@ -58,14 +74,43 @@ const Row: React.FC<{ a: KbArticle; showCats?: boolean }> = ({ a, showCats }) =>
         </span>
       )}
       <span className="kb-row-go" aria-hidden="true">
-        <ExternalIcon />
+        {localSlug ? <GoIcon /> : <ExternalIcon />}
       </span>
-      <span className="kb-sr">נפתח באתר שלח מסר, בחלון חדש</span>
-    </a>
-  </li>
-)
+      {!localSlug && (
+        <span className="kb-sr">נפתח באתר שלח מסר, בחלון חדש</span>
+      )}
+    </>
+  )
 
-const KbPage: React.FC = () => {
+  return (
+    <li>
+      {localSlug ? (
+        <Link to={`/kb/${localSlug}/`}>{inner}</Link>
+      ) : (
+        <a href={a.url} target="_blank" rel="noopener noreferrer">
+          {inner}
+        </a>
+      )}
+    </li>
+  )
+}
+
+interface Data {
+  allMarkdownRemark: {
+    nodes: Array<{ frontmatter: { slug: string; source: string | null } }>
+  }
+}
+
+const KbPage: React.FC<PageProps<Data>> = ({ data }) => {
+  /* source url -> local slug, for the guides already imported */
+  const local = useMemo(() => {
+    const m = new Map<string, string>()
+    for (const n of data.allMarkdownRemark.nodes) {
+      if (n.frontmatter.source) m.set(n.frontmatter.source, n.frontmatter.slug)
+    }
+    return m
+  }, [data])
+
   const [query, setQuery] = useState("")
   const [cat, setCat] = useState<string | null>(null)
 
@@ -193,7 +238,7 @@ const KbPage: React.FC = () => {
             {shown.length > 0 && (q || cat) && (
               <ul className="kb-rows">
                 {shown.map((a) => (
-                  <Row key={a.url} a={a} showCats={!!q} />
+                  <Row key={a.url} a={a} showCats={!!q} localSlug={local.get(a.url)} />
                 ))}
               </ul>
             )}
@@ -207,7 +252,7 @@ const KbPage: React.FC = () => {
                   </div>
                   <ul className="kb-rows">
                     {items.map((a) => (
-                      <Row key={a.url} a={a} />
+                      <Row key={a.url} a={a} localSlug={local.get(a.url)} />
                     ))}
                   </ul>
                 </div>
@@ -221,6 +266,19 @@ const KbPage: React.FC = () => {
 }
 
 export default KbPage
+
+export const query = graphql`
+  query KbIndex {
+    allMarkdownRemark(filter: { frontmatter: { source: { ne: null } } }) {
+      nodes {
+        frontmatter {
+          slug
+          source
+        }
+      }
+    }
+  }
+`
 
 export const Head: HeadFC = () => (
   <SEO
