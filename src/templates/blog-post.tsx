@@ -18,6 +18,11 @@ interface BlogPostData {
   }
 }
 
+/* Imported articles reference their images by absolute path into
+   static/, which nothing prefixes. See the same note in kb-article. */
+const prefixImages = (html: string) =>
+  html.replace(/(src|srcset)="\/blog-images\//g, `$1="${withPrefix("/blog-images/")}`)
+
 const BlogPostTemplate: React.FC<PageProps<BlogPostData>> = ({ data }) => {
   const post = data.markdownRemark
 
@@ -44,7 +49,7 @@ const BlogPostTemplate: React.FC<PageProps<BlogPostData>> = ({ data }) => {
 
           <div
             style={styles.content}
-            dangerouslySetInnerHTML={{ __html: post.html }}
+            dangerouslySetInnerHTML={{ __html: prefixImages(post.html) }}
           />
         </div>
       </article>

@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """
-Import guides from the live sendmsg.co.il knowledge base into content/kb/.
+Import content from the live sendmsg.co.il WordPress site.
+
+Two collections, same extraction:
+  guides   -> content/kb/    + static/kb-images/     (--all, --slug, --limit)
+  articles -> content/blog/  + static/blog-images/   (--articles)
 
 The guides are WordPress/Elementor pages. Everything this script keeps comes
 out of the one content container between the H1 and the "יש לך שאלה נוספת?"
@@ -34,6 +38,10 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 KB_DATA = os.path.join(ROOT, "src", "data", "kb.ts")
 OUT_MD = os.path.join(ROOT, "content", "kb")
 OUT_IMG = os.path.join(ROOT, "static", "kb-images")
+
+BLOG_MD = os.path.join(ROOT, "content", "blog")
+BLOG_IMG = os.path.join(ROOT, "static", "blog-images")
+BLOG_CATEGORY = "מאמרים מקצועיים"
 
 UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/120 Safari/537.36"
 
@@ -407,19 +415,51 @@ def norm_path(url: str) -> str:
     return urllib.parse.unquote(urllib.parse.urlparse(url).path).strip("/").lower()
 
 
-def guide_map():
-    """source path -> local /kb/<slug>/ for everything imported so far."""
+def _collection_map(directory, route):
     out = {}
-    if not os.path.isdir(OUT_MD):
+    if not os.path.isdir(directory):
         return out
-    for name in os.listdir(OUT_MD):
+    for name in os.listdir(directory):
         if not name.endswith(".md"):
             continue
-        text = open(os.path.join(OUT_MD, name), encoding="utf-8").read()
+        text = open(os.path.join(directory, name), encoding="utf-8").read()
         src = re.search(r'^source: "([^"]+)"', text, re.M)
         slug = re.search(r'^slug: "([^"]+)"', text, re.M)
         if src and slug:
-            out[norm_path(src.group(1))] = "/kb/" + urllib.parse.quote(slug.group(1)) + "/"
+            out[norm_path(src.group(1))] = route + urllib.parse.quote(slug.group(1)) + "/"
+    return out
+
+
+def _slug_map(directory, route):
+    """Fall back to matching the live path against a local slug.
+
+    The hand-written blog posts carry no `source`, but their slugs are
+    the live ones, so a link to /digital-course-guide/ still resolves.
+    """
+    out = {}
+    if not os.path.isdir(directory):
+        return out
+    for name in os.listdir(directory):
+        if not name.endswith(".md"):
+            continue
+        text = open(os.path.join(directory, name), encoding="utf-8").read()
+        slug = re.search(r'^slug: "([^"]+)"', text, re.M)
+        if slug:
+            out[slug.group(1).strip().lower()] = route + urllib.parse.quote(slug.group(1)) + "/"
+    return out
+
+
+def guide_map():
+    """source path -> the local route, for everything imported so far.
+
+    Covers both collections: a guide often links to an article and the
+    other way round, so relinking one without the other leaves half the
+    cross-references pointing back at WordPress.
+    """
+    out = _slug_map(BLOG_MD, "/blog/")
+    out.update(_slug_map(OUT_MD, "/kb/"))
+    out.update(_collection_map(BLOG_MD, "/blog/"))
+    out.update(_collection_map(OUT_MD, "/kb/"))
     return out
 
 
@@ -429,10 +469,13 @@ def relink_all(verbose=True):
     rewritten = 0
     left = {}
 
-    for name in sorted(os.listdir(OUT_MD)):
-        if not name.endswith(".md"):
-            continue
-        path = os.path.join(OUT_MD, name)
+    files = []
+    for directory in (OUT_MD, BLOG_MD):
+        if os.path.isdir(directory):
+            files += [os.path.join(directory, n)
+                      for n in sorted(os.listdir(directory)) if n.endswith(".md")]
+
+    for path in files:
         text = open(path, encoding="utf-8").read()
         before = text
 
@@ -462,17 +505,146 @@ def relink_all(verbose=True):
     return rewritten
 
 
+
+# ── articles ────────────────────────────────────────────────────
+# The professional articles are the same WordPress pages as the guides,
+# so they extract identically. They differ only in where they land and
+# in carrying a date and a category, which the blog sorts and filters
+# on. The three hand-written posts already in content/blog are matched
+# by title and left alone rather than overwritten by the live version.
+
+def take_date(page: str) -> str:
+    for pat in (r'property="article:published_time" content="([^"]+)"',
+                r'"datePublished"\s*:\s*"([^"]+)"'):
+        m = re.search(pat, page)
+        if m:
+            return m.group(1)[:10]
+    return ""
+
+
+def existing_blog_titles():
+    out = {}
+    if not os.path.isdir(BLOG_MD):
+        return out
+    for name in os.listdir(BLOG_MD):
+        if not name.endswith(".md"):
+            continue
+        text = open(os.path.join(BLOG_MD, name), encoding="utf-8").read()
+        m = re.search(r'^title: "((?:[^"\\]|\\.)*)"', text, re.M)
+        if m:
+            out[m.group(1).replace('\\"', '"').strip()] = name
+    return out
+
+
+def import_article(art, keep, verbose=True):
+    slug = slug_of(art["url"])
+    title = art["title"]
+
+    if title in keep:
+        if verbose:
+            print(f"  kept hand-written: {title[:50]}")
+        return None
+
+    page = strip_dead(fetch(art["url"]))
+    if not page or "<h1" not in page:
+        print(f"  SKIP (no page): {title}", file=sys.stderr)
+        return None
+
+    body = isolate_body(page, title)
+    if body is None:
+        print(f"  SKIP (no body): {title}", file=sys.stderr)
+        return None
+
+    author = take_author(page)
+    featured = take_featured(page)
+    date = take_date(page)
+
+    def wanted(u: str) -> bool:
+        return u.startswith("http") and re.search(
+            r"(sendmsg\.co\.il|comstar\.co\.il)/.*\.(png|jpe?g|webp|gif)", u, re.I
+        ) is not None
+
+    srcs = []
+    if featured and wanted(featured):
+        srcs.append(featured)
+    for m in re.finditer(r'<img[^>]*?src="([^"]+)"', body):
+        u = htmllib.unescape(m.group(1))
+        if wanted(u) and u not in srcs:
+            srcs.append(u)
+
+    img_dir = os.path.join(BLOG_IMG, slug)
+    img_map = {}
+    if srcs:
+        os.makedirs(img_dir, exist_ok=True)
+    for i, u in enumerate(srcs, 1):
+        ext = os.path.splitext(urllib.parse.urlparse(u).path)[1].lower()
+        if ext not in (".png", ".jpg", ".jpeg", ".webp", ".gif"):
+            ext = ".png"
+        name = ("cover" if u == featured else f"{i:02d}") + ext
+        dest = os.path.join(img_dir, name)
+        url = f"/blog-images/{urllib.parse.quote(slug)}/{name}"
+        if os.path.exists(dest) and os.path.getsize(dest) > 0:
+            img_map[u] = url
+        elif fetch_binary(u, dest):
+            img_map[u] = url
+
+    md = to_markdown(body, slug, img_map)
+    if len(md) < 200:
+        print(f"  SKIP (body too short, {len(md)}): {title}", file=sys.stderr)
+        return None
+
+    excerpt = first_paragraph(md)
+
+    fm = [
+        "---",
+        f"title: {yaml_quote(title)}",
+        f"slug: {yaml_quote(slug)}",
+        f"date: {yaml_quote(date)}",
+        f"category: {yaml_quote(BLOG_CATEGORY)}",
+        f"excerpt: {yaml_quote(excerpt)}",
+        f"author: {yaml_quote(author or '')}",
+        f"featuredImage: {yaml_quote(img_map.get(featured, '') if featured else '')}",
+        f"source: {yaml_quote(art['url'])}",
+        "---",
+    ]
+
+    os.makedirs(BLOG_MD, exist_ok=True)
+    fname = re.sub(r"[^A-Za-z0-9\u0590-\u05FF._-]", "-", slug) + ".md"
+    with open(os.path.join(BLOG_MD, fname), "w", encoding="utf-8") as f:
+        f.write("\n".join(fm) + "\n\n" + md + "\n")
+
+    if verbose:
+        print(f"  {title[:46]:48} {date}  {len(md):6} chars  {len(img_map)} imgs")
+    return {"slug": slug, "images": len(img_map)}
+
+
+def import_articles(catalogue, verbose=True):
+    keep = existing_blog_titles()
+    print(f"importing {len(catalogue)} articles ({len(keep)} hand-written posts will be kept)")
+    done = [import_article(a, keep, verbose) for a in catalogue]
+    ok = [d for d in done if d]
+    print(f"\n{len(ok)} imported, {sum(d['images'] for d in ok)} images")
+    return ok
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--list", action="store_true")
     ap.add_argument("--slug")
     ap.add_argument("--all", action="store_true")
     ap.add_argument("--limit", type=int)
+    ap.add_argument("--articles", metavar="JSON",
+                    help="import professional articles into content/blog from a "
+                         "JSON list of {url, title}")
     ap.add_argument("--excerpts", action="store_true",
                     help="only backfill excerpts, do not fetch")
     ap.add_argument("--relink", action="store_true",
                     help="only rewrite links in content/kb, do not fetch")
     args = ap.parse_args()
+
+    if args.articles:
+        import_articles(json.load(open(args.articles, encoding="utf-8")))
+        return
 
     if args.relink:
         relink_all()

@@ -1,5 +1,5 @@
 import React from "react"
-import { graphql, Link, PageProps, HeadFC } from "gatsby"
+import { graphql, Link, withPrefix, PageProps, HeadFC } from "gatsby"
 import Layout from "../components/Layout"
 import SEO from "../components/SEO"
 import InlineCTA from "../components/InlineCTA"
@@ -46,8 +46,13 @@ interface BlogData {
 
 type Post = BlogData["allMarkdownRemark"]["nodes"][number]
 
+/* An imported image is already prefixed by webpack; a path out of
+   frontmatter points at static/ and is not, so it needs withPrefix or
+   it resolves against the domain root on the GitHub Pages deploy. */
 const postImage = (post: Post) =>
-  post.frontmatter.featuredImage || postImages[post.frontmatter.slug] || null
+  post.frontmatter.featuredImage
+    ? withPrefix(post.frontmatter.featuredImage)
+    : postImages[post.frontmatter.slug] || null
 
 const PostMeta: React.FC<{ post: Post }> = ({ post }) => {
   const author = post.frontmatter.author
