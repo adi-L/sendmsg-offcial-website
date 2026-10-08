@@ -167,8 +167,104 @@ def take_featured(page: str):
     return m.group(1) if m else None
 
 
+def cf_decode(hex_str: str) -> str:
+    """Undo Cloudflare's email obfuscation.
+
+    Cloudflare rewrites every mailto: on the live site into
+    /cdn-cgi/l/email-protection#<hex>, and the address text into a
+    <span class="__cf_email__" data-cfemail="<hex>"> whose visible text stays
+    the placeholder "[email protected]" until their JS runs. A scraper sees the
+    placeholder, so the address has to come out of the hex: the first byte is
+    the XOR key for the rest."""
+    try:
+        b = bytes.fromhex(hex_str)
+    except ValueError:
+        return ""
+    if len(b) < 2:
+        return ""
+    key = b[0]
+    return bytes(c ^ key for c in b[1:]).decode("utf-8", "replace")
+
+
+def undo_cf_email(s: str) -> str:
+    """Put the real addresses back, before any tag stripping happens."""
+    s = re.sub(
+        r'(?is)<span[^>]*class="[^"]*__cf_email__[^"]*"[^>]*'
+        r'data-cfemail="([0-9a-fA-F]+)"[^>]*>.*?</span>',
+        lambda m: cf_decode(m.group(1)) or "", s)
+
+    # an anchor pointing at the obfuscator: the address is either in the href
+    # fragment, or in the span we just decoded into the link text
+    def anchor(m):
+        attrs, text = m.group(1), m.group(2)
+        # the hex sits either in the href fragment or in data-cfemail on the
+        # anchor itself — Cloudflare uses both shapes on the same site
+        frag = (re.search(r"email-protection#([0-9a-fA-F]+)", attrs)
+                or re.search(r'data-cfemail="([0-9a-fA-F]+)"', attrs))
+        addr = cf_decode(frag.group(1)) if frag else ""
+        if not addr:
+            bare = re.sub(r"<[^>]+>", "", text).strip()
+            addr = bare if re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", bare) else ""
+        if not addr:
+            return text
+        # "[email protected]" is Cloudflare's placeholder standing in for the
+        # address until their JS runs; any other link text is the real thing
+        # and has to survive (one article links the word "שלחו לנו הודעה" at a
+        # mailto: carrying a subject line).
+        plain = htmllib.unescape(re.sub(r"<[^>]+>", "", text))
+        if re.fullmatch(r"\s*\[email\s*protected\]\s*", plain):
+            text = addr
+        return '<a href="mailto:' + addr + '">' + text + "</a>"
+
+    return re.sub(r"(?is)<a([^>]*email-protection[^>]*)>(.*?)</a>", anchor, s)
+
+
+# A cell or paragraph whose whole content is escaped markup is a code sample
+# the guide means you to copy, not markup to render. The PayPal guide says so
+# in as many words ("קוד הניתן להעתקה") and the live page escapes it inside a
+# table cell; unescaping that into the page output both breaks the sample and
+# emits a live PayPal button.
+CODEY = re.compile(r"(?is)<(td|p)\b[^>]*>(.*?)</\1>")
+
+
+def fence_escaped_code(s: str, stash: list) -> str:
+    def one(m):
+        inner = re.sub(r"(?i)<br\s*/?>", "\n", m.group(2))
+        inner = htmllib.unescape(re.sub(r"<[^>]+>", "", inner)).strip()
+        inner = "\n".join(ln.strip() for ln in inner.split("\n"))
+        if not inner.startswith("<") or ">" not in inner:
+            return m.group(0)
+        if not re.match(r"<[a-zA-Z/!][^>]*>", inner):
+            return m.group(0)
+        stash.append(inner)
+        return "\n\n\x01CODE" + str(len(stash) - 1) + "\x01\n\n"
+
+    return CODEY.sub(one, s)
+
+
+# Typos in the live copy, corrected on the way in so a re-import cannot
+# restore them. Keep this list short and only for things that are wrong on
+# sendmsg.co.il by their own account — each entry should be justifiable by
+# another sentence on the same page. Report them to the user; do not use this
+# to rewrite copy you merely prefer.
+LIVE_TYPOS = [
+    # a menu path typed with "<" where every other path on the page, including
+    # the page's own FAQ answer, writes "מערכת SMS > אוטומציה"
+    ("ללשונית מערכת SMS&lt;SMS נכנס", "ללשונית מערכת SMS > SMS נכנס"),
+]
+
+
+def fix_live_typos(s: str) -> str:
+    for wrong, right in LIVE_TYPOS:
+        s = s.replace(wrong, right)
+    return s
+
+
 def to_markdown(body: str, slug: str, img_map: dict) -> str:
-    s = body
+    s = undo_cf_email(body)
+
+    code: list = []
+    s = fence_escaped_code(s, code)
 
     # images first, before tags are stripped
     def img_sub(m):
@@ -218,6 +314,13 @@ def to_markdown(body: str, slug: str, img_map: dict) -> str:
     s = re.sub(r"<[^>]+>", "", s)
     s = htmllib.unescape(s)
 
+    # Every real tag is gone by now, so any angle bracket still here came from
+    # escaped source text and has to stay text. Left bare, the markdown renderer
+    # parses it as a tag and swallows the rest of the sentence — which is how
+    # "ללשונית מערכת SMS&lt;SMS נכנס" lost its second half on the page.
+    s = s.replace("<", "&lt;")
+    s = re.sub(r"(?m)^(\s*)>", r"\1&gt;", s)
+
     # tidy whitespace without eating the markdown structure
     lines = []
     for raw in s.split("\n"):
@@ -225,6 +328,12 @@ def to_markdown(body: str, slug: str, img_map: dict) -> str:
         lines.append(line)
     s = "\n".join(lines)
     s = re.sub(r"\n{3,}", "\n\n", s).strip()
+
+    s = fix_live_typos(s)
+
+    # code samples go back in last, so the tidy pass cannot touch them
+    s = re.sub(r"\x01CODE(\d+)\x01",
+               lambda m: "```html\n" + code[int(m.group(1))] + "\n```", s)
     return s
 
 
@@ -523,6 +632,11 @@ def take_date(page: str) -> str:
 
 
 def existing_blog_titles():
+    """Titles of the hand-written posts, which an import must never overwrite.
+
+    A post is hand-written when it carries no `source:` — an imported one
+    always records the live URL it came from. Matching on the title alone
+    would protect the imported posts too, and so refuse every re-import."""
     out = {}
     if not os.path.isdir(BLOG_MD):
         return out
@@ -530,6 +644,8 @@ def existing_blog_titles():
         if not name.endswith(".md"):
             continue
         text = open(os.path.join(BLOG_MD, name), encoding="utf-8").read()
+        if re.search(r'^source: "\S', text, re.M):
+            continue
         m = re.search(r'^title: "((?:[^"\\]|\\.)*)"', text, re.M)
         if m:
             out[m.group(1).replace('\\"', '"').strip()] = name

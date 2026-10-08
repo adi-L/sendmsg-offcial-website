@@ -265,6 +265,45 @@
   margin: 2.4em 0;
 }
 
+/* A code sample the guide means you to copy. It is the one thing on
+   the page that is not Hebrew, so it is isolated out of the RTL flow
+   and allowed to scroll on its own rather than wrap mid-attribute --
+   a wrapped href is a sample you cannot trust. The sky fill and the
+   hairline are the screenshot treatment, because that is what this
+   is: a thing to read off, not prose. */
+.kba-prose pre {
+  max-width: 68ch;
+  margin: 1.6em 0;
+  padding: clamp(14px, 1.6vw, 18px) clamp(14px, 1.8vw, 20px);
+  direction: ltr;
+  unicode-bidi: isolate;
+  text-align: left;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  background: var(--kba-sky);
+  border: 1px solid var(--kba-line);
+  border-radius: var(--kba-r-sm);
+  -webkit-overflow-scrolling: touch;
+}
+
+.kba-prose pre code,
+.kba-prose code {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.86rem;
+  line-height: 1.75;
+  color: var(--kba-ink-2);
+}
+
+/* Inline code sits in a Hebrew sentence, so it needs the isolation
+   but not the panel. */
+.kba-prose :not(pre) > code {
+  direction: ltr;
+  unicode-bidi: isolate;
+  padding: 0.1em 0.4em;
+  background: var(--kba-sky);
+  border-radius: 4px;
+}
+
 .kba-prose blockquote {
   margin: 1.6em 0;
   padding-inline-start: 1.1em;

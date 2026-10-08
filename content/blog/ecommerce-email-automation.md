@@ -219,4 +219,4 @@ source: "https://www.sendmsg.co.il/ecommerce-email-automation/"
 
 בטלפון – 077-4600600
 
-דוא"ל: [[email protected]](/cdn-cgi/l/email-protection#a5d6c4c9c0d6e5c6cac8d6d1c4d78bc6ca8bccc9)
+דוא"ל: [sales@comstar.co.il](mailto:sales@comstar.co.il)

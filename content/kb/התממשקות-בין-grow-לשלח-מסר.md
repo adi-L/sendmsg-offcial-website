@@ -97,6 +97,6 @@ excerpt: "בין שלח מסר למערכת הסליקה של חברת Grow ני
 
 לאחר שדרוג מערכת Grow – יש לבקש מנציגי השירות של Grow להגדיר את הוובהוק בפורמט GET – Array.
 
-במידה ומשהו לא מסתדר – ניתן לשלוח מייל לתמיכה של Grow ולכתב את התמיכה שלנו – [[email protected]](/cdn-cgi/l/email-protection#bbc8ded5df95d3ded7cbfbd8d4d6c8cfdac995d8d495d2d7) ונשמח לסייע!
+במידה ומשהו לא מסתדר – ניתן לשלוח מייל לתמיכה של Grow ולכתב את התמיכה שלנו – [send.help@comstar.co.il](mailto:send.help@comstar.co.il) ונשמח לסייע!
 
 ### **בהצלחה!**
