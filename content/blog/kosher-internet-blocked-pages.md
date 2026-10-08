@@ -17,7 +17,7 @@ source: "https://www.sendmsg.co.il/kosher-internet-blocked-pages/"
 
 אתם בודקים את הלינקים, הכל עובד אצלכם פיקס בנייד. אז איפה הבעיה? הבעיה היא שאם הייתם פותחים את הלינק הזה ממחשב או מכשיר של לקוח חרדי ממוצע, הייתם פוגשים את השלט הרשמי של המגזר: **"דף זה חסום"**.
 
-![דפים חסומים באינטרנט הכשר](/blog-images/kosher-internet-blocked-pages/02.png)
+![דפים חסומים באינטרנט הכשר](/blog-images/kosher-internet-blocked-pages/02.webp)
 
 ## המגרש היחיד שקיים: למה הכל קם ונופל על רשימת תפוצה?
 
@@ -37,7 +37,7 @@ source: "https://www.sendmsg.co.il/kosher-internet-blocked-pages/"
 
 ## חלק א': המפה האנתרופולוגית של הדיגיטל החרדי
 
-![הקהל החרדי](/blog-images/kosher-internet-blocked-pages/03.png)
+![הקהל החרדי](/blog-images/kosher-internet-blocked-pages/03.webp)
 
 אי אפשר למכור ל"חרדים" כאילו הם גוש אחד. הדיגיטל החרדי מחולק לשלושה תתי-קהלים מרכזיים, ולכל אחד מהם יש הרגלי צריכה, רמת חסימה ופסיכולוגיה שונה לחלוטין:
 

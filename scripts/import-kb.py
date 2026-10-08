@@ -27,6 +27,7 @@ Re-running is safe: a guide is re-fetched and overwritten in place.
 
 import argparse
 import html as htmllib
+import io
 import json
 import os
 import re
@@ -260,6 +261,154 @@ def fix_live_typos(s: str) -> str:
     return s
 
 
+# ── image weight ────────────────────────────────────────────────────
+# The screenshots arrive as PNG whatever they contain, and a photograph
+# stored as PNG is the single heaviest thing on the site: 7 identical
+# 1536x1024 cover photos were 1.1MB each, and one blog article shipped
+# 4.8MB of images.
+#
+# Lossy WebP fixes that -- 94-98% off a photograph -- but it softens small
+# text, and most of these files are UI screenshots whose Hebrew labels are
+# the content. So an image is only re-encoded lossily when two independent
+# signals agree that it is photographic:
+#
+#   lossless ratio  how well it packs with no loss. Flat UI regions pack
+#                   well (0.26-0.65 here); continuous tone does not (0.68+).
+#   flat fraction   share of pixels identical to the neighbour right and
+#                   below. Screenshots 0.53-0.81, photographs 0.02-0.20.
+#
+# Either alone misfires: a vector diagram full of crisp Hebrew has almost
+# no flat pixels because it is built from gradients (flat 0.11), and a
+# newsletter mockup of dense small text packs only moderately (ratio 0.60).
+# Requiring both means anything ambiguous keeps every pixel, which is the
+# direction to be wrong in. Everything else is re-encoded losslessly, which
+# still takes 20-55% off and cannot change a pixel.
+OPTIMISE_MIN_BYTES = 100 * 1024   # below this the saving is not worth the churn
+PHOTO_MIN_RATIO = 0.68
+PHOTO_MAX_FLAT = 0.25
+PHOTO_QUALITY = 82
+PHOTO_MAX_WIDTH = 1600            # nothing on the site displays wider
+
+
+def _signals(im):
+    """(lossless ratio vs the file on disk, flat fraction)."""
+    import numpy as np
+
+    buf = io.BytesIO()
+    im.save(buf, "WEBP", lossless=True, method=4)
+    lossless = buf.tell()
+
+    small = im.copy()
+    small.thumbnail((700, 700))
+    a = np.asarray(small.convert("RGB")).astype(np.int16)
+    same_right = np.abs(a[:-1, :-1] - a[:-1, 1:]).sum(2) == 0
+    same_below = np.abs(a[:-1, :-1] - a[1:, :-1]).sum(2) == 0
+    return lossless, float((same_right & same_below).mean())
+
+
+def optimise_image(path: str, verbose: bool = False):
+    """Re-encode one image as WebP when that is smaller. Returns the path it
+    ended up at, which may have a new extension, or the original path."""
+    try:
+        from PIL import Image
+        import numpy  # noqa: F401  (used by _signals)
+    except ImportError:
+        return path
+
+    original = os.path.getsize(path)
+    if original < OPTIMISE_MIN_BYTES:
+        return path
+
+    try:
+        im = Image.open(path)
+        im.load()
+    except Exception:
+        return path
+
+    if im.mode in ("P", "LA"):
+        im = im.convert("RGBA")
+
+    try:
+        lossless, flat = _signals(im)
+    except Exception:
+        return path
+
+    ratio = lossless / original
+    photo = ratio >= PHOTO_MIN_RATIO and flat <= PHOTO_MAX_FLAT
+
+    out = io.BytesIO()
+    if photo:
+        shrunk = im
+        if im.width > PHOTO_MAX_WIDTH:
+            shrunk = im.copy()
+            shrunk.thumbnail((PHOTO_MAX_WIDTH, PHOTO_MAX_WIDTH))
+        shrunk.convert("RGB").save(out, "WEBP", quality=PHOTO_QUALITY, method=4)
+    else:
+        im.save(out, "WEBP", lossless=True, method=4)
+
+    # never make a file bigger, and never pay the rename for a rounding error
+    if out.tell() >= original * 0.95:
+        return path
+
+    dest = os.path.splitext(path)[0] + ".webp"
+    with open(dest, "wb") as f:
+        f.write(out.getvalue())
+    if dest != path:
+        os.remove(path)
+
+    if verbose:
+        print(f"    {'photo   ' if photo else 'lossless'} "
+              f"{original // 1024:5}K -> {out.tell() // 1024:5}K  "
+              f"ratio={ratio:.2f} flat={flat:.2f}  {os.path.basename(dest)}")
+    return dest
+
+
+def optimise_existing(verbose=True):
+    """Sweep the images already imported, then repoint the markdown at them."""
+    renames = {}
+    saved = 0
+    for root in (OUT_IMG, BLOG_IMG):
+        if not os.path.isdir(root):
+            continue
+        for d in sorted(os.listdir(root)):
+            folder = os.path.join(root, d)
+            if not os.path.isdir(folder):
+                continue
+            for name in sorted(os.listdir(folder)):
+                path = os.path.join(folder, name)
+                before = os.path.getsize(path)
+                after_path = optimise_image(path, verbose)
+                if after_path != path:
+                    web_root = "/" + os.path.basename(root)
+                    quoted = urllib.parse.quote(d)
+                    renames[f"{web_root}/{quoted}/{name}"] = (
+                        f"{web_root}/{quoted}/{os.path.basename(after_path)}")
+                    saved += before - os.path.getsize(after_path)
+
+    if not renames:
+        print("nothing to optimise")
+        return
+
+    touched = 0
+    for directory in (OUT_MD, BLOG_MD):
+        if not os.path.isdir(directory):
+            continue
+        for name in sorted(os.listdir(directory)):
+            if not name.endswith(".md"):
+                continue
+            f = os.path.join(directory, name)
+            text = open(f, encoding="utf-8").read()
+            out = text
+            for old, new in renames.items():
+                out = out.replace(old, new)
+            if out != text:
+                open(f, "w", encoding="utf-8").write(out)
+                touched += 1
+
+    print(f"optimised {len(renames)} images, saved "
+          f"{saved / 1024 / 1024:.1f} MB, repointed {touched} markdown files")
+
+
 def to_markdown(body: str, slug: str, img_map: dict) -> str:
     s = undo_cf_email(body)
 
@@ -390,11 +539,18 @@ def import_one(art, verbose=True):
             ext = ".png"
         name = ("cover" if u == featured else f"{i:02d}") + ext
         dest = os.path.join(img_dir, name)
-        if os.path.exists(dest) and os.path.getsize(dest) > 0:
-            img_map[u] = f"/kb-images/{urllib.parse.quote(slug)}/{name}"
+        webp = os.path.splitext(dest)[0] + ".webp"
+        for have in (dest, webp):
+            if os.path.exists(have) and os.path.getsize(have) > 0:
+                img_map[u] = (f"/kb-images/{urllib.parse.quote(slug)}/"
+                              f"{os.path.basename(have)}")
+                break
+        if u in img_map:
             continue
         if fetch_binary(u, dest):
-            img_map[u] = f"/kb-images/{urllib.parse.quote(slug)}/{name}"
+            final = optimise_image(dest)
+            img_map[u] = (f"/kb-images/{urllib.parse.quote(slug)}/"
+                          f"{os.path.basename(final)}")
 
     md = to_markdown(body, slug, img_map)
     if len(md) < 120:
@@ -698,11 +854,14 @@ def import_article(art, keep, verbose=True):
             ext = ".png"
         name = ("cover" if u == featured else f"{i:02d}") + ext
         dest = os.path.join(img_dir, name)
-        url = f"/blog-images/{urllib.parse.quote(slug)}/{name}"
-        if os.path.exists(dest) and os.path.getsize(dest) > 0:
-            img_map[u] = url
+        webp = os.path.splitext(dest)[0] + ".webp"
+        here = f"/blog-images/{urllib.parse.quote(slug)}/"
+        have = next((h for h in (dest, webp)
+                     if os.path.exists(h) and os.path.getsize(h) > 0), None)
+        if have:
+            img_map[u] = here + os.path.basename(have)
         elif fetch_binary(u, dest):
-            img_map[u] = url
+            img_map[u] = here + os.path.basename(optimise_image(dest))
 
     md = to_markdown(body, slug, img_map)
     if len(md) < 200:
@@ -756,10 +915,18 @@ def main():
                     help="only backfill excerpts, do not fetch")
     ap.add_argument("--relink", action="store_true",
                     help="only rewrite links in content/kb, do not fetch")
+    ap.add_argument("--optimise", "--optimize", action="store_true",
+                    dest="optimise",
+                    help="re-encode the already-imported images as WebP and "
+                         "repoint the markdown at them, do not fetch")
     args = ap.parse_args()
 
     if args.articles:
         import_articles(json.load(open(args.articles, encoding="utf-8")))
+        return
+
+    if args.optimise:
+        optimise_existing()
         return
 
     if args.relink:

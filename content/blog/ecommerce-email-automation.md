@@ -15,7 +15,7 @@ source: "https://www.sendmsg.co.il/ecommerce-email-automation/"
 
 הנתונים מדברים בעד עצמם: רכישת לקוח חדש עולה בממוצע פי 5 עד 7 מאשר מכירה ללקוח שכבר מכיר אתכם. לקוח שרכש בעבר נוטה להמיר בשיעור גבוה פי כמה מגולש שמגיע בפעם הראשונה.
 
-![חנות איקומרס](/blog-images/ecommerce-email-automation/02.png)
+![חנות איקומרס](/blog-images/ecommerce-email-automation/02.webp)
 
 ## **תקשורת רציפה היא קריטית לעסק שלכם**
 
@@ -27,7 +27,7 @@ source: "https://www.sendmsg.co.il/ecommerce-email-automation/"
 
 בעוד שפלטפורמת החנות שלכם רק מודיעה שההזמנה התקבלה, מערכת אוטומציה חכמה בונה מערכת יחסים: היא מעדכנת, מלווה את הלקוח ברגעים שאחרי הקנייה, והופכת את תחושת החרדה לביטחון מלא במותג שלכם.
 
-![השוואה בין לקוח חדש ללקוח חוזר](/blog-images/ecommerce-email-automation/03.png)
+![השוואה בין לקוח חדש ללקוח חוזר](/blog-images/ecommerce-email-automation/03.webp)
 
 ## **למה המיילים האוטומטיים של פלטפורמת האיקומרס לא מספיקים?**
 
@@ -59,7 +59,7 @@ source: "https://www.sendmsg.co.il/ecommerce-email-automation/"
 
 לגולשים שעומדים לעזוב (exit intent) אפשר להציע קופון חד פעמי, זה גם מתגמל את הגולש וגם מונע נטישה.
 
-![פופאפ קבלת לידים לאיקומרס](/blog-images/ecommerce-email-automation/05.png)
+![פופאפ קבלת לידים לאיקומרס](/blog-images/ecommerce-email-automation/05.webp)
 
 ### **2. שחזור עגלות נטושות –** אל תפסידו מכירות שכמעט היו.
 
@@ -69,7 +69,7 @@ source: "https://www.sendmsg.co.il/ecommerce-email-automation/"
 
 סדרת מיילים לעגלה נטושה מחזירה בממוצע 10%-15% מהרוכשים הפוטנציאליים.
 
-![נייל תזכורת לעגלה נטושה](/blog-images/ecommerce-email-automation/06.png)
+![נייל תזכורת לעגלה נטושה](/blog-images/ecommerce-email-automation/06.webp)
 
 ### **3. סדרת קבלת פנים –**הרושם הראשון נבנה אחרי הקנייה
 
@@ -113,7 +113,7 @@ source: "https://www.sendmsg.co.il/ecommerce-email-automation/"
 
 ![הגדרת רשימות דיוור לנרשם חדש](/blog-images/ecommerce-email-automation/10.png)
 
-![הגדרת רשימת דיוור לעגלה נטושה](/blog-images/ecommerce-email-automation/11.png)
+![הגדרת רשימת דיוור לעגלה נטושה](/blog-images/ecommerce-email-automation/11.webp)
 
 #### טיפול בעגלות נטושות
 
@@ -125,7 +125,7 @@ source: "https://www.sendmsg.co.il/ecommerce-email-automation/"
 
 ניתן להגדיר רכישת מוצר ספציפי (כמו קורס דיגיטלי או באנדל) תכניס את הלקוח לקבוצה ייעודית שם תהיה סדרה שתשלח לו תכנים רלוונטיים רק לו.
 
-![התממשקות ישירה עם ווקומרס](/blog-images/ecommerce-email-automation/13.png)
+![התממשקות ישירה עם ווקומרס](/blog-images/ecommerce-email-automation/13.webp)
 
 זה שירות לקוחות שאומר: "אנחנו כאן"
 
@@ -135,7 +135,7 @@ source: "https://www.sendmsg.co.il/ecommerce-email-automation/"
 
 גם אם החנות שלכם לא מבוססת ווקומרס, שלח מסר מאפשרת לכם ליהנות מאוטומציה מלאה דרך אפליקציות צד שלישי כמו Make או Zapier.
 
-![התממשקות עם מערכות צד שלישי](/blog-images/ecommerce-email-automation/14.png)
+![התממשקות עם מערכות צד שלישי](/blog-images/ecommerce-email-automation/14.webp)
 
 איך זה עובד?
 
@@ -161,7 +161,7 @@ source: "https://www.sendmsg.co.il/ecommerce-email-automation/"
 
 ![פניה אישית בניוזלטר](/blog-images/ecommerce-email-automation/15.png)
 
-![פרסונליזציה ומיפוי שדות חכם](/blog-images/ecommerce-email-automation/16.png)
+![פרסונליזציה ומיפוי שדות חכם](/blog-images/ecommerce-email-automation/16.webp)
 
 [מדריך ליצירת שדות במערכת שלח מסר](/kb/%D7%94%D7%92%D7%93%D7%A8%D7%AA-%D7%A9%D7%93%D7%95%D7%AA-%D7%9E%D7%A0%D7%95%D7%99%D7%99%D7%9D-%D7%91%D7%9E%D7%A2%D7%A8%D7%9B%D7%AA-%D7%A9%D7%9C%D7%97-%D7%9E%D7%A1%D7%A8/)
 
@@ -185,7 +185,7 @@ source: "https://www.sendmsg.co.il/ecommerce-email-automation/"
 
 [מדריך לניהול מערכת ה-CRM](/kb/%D7%A0%D7%99%D7%94%D7%95%D7%9C-%D7%A7%D7%A9%D7%A8%D7%99-%D7%94%D7%9C%D7%A7%D7%95%D7%97%D7%95%D7%AA-crm-%D7%A9%D7%9C%D7%97_%D7%9E%D7%A1%D7%A8/)
 
-![רציפות עסקית](/blog-images/ecommerce-email-automation/17.png)
+![רציפות עסקית](/blog-images/ecommerce-email-automation/17.webp)
 
 ### **5. תיזמון שליחה לפי מועדים – כי לתזמון הנכון יש כוח**
 
@@ -199,7 +199,7 @@ source: "https://www.sendmsg.co.il/ecommerce-email-automation/"
 
 נוכחות מקצועית, חנות שמדוורת לפני כל חג נתפסת כחנות פעילה ואמינה.
 
-![תזמון שליחה לפי מועדים](/blog-images/ecommerce-email-automation/18.png)
+![תזמון שליחה לפי מועדים](/blog-images/ecommerce-email-automation/18.webp)
 
 ## שאלות נפוצות- FAQ
 

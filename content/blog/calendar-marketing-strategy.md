@@ -21,7 +21,7 @@ source: "https://www.sendmsg.co.il/calendar-marketing-strategy/"
 
 עסק שלא נמצא שם באותו הרגע, פשוט לא בתמונה כשההחלטה מתקבלת.
 
-![על מה נכתוב היום?](/blog-images/calendar-marketing-strategy/02.png)
+![על מה נכתוב היום?](/blog-images/calendar-marketing-strategy/02.webp)
 
 ## למה זה משנה: תזמון נכון יכול לעשות את כל ההבדל
 
@@ -39,7 +39,7 @@ source: "https://www.sendmsg.co.il/calendar-marketing-strategy/"
 
 לוח השנה הוא בעצם תוכנית מוכנה מראש לימים שבהם יש כבר התעניינות יזומה מצד הלקוח .
 
-![](/blog-images/calendar-marketing-strategy/03.png)
+![](/blog-images/calendar-marketing-strategy/03.webp)
 
 ## דוגמאות מהשטח: איך עושים את זה בכל תחום
 
@@ -51,7 +51,7 @@ source: "https://www.sendmsg.co.il/calendar-marketing-strategy/"
 
 **המהלך:**מייל קליל שמסביר איך מונעים מריבות כלכליות בבית, עם שלושה טיפים פרקטיים לניהול תקציב משותף. זה מציב את איש המקצוע באור אנושי ואכפתי, ומזכיר ללקוחות מי הסמכות הפיננסית שלהם.
 
-![](/blog-images/calendar-marketing-strategy/04.png)
+![](/blog-images/calendar-marketing-strategy/04.webp)
 
 ### קליניקת ספא / מטפל ב-1 בספטמבר (החזרה ללימודים)
 
@@ -90,7 +90,7 @@ source: "https://www.sendmsg.co.il/calendar-marketing-strategy/"
 - **שמרו על אנושיות:**ימי מודעות הם לא המקום ל"מכירה קשה". הם המקום להראות אופי, להזכיר שיש אנשים אמיתיים מאחורי הלוגו, ולבנות אמון שישתלם בקמפיינים הבאים.
 - **תכננו מראש:**לתאריכים גדולים (בלאק פריידי, ראש השנה, חזרה ללימודים) תכננו 6-8 שבועות מראש. לימי מודעות קטנים יותר מספיקות 2-3 שבועות.המותגים שמשכילים להופיע ברגעים התרבותיים והיומיומיים האלה בונים לעצמם נכס יקר: תיבת דואר נכנס שהלקוח מצפה לפתוח. אל תישארו המותג שמופיע רק כשיש לו משהו למכור
 
-![קמפיין לקראת יום האהבה](/blog-images/calendar-marketing-strategy/06.png)
+![קמפיין לקראת יום האהבה](/blog-images/calendar-marketing-strategy/06.webp)
 
 ## איך מיישמים את זה בשלח מסר
 
@@ -112,7 +112,7 @@ source: "https://www.sendmsg.co.il/calendar-marketing-strategy/"
 
 הוסיפו קישור לדף נחיתה נפרד לקמפיין, עם כותרת, תיאור קצר, תמונה רלוונטית לאירוע וכפתור רכישה או הרשמה שמחובר ישירות למערכת הסליקה שלכם. דף ממוקד תמיד יניב יחס המרה גבוה יותר מהפניה לעמוד הבית הכללי.
 
-![ניוזלטר גשר בין יום בלוח השנה למוצר](/blog-images/calendar-marketing-strategy/08.png)
+![ניוזלטר גשר בין יום בלוח השנה למוצר](/blog-images/calendar-marketing-strategy/08.webp)
 
 [יצירת ניוזלטר חדש](/kb/%D7%99%D7%A6%D7%99%D7%A8%D7%AA-%D7%A0%D7%99%D7%95%D7%96%D7%9C%D7%98%D7%A8-%D7%A9%D7%9C%D7%97-%D7%9E%D7%A1%D7%A8/)[פנייה אישית בניוזלטר](/kb/%D7%99%D7%A6%D7%99%D7%A8%D7%AA-%D7%A4%D7%A0%D7%99%D7%94-%D7%90%D7%99%D7%A9%D7%99%D7%AA-%D7%91%D7%A0%D7%99%D7%95%D7%96%D7%9C%D7%98%D7%A8/)[הוספת קישורים לניוזלטר](/kb/%D7%AA%D7%95%D7%A1%D7%A4%D7%95%D7%AA-%D7%95%D7%A7%D7%99%D7%A9%D7%95%D7%A8%D7%99%D7%9D-%D7%91%D7%9E%D7%A2%D7%A8%D7%9B%D7%AA-%D7%94%D7%A0%D7%99%D7%95%D7%96%D7%9C%D7%98%D7%A8-%D7%94%D7%97%D7%93%D7%A9/)
 
@@ -130,7 +130,7 @@ source: "https://www.sendmsg.co.il/calendar-marketing-strategy/"
 
 את התזמון (כמה ימים לפני/אחרי האירוע) אפשר להגדיר מראש דרך תפריט האוטומציות, כך שהרצף ירוץ אוטומטית בכל שנה מחדש (2)
 
-![תזמון ניוזלטר לפי חגים ואירועים בלוח השנה](/blog-images/calendar-marketing-strategy/09.png)
+![תזמון ניוזלטר לפי חגים ואירועים בלוח השנה](/blog-images/calendar-marketing-strategy/09.webp)
 
 דוגמא לרצף של 3 הודעות שישלחו לקראת יום כדור הארץ
 

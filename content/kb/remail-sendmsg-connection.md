@@ -57,7 +57,7 @@ excerpt: "במדריך הקצר הזה נחבר את ReMail לשלח מסר בכ
 - באזור הגדרות טכניות, מזינים את **מזהה רשימת התפוצה** (קבוצת דיוור) של שלח מסר.
 - שומרים את התיבה.
 
-![](/kb-images/remail-sendmsg-connection/07.png)
+![](/kb-images/remail-sendmsg-connection/07.webp)
 
 זהו, החיבור פעיל.
 

@@ -5,7 +5,7 @@ source: "https://www.sendmsg.co.il/%d7%94%d7%aa%d7%9e%d7%9e%d7%a9%d7%a7%d7%95%d7
 categories:
   - "אוטומציות"
   - "חיבור למערכות חיצוניות"
-featuredImage: "/kb-images/%D7%94%D7%AA%D7%9E%D7%9E%D7%A9%D7%A7%D7%95%D7%AA-%D7%9E%D7%A2%D7%A8%D7%9B%D7%AA-%D7%A8%D7%99%D7%95%D7%95%D7%97%D7%99%D7%AA-icredit-%D7%9C%D7%A9%D7%9C%D7%97-%D7%9E%D7%A1%D7%A8/cover.png"
+featuredImage: "/kb-images/%D7%94%D7%AA%D7%9E%D7%9E%D7%A9%D7%A7%D7%95%D7%AA-%D7%9E%D7%A2%D7%A8%D7%9B%D7%AA-%D7%A8%D7%99%D7%95%D7%95%D7%97%D7%99%D7%AA-icredit-%D7%9C%D7%A9%D7%9C%D7%97-%D7%9E%D7%A1%D7%A8/cover.webp"
 tags:
   - "התממשקות"
   - "אינטגרציות"
