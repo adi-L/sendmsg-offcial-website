@@ -1,0 +1,489 @@
+/* ============================================================
+   Support page (.sp-*)
+
+   Same world as /contact/ and the service pages: Primary Blue
+   #0D598C as structural ink, the magenta-purple gradient as the
+   single accent, start-aligned editorial headings with a short rule.
+
+   The page leads with answers, so the accordion is the first thing
+   under the hero and the channels sit beneath it. The one authored
+   moment is the live status dot in the hours panel: it is the only
+   thing on the page that knows something the visitor does not.
+
+   Shape: surfaces take --sp-r, buttons stay pills because every
+   other button on the site is.
+
+   Motion: ease-out only, hover gated behind a real pointer, only
+   transform / opacity / colour animate.
+   ============================================================ */
+
+.sp {
+  --sp-ink: #0b1f33;
+  --sp-ink-2: #16324f;
+  --sp-blue: #0d598c;
+  --sp-sky: #e9eff6;
+  --sp-line: #d7e0ea;
+  --sp-line-2: #c8d5e3;
+  --sp-body: #4b6076;
+  --sp-on-ink: #c6d7e8;
+  --sp-on-ink-dim: #93aec9;
+  --sp-accent: #ff8ad1;
+  --sp-open: #7ae0b5;
+
+  --sp-r: 14px;
+  --sp-r-sm: 8px;
+
+  --sp-ease: cubic-bezier(0.23, 1, 0.32, 1);
+  --sp-hover: 150ms;
+  --sp-press: 160ms;
+  --sp-disclose: 250ms;
+}
+
+.sp ::selection {
+  background: rgba(13, 89, 140, 0.18);
+}
+
+.sp-ltr {
+  unicode-bidi: isolate;
+  direction: ltr;
+  white-space: nowrap;
+}
+
+/* ── hero ───────────────────────────────────────────────────────── */
+.sp-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--sp-ink);
+  padding: clamp(60px, 7.5vw, 100px) 0 clamp(56px, 7vw, 92px);
+}
+
+.sp-hero::before {
+  content: "";
+  position: absolute;
+  inset: -60% -10% auto;
+  height: 160%;
+  z-index: -1;
+  background:
+    radial-gradient(34em 18em at 88% 4%, rgba(168, 16, 126, 0.26), transparent 62%),
+    radial-gradient(30em 16em at 4% 96%, rgba(99, 40, 167, 0.26), transparent 64%);
+}
+
+.sp-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: clamp(32px, 5vw, 72px);
+  align-items: center;
+}
+
+.sp-hero h1 {
+  font-size: clamp(2.1rem, 4.6vw, 3.4rem);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.032em;
+  color: #fff;
+  text-wrap: balance;
+  margin: 0;
+}
+
+.sp-hero-sub {
+  font-size: clamp(1.1rem, 1.5vw, 1.3rem);
+  line-height: 1.6;
+  color: var(--sp-on-ink);
+  max-width: 40ch;
+  text-wrap: pretty;
+  margin: 20px 0 0;
+}
+
+/* ── the hours panel ────────────────────────────────────────────
+   A translucent surface holding an object, not a sentence. */
+.sp-hours {
+  border-radius: var(--sp-r);
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  padding: clamp(22px, 2.8vw, 30px) clamp(22px, 2.8vw, 30px) clamp(18px, 2.2vw, 24px);
+}
+
+.sp-hours-label {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--sp-on-ink-dim);
+  margin: 0;
+}
+
+.sp-hours-days {
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: var(--sp-on-ink);
+  margin: 12px 0 0;
+}
+
+.sp-hours-time {
+  font-size: clamp(1.6rem, 2.6vw, 2.1rem);
+  font-weight: 800;
+  letter-spacing: -0.028em;
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+  margin: 4px 0 0;
+}
+
+.sp-hours-now {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 10px;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--sp-on-ink);
+  margin: 14px 0 0;
+  padding-block-start: 14px;
+  border-block-start: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.sp-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--sp-on-ink-dim);
+  align-self: center;
+}
+
+.sp-hours-now[data-open="true"] .sp-dot {
+  background: var(--sp-open);
+  box-shadow: 0 0 0 4px rgba(122, 224, 181, 0.22);
+}
+
+.sp-hours-note {
+  font-weight: 400;
+  color: var(--sp-on-ink-dim);
+}
+
+.sp-call {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-block-start: clamp(16px, 2vw, 20px);
+  font-size: clamp(1.1rem, 1.5vw, 1.25rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #fff;
+  transition: color var(--sp-hover) var(--sp-ease);
+}
+
+.sp-call-ico {
+  display: inline-flex;
+  color: var(--sp-accent);
+}
+
+/* ── shared heading ─────────────────────────────────────────────── */
+.sp-head {
+  max-width: 46ch;
+  margin-block-end: clamp(32px, 4vw, 48px);
+}
+
+.sp-head h2 {
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
+  font-weight: 800;
+  line-height: 1.18;
+  letter-spacing: -0.028em;
+  color: var(--sp-ink-2);
+  text-wrap: balance;
+  margin: 0;
+}
+
+.sp-head h2::after {
+  content: "";
+  display: block;
+  width: 44px;
+  height: 3px;
+  margin-block-start: 16px;
+  border-radius: 2px;
+  background: var(--primary-gradient);
+}
+
+.sp-head p {
+  font-size: clamp(1rem, 1.25vw, 1.1rem);
+  line-height: 1.7;
+  color: var(--sp-body);
+  text-wrap: pretty;
+  margin: 16px 0 0;
+}
+
+/* ── the answers ────────────────────────────────────────────────── */
+.sp-faq {
+  padding: clamp(60px, 7.5vw, 96px) 0;
+  background: var(--bg-white);
+}
+
+.sp-qs {
+  border-block-start: 1px solid var(--sp-line);
+}
+
+.sp-q {
+  border-block-end: 1px solid var(--sp-line);
+}
+
+.sp-q-h {
+  margin: 0;
+}
+
+.sp-q-btn {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: clamp(16px, 2.4vw, 32px);
+  width: 100%;
+  padding-block: clamp(18px, 2.2vw, 24px);
+  text-align: start;
+  font-size: clamp(1.02rem, 1.35vw, 1.18rem);
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--sp-ink-2);
+  transition: color var(--sp-hover) var(--sp-ease);
+}
+
+.sp-q-sign {
+  flex: 0 0 auto;
+  display: inline-flex;
+  color: var(--sp-blue);
+}
+
+.sp-plus-v {
+  transform-origin: 12px 12px;
+  transition: transform var(--sp-disclose) var(--sp-ease);
+}
+
+.sp-q[data-open="true"] .sp-plus-v {
+  transform: rotate(90deg);
+}
+
+/* Collapsed to 0fr and made invisible, so the panel leaves the tab
+   order rather than merely going out of sight. */
+.sp-a {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition:
+    grid-template-rows var(--sp-disclose) var(--sp-ease),
+    visibility var(--sp-disclose) var(--sp-ease);
+}
+
+.sp-q[data-open="true"] .sp-a {
+  grid-template-rows: 1fr;
+  visibility: visible;
+}
+
+.sp-a-in {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.sp-a-in > :last-child {
+  padding-block-end: clamp(20px, 2.6vw, 28px);
+}
+
+.sp-a-in p {
+  max-width: 74ch;
+  margin: 0 0 14px;
+  font-size: 1.02rem;
+  line-height: 1.8;
+  color: var(--sp-body);
+  text-wrap: pretty;
+}
+
+.sp-a-list {
+  max-width: 74ch;
+  margin: 0 0 14px;
+}
+
+.sp-a-list li {
+  position: relative;
+  padding-inline-start: 18px;
+  margin-block-end: 8px;
+  font-size: 1.02rem;
+  line-height: 1.75;
+  color: var(--sp-body);
+  text-wrap: pretty;
+}
+
+.sp-a-list li::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0.78em;
+  width: 6px;
+  height: 1px;
+  background: var(--sp-blue);
+}
+
+.sp-a-more a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  color: var(--sp-blue);
+}
+
+.sp-a-more span {
+  display: inline-flex;
+  transition: transform var(--sp-hover) var(--sp-ease);
+}
+
+/* ── the channels ───────────────────────────────────────────────── */
+.sp-ways {
+  padding: clamp(60px, 7.5vw, 96px) 0;
+  background: var(--sp-sky);
+}
+
+.sp-ways-split {
+  display: grid;
+  grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
+  gap: clamp(28px, 4vw, 72px);
+  align-items: start;
+}
+
+.sp-ways .sp-head {
+  margin-block-end: 0;
+  position: sticky;
+  top: clamp(90px, 11vh, 120px);
+}
+
+.sp-ways-list {
+  border-block-start: 1px solid var(--sp-line-2);
+}
+
+.sp-ways-list li {
+  border-block-end: 1px solid var(--sp-line-2);
+}
+
+.sp-ways-list a {
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(14px, 2vw, 20px);
+  padding-block: clamp(16px, 2vw, 22px);
+}
+
+.sp-way-ico {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--sp-r-sm);
+  background: var(--bg-white);
+  border: 1px solid var(--sp-line-2);
+  color: var(--sp-blue);
+  transition:
+    border-color var(--sp-hover) var(--sp-ease),
+    color var(--sp-hover) var(--sp-ease);
+}
+
+.sp-way-main {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.sp-way-t {
+  display: block;
+  font-size: 1.12rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--sp-ink-2);
+  overflow-wrap: anywhere;
+  transition: color var(--sp-hover) var(--sp-ease);
+}
+
+.sp-way-d {
+  display: block;
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: var(--sp-body);
+  text-wrap: pretty;
+  margin-block-start: 4px;
+}
+
+.sp-way-go {
+  flex: 0 0 auto;
+  align-self: center;
+  display: inline-flex;
+  color: var(--sp-blue);
+  transition: transform var(--sp-hover) var(--sp-ease);
+}
+
+/* ── hover ──────────────────────────────────────────────────────
+   Gated: a touch device fires :hover on tap and then leaves the
+   element stuck in its hover state. */
+@media (hover: hover) and (pointer: fine) {
+  .sp-call:hover {
+    color: var(--sp-accent);
+  }
+
+  .sp-q-btn:hover {
+    color: var(--sp-blue);
+  }
+
+  .sp-a-more a:hover span {
+    transform: translateX(-4px);
+  }
+
+  .sp-ways-list a:hover .sp-way-t {
+    color: var(--sp-blue);
+  }
+
+  .sp-ways-list a:hover .sp-way-ico {
+    border-color: var(--sp-blue);
+  }
+
+  .sp-ways-list a:hover .sp-way-go {
+    transform: translateX(-4px);
+  }
+}
+
+/* ── responsive ────────────────────────────────────────────────── */
+@media (max-width: 1000px) {
+  .sp-hero-grid,
+  .sp-ways-split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sp-hero-sub {
+    max-width: 58ch;
+  }
+
+  /* With one column the heading sits above its list, so sticking it
+     would park it over them. */
+  .sp-ways .sp-head {
+    position: static;
+    max-width: 58ch;
+    margin-block-end: clamp(24px, 3vw, 32px);
+  }
+}
+
+@media (max-width: 560px) {
+  .sp-way-ico {
+    width: 38px;
+    height: 38px;
+  }
+
+  .sp-way-go {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sp-call,
+  .sp-q-btn,
+  .sp-plus-v,
+  .sp-a,
+  .sp-a-more span,
+  .sp-way-t,
+  .sp-way-ico,
+  .sp-way-go {
+    transition: none;
+  }
+
+  .sp-ways .sp-head {
+    position: static;
+  }
+}

@@ -1,17 +1,18 @@
-import React, { useState, useEffect, FormEvent } from "react"
+import React, { useState, FormEvent } from "react"
 import { Link } from "gatsby"
 import type { HeadFC } from "gatsby"
 import Layout from "../components/Layout"
 import SEO from "../components/SEO"
 import CTA from "../components/CTA"
 import { SUPPORT_EMAIL } from "../data/api"
+import {
+  SUPPORT_PHONE,
+  WHATSAPP_NUMBER,
+  WHATSAPP_LINK,
+  useSupportStatus,
+} from "../data/support-hours"
 import "../styles/contact.css"
 
-/* The numbers the live site publishes on this page. Support answers on
-   4600911; 4600600 is the switchboard the topbar already carries. */
-const SUPPORT_PHONE = "077-4600911"
-const WHATSAPP_NUMBER = "055-9377588"
-const WHATSAPP_LINK = "https://api.whatsapp.com/send?phone=972559377588"
 
 /* The site's own icon set: 24-grid, 1.8 stroke, round caps. The WhatsApp
    mark is the one exception — a brand mark is its own lettering, and
@@ -56,61 +57,6 @@ const GoIcon = ({ size = 20 }: { size?: number }) =>
     </>,
     size
   )
-
-/* ── support hours ──────────────────────────────────────────────
-   Sunday to Thursday, 9:00 to 17:00, Israel time. The visitor is not
-   necessarily in that timezone, and "are they open right now" is the
-   one question a contact page can actually answer for them. */
-const TZ = "Asia/Jerusalem"
-const OPEN_MIN = 9 * 60
-const CLOSE_MIN = 17 * 60
-const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-const HEBREW_DAYS = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"]
-
-type Status = { open: boolean; note: string }
-
-function readStatus(): Status | null {
-  const parts = new Intl.DateTimeFormat("en-US", {
-    timeZone: TZ,
-    weekday: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  }).formatToParts(new Date())
-
-  const value = (type: string) => parts.find(p => p.type === type)?.value ?? ""
-  const day = WEEKDAYS.indexOf(value("weekday"))
-  if (day < 0) return null
-
-  const minutes = Number(value("hour")) % 24 * 60 + Number(value("minute"))
-  const isWorkday = day <= 4
-
-  if (isWorkday && minutes >= OPEN_MIN && minutes < CLOSE_MIN) {
-    return { open: true, note: "עד 17:00" }
-  }
-  if (isWorkday && minutes < OPEN_MIN) {
-    return { open: false, note: "נפתח היום ב-9:00" }
-  }
-
-  let next = (day + 1) % 7
-  while (next > 4) next = (next + 1) % 7
-  const when = next === (day + 1) % 7 ? "מחר" : `ביום ${HEBREW_DAYS[next]}`
-  return { open: false, note: `נפתח ${when} ב-9:00` }
-}
-
-/* Null until mounted, so the server-rendered band carries the plain
-   opening hours and a page with no JS never shows a stale "open now". */
-function useSupportStatus() {
-  const [status, setStatus] = useState<Status | null>(null)
-
-  useEffect(() => {
-    setStatus(readStatus())
-    const id = window.setInterval(() => setStatus(readStatus()), 60_000)
-    return () => window.clearInterval(id)
-  }, [])
-
-  return status
-}
 
 const steps = [
   {

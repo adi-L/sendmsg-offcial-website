@@ -108,7 +108,7 @@ const audiences = [
 
 const alsoIncluded = [
   { t: "מערכת דיוור", hook: "עד 250 מנויים, חינם ולתמיד", to: "/newsletters/" },
-  { t: "דפי נחיתה", hook: "3 דפים ראשונים חינם ולתמיד", to: "/landing-pages/" },
+  { t: "דפי נחיתה", hook: "עד 5 דפים בחבילה החינמית", to: "/landing-pages/" },
   { t: "מערכת סמסים", hook: "100 סמסים ראשונים חינם", to: null },
   { t: "ניהול לקוחות CRM", hook: "כלול בחשבון", to: null },
 ]

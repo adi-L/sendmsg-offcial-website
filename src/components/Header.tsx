@@ -115,7 +115,7 @@ const navItems: NavItem[] = [
   },
   {
     label: "שירותים",
-    href: "https://www.sendmsg.co.il/services/",
+    href: "/services/",
     items: [
       { label: "ניוזלטרים וקמפיינים", href: "/newsletters/", icon: "mail", desc: "מעצבים ושולחים קמפיינים בתוך דקות." },
       { label: "דפי נחיתה", href: "/landing-pages/", icon: "layout", desc: "דף נחיתה מעוצב, בלי מעצב ובלי מתכנת." },
@@ -130,7 +130,7 @@ const navItems: NavItem[] = [
       alt: "מערכת הדיוור של שלח מסר",
       caption: "כל כלי השיווק, במנוי אחד.",
       ctaLabel: "לכל השירותים ←",
-      ctaHref: "https://www.sendmsg.co.il/services/",
+      ctaHref: "/services/",
     },
   },
   {
@@ -154,7 +154,7 @@ const navItems: NavItem[] = [
     label: "מרכז הידע",
     href: "/blog/",
     items: [
-      { label: "מדריכים", href: "https://www.sendmsg.co.il/kb/", icon: "book", desc: "צעד אחר צעד, איך עושים הכל במערכת." },
+      { label: "מדריכים", href: "/kb/", icon: "book", desc: "צעד אחר צעד, איך עושים הכל במערכת." },
       { label: "מאמרים מקצועיים", href: "/blog/", icon: "fileText", desc: "טיפים וכלים לשיווק חכם יותר." },
     ],
     media: {

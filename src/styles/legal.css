@@ -1,0 +1,442 @@
+/* ============================================================
+   Legal pages (.lg-*) — /terms/ and /accessibility/
+
+   Shared on purpose. Two legal documents on one site should be the
+   same document visually; a reader who has learned to read one has
+   learned to read the other.
+
+   This is the site's one Read surface, so it is the one place that
+   is typeset rather than composed: a single measured column, a
+   sticky index beside it, and no colour doing work that hierarchy
+   should do. Same tokens as everywhere else.
+
+   Motion: ease-out only, hover gated behind a real pointer.
+   ============================================================ */
+
+.lg {
+  --lg-ink: #0b1f33;
+  --lg-ink-2: #16324f;
+  --lg-blue: #0d598c;
+  --lg-sky: #e9eff6;
+  --lg-line: #d7e0ea;
+  --lg-line-2: #c8d5e3;
+  --lg-body: #4b6076;
+  --lg-on-ink: #c6d7e8;
+  --lg-on-ink-dim: #93aec9;
+  --lg-accent: #ff8ad1;
+
+  --lg-r: 14px;
+  --lg-r-sm: 8px;
+
+  --lg-ease: cubic-bezier(0.23, 1, 0.32, 1);
+  --lg-hover: 150ms;
+}
+
+.lg ::selection {
+  background: rgba(13, 89, 140, 0.18);
+}
+
+.lg-ltr {
+  unicode-bidi: isolate;
+  direction: ltr;
+  white-space: nowrap;
+}
+
+/* ── hero ───────────────────────────────────────────────────────── */
+.lg-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--lg-ink);
+  padding: clamp(56px, 7vw, 88px) 0 clamp(48px, 6vw, 72px);
+}
+
+.lg-hero::before {
+  content: "";
+  position: absolute;
+  inset: -60% -10% auto;
+  height: 160%;
+  z-index: -1;
+  background:
+    radial-gradient(34em 18em at 88% 4%, rgba(168, 16, 126, 0.26), transparent 62%),
+    radial-gradient(30em 16em at 4% 96%, rgba(99, 40, 167, 0.26), transparent 64%);
+}
+
+.lg-hero h1 {
+  font-size: clamp(2rem, 4.2vw, 3.1rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.032em;
+  color: #fff;
+  text-wrap: balance;
+  max-width: 24ch;
+  margin: 0;
+}
+
+.lg-hero-sub {
+  font-size: clamp(1.05rem, 1.4vw, 1.22rem);
+  line-height: 1.65;
+  color: var(--lg-on-ink);
+  max-width: 54ch;
+  text-wrap: pretty;
+  margin: 18px 0 0;
+}
+
+.lg-hero-meta {
+  font-size: 0.98rem;
+  line-height: 1.7;
+  color: var(--lg-on-ink-dim);
+  max-width: 54ch;
+  text-wrap: pretty;
+  margin: 16px 0 0;
+  padding-block-start: 16px;
+  border-block-start: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ── the document ───────────────────────────────────────────────── */
+.lg-doc {
+  padding: clamp(48px, 6vw, 80px) 0 clamp(60px, 7.5vw, 96px);
+  background: var(--bg-white);
+}
+
+.lg-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.46fr) minmax(0, 1.54fr);
+  gap: clamp(28px, 4vw, 72px);
+  align-items: start;
+}
+
+/* ── the index ──────────────────────────────────────────────────
+   Sticky, because a sixteen-section agreement is navigated rather
+   than read front to back. */
+.lg-toc {
+  position: sticky;
+  top: clamp(90px, 11vh, 120px);
+}
+
+.lg-toc h2 {
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--lg-ink-2);
+  margin: 0 0 14px;
+}
+
+.lg-toc ol {
+  border-block-start: 1px solid var(--lg-line);
+  /* The document's own numbering, which the reader needs to cite a
+     clause — this is the case the counter earns. */
+  counter-reset: lg-clause;
+}
+
+/* Only a list long enough to outgrow the sticky box scrolls, and only
+   that one gets the faded end edge, so it reads as "there is more"
+   rather than as a clipped row. A short index is left alone. */
+.lg-toc[data-scroll="true"] ol {
+  max-height: min(62vh, 640px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 32px), transparent);
+  scrollbar-width: thin;
+  scrollbar-color: var(--lg-line-2) transparent;
+}
+
+.lg-toc[data-scroll="true"] ol::-webkit-scrollbar {
+  width: 6px;
+}
+
+.lg-toc[data-scroll="true"] ol::-webkit-scrollbar-thumb {
+  border-radius: 3px;
+  background: var(--lg-line-2);
+}
+
+.lg-toc[data-scroll="true"] ol::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.lg-toc li {
+  counter-increment: lg-clause;
+  border-block-end: 1px solid var(--lg-line);
+}
+
+.lg-toc a {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding-block: 10px;
+  font-size: 0.96rem;
+  line-height: 1.5;
+  color: var(--lg-body);
+  text-wrap: pretty;
+  transition: color var(--lg-hover) var(--lg-ease);
+}
+
+/* Only where the headings do not already carry their own numbers.
+   The privacy policy numbers its own sections, and a second counter
+   beside "1. כללי" reads as a contradiction. */
+.lg-toc[data-count="true"] a::before {
+  content: counter(lg-clause);
+  flex: 0 0 auto;
+  min-width: 1.6ch;
+  unicode-bidi: isolate;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: var(--lg-blue);
+}
+
+/* ── the sections ───────────────────────────────────────────────── */
+.lg-sec {
+  scroll-margin-top: clamp(80px, 11vh, 112px);
+}
+
+.lg-sec + .lg-sec {
+  margin-block-start: clamp(36px, 4.5vw, 56px);
+  padding-block-start: clamp(36px, 4.5vw, 56px);
+  border-block-start: 1px solid var(--lg-line);
+}
+
+.lg-sec h2 {
+  font-size: clamp(1.3rem, 2.1vw, 1.65rem);
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -0.026em;
+  color: var(--lg-ink-2);
+  text-wrap: balance;
+  margin: 0 0 clamp(14px, 1.8vw, 20px);
+}
+
+.lg-sec h2::after {
+  content: "";
+  display: block;
+  width: 36px;
+  height: 3px;
+  margin-block-start: 13px;
+  border-radius: 2px;
+  background: var(--primary-gradient);
+}
+
+.lg-sec p {
+  max-width: 70ch;
+  font-size: 1.02rem;
+  line-height: 1.85;
+  color: var(--lg-body);
+  text-wrap: pretty;
+  margin: 0 0 14px;
+}
+
+.lg-sec p:last-child {
+  margin-block-end: 0;
+}
+
+.lg-sec a {
+  color: var(--lg-blue);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  text-decoration-color: rgba(13, 89, 140, 0.4);
+  transition: text-decoration-color var(--lg-hover) var(--lg-ease);
+}
+
+/* ── definitions ────────────────────────────────────────────────── */
+.lg-dl {
+  max-width: 70ch;
+  border-block-start: 1px solid var(--lg-line);
+}
+
+.lg-dl > div {
+  display: grid;
+  grid-template-columns: minmax(0, 0.34fr) minmax(0, 1fr);
+  gap: 6px clamp(16px, 2.2vw, 28px);
+  padding-block: clamp(12px, 1.5vw, 16px);
+  border-block-end: 1px solid var(--lg-line);
+}
+
+.lg-dl dt {
+  font-size: 1.02rem;
+  font-weight: 800;
+  letter-spacing: -0.018em;
+  color: var(--lg-ink-2);
+  text-wrap: pretty;
+}
+
+.lg-dl dd {
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--lg-body);
+  text-wrap: pretty;
+  margin: 0;
+}
+
+/* ── numbered sub-clauses, used by the privacy policy ───────────
+   The policy's own sub-items. They are not decorative bullets: each
+   one is a separately citable clause, so each gets a rule rather
+   than a dot. */
+.lg-list {
+  max-width: 70ch;
+  margin: 0 0 14px;
+  border-block-start: 1px solid var(--lg-line);
+}
+
+.lg-list li {
+  padding-block: 11px;
+  border-block-end: 1px solid var(--lg-line);
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--lg-body);
+  text-wrap: pretty;
+}
+
+/* ── checked list, used by the accessibility statement ──────────── */
+.lg-checks {
+  max-width: 70ch;
+  margin-block: 4px 16px;
+}
+
+.lg-checks li {
+  position: relative;
+  padding-inline-start: 30px;
+  margin-block-end: 10px;
+  font-size: 1.02rem;
+  line-height: 1.75;
+  color: var(--lg-body);
+  text-wrap: pretty;
+}
+
+.lg-check {
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0.28em;
+  display: inline-flex;
+  color: var(--lg-blue);
+}
+
+/* ── the contact close ──────────────────────────────────────────── */
+.lg-contact {
+  padding: clamp(44px, 5.5vw, 68px) 0;
+  background: var(--lg-sky);
+}
+
+.lg-contact-in {
+  max-width: 62ch;
+}
+
+.lg-contact h2 {
+  font-size: clamp(1.45rem, 2.4vw, 1.9rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.026em;
+  color: var(--lg-ink-2);
+  margin: 0;
+}
+
+.lg-contact h2::after {
+  content: "";
+  display: block;
+  width: 44px;
+  height: 3px;
+  margin-block-start: 15px;
+  border-radius: 2px;
+  background: var(--primary-gradient);
+}
+
+.lg-contact p {
+  font-size: 1.02rem;
+  line-height: 1.8;
+  color: var(--lg-body);
+  text-wrap: pretty;
+  margin: 16px 0 0;
+}
+
+.lg-contact-rows {
+  margin-block-start: clamp(20px, 2.6vw, 28px);
+  border-block-start: 1px solid var(--lg-line-2);
+}
+
+.lg-contact-rows li {
+  border-block-end: 1px solid var(--lg-line-2);
+}
+
+.lg-contact-rows a {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px clamp(14px, 2vw, 28px);
+  padding-block: clamp(13px, 1.6vw, 16px);
+}
+
+.lg-contact-t {
+  flex: 0 0 auto;
+  min-width: 9ch;
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: var(--lg-body);
+}
+
+.lg-contact-v {
+  flex: 1 1 auto;
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--lg-ink-2);
+  overflow-wrap: anywhere;
+  transition: color var(--lg-hover) var(--lg-ease);
+}
+
+/* ── hover ──────────────────────────────────────────────────────
+   Gated: a touch device fires :hover on tap and then leaves the
+   element stuck in its hover state. */
+@media (hover: hover) and (pointer: fine) {
+  .lg-toc a:hover {
+    color: var(--lg-blue);
+  }
+
+  .lg-sec a:hover {
+    text-decoration-color: currentColor;
+  }
+
+  .lg-contact-rows a:hover .lg-contact-v {
+    color: var(--lg-blue);
+  }
+}
+
+/* ── responsive ────────────────────────────────────────────────── */
+@media (max-width: 1000px) {
+  .lg-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Above the document rather than beside it, so it must not stick. */
+  .lg-toc {
+    position: static;
+    margin-block-end: clamp(28px, 3.6vw, 40px);
+  }
+
+  .lg-toc[data-scroll="true"] ol {
+    max-height: none;
+    overflow: visible;
+    mask-image: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .lg-dl > div {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .lg-contact-t {
+    flex: 1 1 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lg-toc a,
+  .lg-sec a,
+  .lg-contact-v {
+    transition: none;
+  }
+
+  .lg-toc {
+    position: static;
+  }
+}
