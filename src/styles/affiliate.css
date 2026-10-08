@@ -1,0 +1,487 @@
+/* ============================================================
+   Affiliate page (.af-*)
+
+   Same world as the service pages: Primary Blue #0D598C as
+   structural ink, the magenta-purple gradient as the single
+   accent, start-aligned editorial headings with a short rule.
+
+   This page is about money, so its centre is a sum shown in full
+   rather than a figure asserted. Every number in that table comes
+   from the same TIERS the pricing page renders.
+
+   Shape: surfaces take --af-r, buttons stay pills because every
+   other button on the site is.
+
+   Motion: ease-out only, hover gated behind a real pointer, only
+   transform / opacity / colour animate.
+   ============================================================ */
+
+.af {
+  --af-ink: #0b1f33;
+  --af-ink-2: #16324f;
+  --af-blue: #0d598c;
+  --af-sky: #e9eff6;
+  --af-line: #d7e0ea;
+  --af-body: #4b6076;
+  --af-on-ink: #c6d7e8;
+  --af-on-ink-dim: #93aec9;
+
+  --af-r: 14px;
+
+  --af-ease: cubic-bezier(0.23, 1, 0.32, 1);
+  --af-hover: 150ms;
+  --af-press: 160ms;
+}
+
+.af ::selection {
+  background: rgba(13, 89, 140, 0.18);
+}
+
+.af-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.af-ltr {
+  unicode-bidi: isolate;
+  direction: ltr;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── hero ───────────────────────────────────────────────────────── */
+.af-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--af-ink);
+  padding: clamp(60px, 7.5vw, 100px) 0 clamp(52px, 6.5vw, 84px);
+}
+
+.af-hero::before {
+  content: "";
+  position: absolute;
+  inset: -60% -10% auto;
+  height: 160%;
+  z-index: -1;
+  background:
+    radial-gradient(34em 18em at 88% 4%, rgba(168, 16, 126, 0.26), transparent 62%),
+    radial-gradient(30em 16em at 4% 96%, rgba(99, 40, 167, 0.26), transparent 64%);
+}
+
+.af-hero h1 {
+  font-size: clamp(2.1rem, 4.6vw, 3.4rem);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.032em;
+  color: #fff;
+  text-wrap: balance;
+  margin: 0;
+}
+
+.af-hero-sub {
+  font-size: clamp(1.1rem, 1.5vw, 1.3rem);
+  line-height: 1.65;
+  color: var(--af-on-ink);
+  max-width: 50ch;
+  text-wrap: pretty;
+  margin: 20px 0 0;
+}
+
+.af-hero-note {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--af-on-ink-dim);
+  max-width: 52ch;
+  text-wrap: pretty;
+  margin: 18px 0 clamp(28px, 3.4vw, 38px);
+  padding-block-start: 18px;
+  border-block-start: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ── shared heading ─────────────────────────────────────────────── */
+.af-head {
+  max-width: 52ch;
+  margin-block-end: clamp(32px, 4vw, 48px);
+}
+
+.af-head h2 {
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
+  font-weight: 800;
+  line-height: 1.18;
+  letter-spacing: -0.028em;
+  color: var(--af-ink-2);
+  text-wrap: balance;
+  margin: 0;
+}
+
+.af-head h2::after {
+  content: "";
+  display: block;
+  width: 44px;
+  height: 3px;
+  margin-block-start: 16px;
+  border-radius: 2px;
+  background: var(--primary-gradient);
+}
+
+.af-head p {
+  font-size: clamp(1rem, 1.25vw, 1.1rem);
+  line-height: 1.7;
+  color: var(--af-body);
+  text-wrap: pretty;
+  margin: 16px 0 0;
+}
+
+.af-inline-link {
+  font-weight: 700;
+  color: var(--af-blue);
+  border-block-end: 1px solid currentColor;
+  transition: color var(--af-hover) var(--af-ease);
+}
+
+/* ── what earns ─────────────────────────────────────────────────
+   The rate repeats because it genuinely is the same on all three,
+   and seeing it three times is the point. */
+.af-earns {
+  padding: clamp(60px, 7.5vw, 96px) 0;
+  background: var(--bg-white);
+}
+
+.af-earns-split {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(28px, 4vw, 72px);
+  align-items: start;
+}
+
+.af-earns .af-head {
+  margin-block-end: 0;
+}
+
+.af-earn-list {
+  border-block-start: 1px solid var(--af-line);
+}
+
+.af-earn-list li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: clamp(16px, 2.4vw, 32px);
+  padding-block: clamp(16px, 2vw, 22px);
+  border-block-end: 1px solid var(--af-line);
+}
+
+.af-earn-t {
+  font-size: clamp(1.02rem, 1.3vw, 1.12rem);
+  line-height: 1.6;
+  color: var(--af-ink-2);
+  text-wrap: pretty;
+}
+
+.af-earn-rate {
+  flex: 0 0 auto;
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--af-blue);
+  font-variant-numeric: tabular-nums;
+  unicode-bidi: isolate;
+}
+
+/* ── the sum ────────────────────────────────────────────────────── */
+.af-example {
+  padding: clamp(60px, 7.5vw, 96px) 0;
+  background: var(--af-sky);
+}
+
+.af-table {
+  width: 100%;
+  max-width: 78ch;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.af-table th,
+.af-table td {
+  text-align: start;
+  border-block-end: 1px solid #c8d5e3;
+}
+
+.af-table thead th {
+  padding: 0 0 14px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--af-body);
+  border-block-end: 2px solid var(--af-blue);
+}
+
+.af-table tbody th {
+  padding-block: clamp(14px, 1.8vw, 20px);
+  font-size: 1.08rem;
+  font-weight: 800;
+  color: var(--af-ink-2);
+}
+
+.af-table tbody td {
+  padding-block: clamp(14px, 1.8vw, 20px);
+  font-size: 1.02rem;
+  color: var(--af-body);
+}
+
+.af-table tbody td:last-child {
+  font-weight: 700;
+  color: var(--af-ink-2);
+}
+
+.af-table tfoot th {
+  padding-block: clamp(14px, 1.8vw, 20px);
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: var(--af-body);
+}
+
+.af-table tfoot td {
+  padding-block: clamp(14px, 1.8vw, 20px);
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: var(--af-ink-2);
+}
+
+/* The answer the table is for. Scoped through .af-table so it
+   outranks the generic `.af-table tfoot td` rule above, which is
+   one element more specific than a bare `.af-table-total td`. */
+.af-table .af-table-total th,
+.af-table .af-table-total td {
+  border-block-end: 0;
+  color: var(--af-ink-2);
+}
+
+.af-table .af-table-total th {
+  font-weight: 800;
+}
+
+.af-table .af-table-total td {
+  font-size: clamp(1.5rem, 2.6vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.af-foot {
+  max-width: 70ch;
+  margin: clamp(20px, 2.6vw, 28px) 0 0;
+  font-size: 0.95rem;
+  line-height: 1.75;
+  color: var(--af-body);
+  text-wrap: pretty;
+}
+
+/* ── how to start ───────────────────────────────────────────────── */
+.af-start {
+  padding: clamp(60px, 7.5vw, 96px) 0;
+  background: var(--bg-white);
+}
+
+.af-steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(20px, 2.8vw, 40px);
+}
+
+.af-steps li {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-block-start: clamp(16px, 2vw, 22px);
+  border-block-start: 2px solid var(--af-blue);
+}
+
+.af-step-n {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--af-blue);
+  font-variant-numeric: tabular-nums;
+  unicode-bidi: isolate;
+}
+
+.af-step-t {
+  font-size: 1.02rem;
+  line-height: 1.65;
+  color: var(--af-ink-2);
+  text-wrap: pretty;
+}
+
+/* ── who it suits ───────────────────────────────────────────────── */
+.af-suits {
+  padding: clamp(60px, 7.5vw, 96px) 0;
+  background: var(--af-sky);
+}
+
+.af-suits-split {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(28px, 4vw, 72px);
+  align-items: start;
+}
+
+.af-suits .af-head {
+  margin-block-end: 0;
+}
+
+.af-suit-list {
+  border-block-start: 1px solid #c8d5e3;
+}
+
+.af-suit-list li {
+  padding-block: clamp(14px, 1.7vw, 18px);
+  border-block-end: 1px solid #c8d5e3;
+  font-size: clamp(1.02rem, 1.3vw, 1.12rem);
+  line-height: 1.6;
+  color: var(--af-ink-2);
+}
+
+/* ── the rules ──────────────────────────────────────────────────── */
+.af-notes {
+  padding: clamp(56px, 7vw, 88px) 0;
+  background: var(--bg-white);
+}
+
+.af-notes-in {
+  max-width: 64ch;
+  padding-block-start: clamp(24px, 3vw, 32px);
+  border-block-start: 1px solid var(--af-line);
+}
+
+.af-notes h2 {
+  font-size: clamp(1.3rem, 2.1vw, 1.6rem);
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -0.024em;
+  color: var(--af-ink-2);
+  margin: 0;
+}
+
+.af-notes p {
+  font-size: 1.02rem;
+  line-height: 1.8;
+  color: var(--af-body);
+  text-wrap: pretty;
+  margin: 16px 0 0;
+}
+
+.af-notes-terms {
+  font-size: 0.95rem;
+  color: var(--af-body);
+}
+
+/* ── buttons ──────────────────────────────────────────────────── */
+.af-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 34px;
+  border-radius: var(--radius-xl);
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-align: center;
+  transition:
+    transform var(--af-press) var(--af-ease),
+    box-shadow var(--af-hover) var(--af-ease),
+    background var(--af-hover) var(--af-ease),
+    color var(--af-hover) var(--af-ease);
+}
+
+.af-btn:active {
+  transform: scale(0.98);
+}
+
+.af-btn-accent {
+  background: var(--primary-gradient);
+  color: #fff;
+  box-shadow: 0 8px 24px -10px rgba(168, 16, 126, 0.75);
+}
+
+/* ── hover ──────────────────────────────────────────────────────
+   Gated: a touch device fires :hover on tap and then leaves the
+   element stuck in its hover state. */
+@media (hover: hover) and (pointer: fine) {
+  .af-btn-accent:hover {
+    box-shadow: 0 14px 32px -12px rgba(168, 16, 126, 0.85);
+  }
+
+  .af-inline-link:hover {
+    color: var(--af-ink-2);
+  }
+}
+
+/* ── responsive ────────────────────────────────────────────────── */
+@media (max-width: 1000px) {
+  .af-earns-split,
+  .af-suits-split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .af-earns .af-head,
+  .af-suits .af-head {
+    margin-block-end: clamp(24px, 3vw, 32px);
+  }
+
+  .af-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .af-steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .af-table thead {
+    display: none;
+  }
+
+  /* On a phone the table becomes stacked rows: three columns of
+     numbers at 390px is a scroll bar pretending to be a table. */
+  .af-table tbody tr,
+  .af-table tfoot tr {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 4px 12px;
+    padding-block: 14px;
+    border-block-end: 1px solid #c8d5e3;
+  }
+
+  .af-table tbody th,
+  .af-table tbody td,
+  .af-table tfoot th,
+  .af-table tfoot td {
+    padding-block: 0;
+    border-block-end: 0;
+  }
+
+  .af-table tbody th {
+    grid-column: 1 / -1;
+  }
+
+  .af-hero .af-btn {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .af-btn,
+  .af-inline-link {
+    transition: none;
+  }
+
+  .af-btn:active {
+    transform: none;
+  }
+}

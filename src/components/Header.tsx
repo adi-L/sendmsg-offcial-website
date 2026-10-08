@@ -101,8 +101,8 @@ const navItems: NavItem[] = [
     items: [
       { label: "חבילות דיוור", href: "/pricing/", icon: "package", desc: "כל המסלולים, מהחבילה החינמית ועד הבלתי מוגבלת." },
       { label: "בנק סמסים", href: "/sms-bank/", icon: "messageSquare", desc: "רוכשים סמסים מראש ומשתמשים בקצב שלכם." },
-      { label: "בנק שליחות", href: "https://www.sendmsg.co.il/pricelist/emailbank/", icon: "send", desc: "בנק דיוורים ללא מנוי חודשי." },
-      { label: "מספר וירטואלי", href: "https://www.sendmsg.co.il/virtualnumber/", icon: "hash", desc: "מספר ייעודי לשליחה וקבלה של הודעות." },
+      { label: "בנק שליחות", href: "/email-bank/", icon: "send", desc: "בנק דיוורים ללא מנוי חודשי." },
+      { label: "מספר וירטואלי", href: "/virtual-number/", icon: "hash", desc: "מספר ייעודי לשליחה וקבלה של הודעות." },
     ],
     media: {
       image: megaPricing,
@@ -117,13 +117,13 @@ const navItems: NavItem[] = [
     label: "שירותים",
     href: "https://www.sendmsg.co.il/services/",
     items: [
-      { label: "ניוזלטרים וקמפיינים", href: "https://www.sendmsg.co.il/newsletters/", icon: "mail", desc: "מעצבים ושולחים קמפיינים בתוך דקות." },
-      { label: "דפי נחיתה", href: "https://www.sendmsg.co.il/landingpages/", icon: "layout", desc: "דף נחיתה מעוצב, בלי מעצב ובלי מתכנת." },
-      { label: "קורסים דיגיטליים", href: "https://www.sendmsg.co.il/digitalcourses/", icon: "graduation", desc: "מעלים קורס, גובים תשלום, הכל במקום אחד." },
-      { label: "מערכת סמסים (SMS)", href: "https://www.sendmsg.co.il/%d7%a9%d7%9c%d7%99%d7%97%d7%aa-%d7%a1%d7%9e%d7%a1%d7%99%d7%9d/", icon: "messageCircle", desc: "הודעות אישיות וקמפיינים המוניים." },
-      { label: "ניהול מועדון לקוחות (CRM)", href: "https://www.sendmsg.co.il/crm/", icon: "users", desc: "כל הלקוחות והפילוחים במקום אחד." },
-      { label: "פגישות ושיתופי פעולה", href: "https://www.sendmsg.co.il/meetings/", icon: "calendar", desc: "תיאום פגישות בלי פינג פונג של הודעות." },
-      { label: "דומיין פרטי", href: "https://www.sendmsg.co.il/%d7%93%d7%95%d7%9e%d7%99%d7%99%d7%9f-%d7%a4%d7%a8%d7%98%d7%99/", icon: "globe", desc: "כתובת משלכם לדפים ולדיוורים." },
+      { label: "ניוזלטרים וקמפיינים", href: "/newsletters/", icon: "mail", desc: "מעצבים ושולחים קמפיינים בתוך דקות." },
+      { label: "דפי נחיתה", href: "/landing-pages/", icon: "layout", desc: "דף נחיתה מעוצב, בלי מעצב ובלי מתכנת." },
+      { label: "קורסים דיגיטליים", href: "/digital-courses/", icon: "graduation", desc: "מעלים קורס, גובים תשלום, הכל במקום אחד." },
+      { label: "מערכת סמסים (SMS)", href: "/sms/", icon: "messageCircle", desc: "הודעות אישיות וקמפיינים המוניים." },
+      { label: "ניהול מועדון לקוחות (CRM)", href: "/crm/", icon: "users", desc: "כל הלקוחות והפילוחים במקום אחד." },
+      { label: "פגישות ושיתופי פעולה", href: "/meetings/", icon: "calendar", desc: "תיאום פגישות בלי פינג פונג של הודעות." },
+      { label: "דומיין פרטי", href: "/domain/", icon: "globe", desc: "כתובת משלכם לדפים ולדיוורים." },
     ],
     media: {
       image: megaServices,
@@ -138,7 +138,7 @@ const navItems: NavItem[] = [
     href: "/support/",
     items: [
       { label: "צרו קשר", href: "/contact/", icon: "phone", desc: "טלפון, WhatsApp או טופס, איך שנוח לכם." },
-      { label: "תכנית שותפים", href: "https://www.sendmsg.co.il/affiliate/", icon: "share", desc: "ממליצים על שלח מסר ומרוויחים." },
+      { label: "תכנית שותפים", href: "/affiliate/", icon: "share", desc: "ממליצים על שלח מסר ומרוויחים." },
       { label: "התממשקות API", href: "/api/", icon: "code", desc: "מחברים את המערכת לכל כלי אחר." },
     ],
     media: {

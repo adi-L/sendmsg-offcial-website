@@ -1,0 +1,492 @@
+/* ============================================================
+   Landing pages page (.lp-*)
+
+   Same world as the other service and pricelist pages: Primary
+   Blue #0D598C as structural ink, the magenta-purple gradient as
+   the single accent, start-aligned editorial headings with a
+   short rule.
+
+   The one authored moment is the template gallery. Each template
+   is a whole page 2560px tall, so the preview opens at the top
+   and travels down when pointed at: the length is the argument,
+   and a static crop would hide it.
+
+   Shape: surfaces take --lp-r, buttons stay pills because every
+   other button on the site is.
+
+   Motion: ease-out only, hover gated behind a real pointer, only
+   transform / opacity / colour / grid-template-rows animate.
+   ============================================================ */
+
+.lp {
+  --lp-ink: #0b1f33;
+  --lp-ink-2: #16324f;
+  --lp-blue: #0d598c;
+  --lp-sky: #e9eff6;
+  --lp-line: #d7e0ea;
+  --lp-body: #4b6076;
+  --lp-on-ink: #c6d7e8;
+  --lp-on-ink-dim: #93aec9;
+
+  --lp-r: 14px;
+  --lp-r-sm: 8px;
+
+  --lp-ease: cubic-bezier(0.23, 1, 0.32, 1);
+  --lp-hover: 150ms;
+  --lp-press: 160ms;
+  --lp-disclose: 250ms;
+  --lp-travel: 2600ms;
+}
+
+.lp ::selection {
+  background: rgba(13, 89, 140, 0.18);
+}
+
+.lp-ltr {
+  unicode-bidi: isolate;
+  direction: ltr;
+  white-space: nowrap;
+}
+
+/* ── hero ───────────────────────────────────────────────────────── */
+.lp-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--lp-ink);
+  padding: clamp(60px, 7.5vw, 100px) 0 clamp(52px, 6.5vw, 84px);
+}
+
+.lp-hero::before {
+  content: "";
+  position: absolute;
+  inset: -60% -10% auto;
+  height: 160%;
+  z-index: -1;
+  background:
+    radial-gradient(34em 18em at 88% 4%, rgba(168, 16, 126, 0.26), transparent 62%),
+    radial-gradient(30em 16em at 4% 96%, rgba(99, 40, 167, 0.26), transparent 64%);
+}
+
+.lp-hero h1 {
+  font-size: clamp(2.1rem, 4.6vw, 3.4rem);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.032em;
+  color: #fff;
+  text-wrap: balance;
+  margin: 0;
+}
+
+.lp-hero-sub {
+  font-size: clamp(1.1rem, 1.5vw, 1.3rem);
+  line-height: 1.65;
+  color: var(--lp-on-ink);
+  max-width: 40ch;
+  text-wrap: pretty;
+  margin: 20px 0 0;
+}
+
+.lp-hero-note {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.7;
+  color: var(--lp-on-ink-dim);
+  margin: 18px 0 clamp(28px, 3.4vw, 38px);
+  padding-block-start: 18px;
+  border-block-start: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ── shared heading ─────────────────────────────────────────────── */
+.lp-head {
+  max-width: 54ch;
+  margin-block-end: clamp(32px, 4vw, 48px);
+}
+
+.lp-head h2 {
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
+  font-weight: 800;
+  line-height: 1.18;
+  letter-spacing: -0.028em;
+  color: var(--lp-ink-2);
+  text-wrap: balance;
+  margin: 0;
+}
+
+.lp-head h2::after {
+  content: "";
+  display: block;
+  width: 44px;
+  height: 3px;
+  margin-block-start: 16px;
+  border-radius: 2px;
+  background: var(--primary-gradient);
+}
+
+.lp-head p {
+  font-size: clamp(1rem, 1.25vw, 1.1rem);
+  line-height: 1.7;
+  color: var(--lp-body);
+  text-wrap: pretty;
+  margin: 16px 0 0;
+}
+
+/* ── what you can do ────────────────────────────────────────────
+   The heading stays beside the list it names; the rows run down
+   their own column so nine lines never become nine boxes. */
+.lp-can {
+  padding: clamp(60px, 7.5vw, 96px) 0;
+  background: var(--bg-white);
+}
+
+.lp-can-split {
+  display: grid;
+  grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
+  gap: clamp(28px, 4vw, 72px);
+  align-items: start;
+}
+
+.lp-can .lp-head {
+  margin-block-end: 0;
+  position: sticky;
+  top: clamp(90px, 11vh, 120px);
+}
+
+.lp-can-list {
+  border-block-start: 1px solid var(--lp-line);
+}
+
+.lp-can-list li {
+  padding-block: clamp(14px, 1.7vw, 18px);
+  border-block-end: 1px solid var(--lp-line);
+  font-size: clamp(1.02rem, 1.3vw, 1.12rem);
+  line-height: 1.6;
+  color: var(--lp-ink-2);
+  text-wrap: pretty;
+}
+
+/* ── the templates ──────────────────────────────────────────────
+   A window onto a whole page. It shows the top at rest and
+   travels down under a real pointer, which is the only motion on
+   the page that lasts longer than a transition. */
+.lp-templates {
+  padding: clamp(60px, 7.5vw, 96px) 0;
+  background: var(--lp-sky);
+}
+
+.lp-tpl-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(18px, 2.4vw, 32px);
+}
+
+.lp-tpl-frame {
+  position: relative;
+  overflow: hidden;
+  /* a size container, so the travel below can be expressed in the
+     frame's own height rather than in a number guessed per image */
+  container-type: size;
+  aspect-ratio: 3 / 4;
+  background: var(--bg-white);
+  border: 1px solid #c8d5e3;
+  border-radius: var(--lp-r);
+  box-shadow: 0 14px 34px -24px rgba(11, 31, 51, 0.55);
+}
+
+.lp-tpl-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: transform var(--lp-travel) var(--lp-ease);
+}
+
+.lp-tpl-name {
+  margin: 14px 0 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--lp-ink-2);
+}
+
+/* ── what else is included ──────────────────────────────────────
+   The hooks, not the paragraphs they were buried in. */
+.lp-also {
+  padding: clamp(60px, 7.5vw, 96px) 0;
+  background: var(--bg-white);
+}
+
+.lp-also-list {
+  border-block-start: 1px solid var(--lp-line);
+}
+
+.lp-also-list li {
+  border-block-end: 1px solid var(--lp-line);
+}
+
+.lp-also-list a,
+.lp-also-list div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px clamp(16px, 2.4vw, 32px);
+  padding-block: clamp(16px, 2vw, 22px);
+}
+
+.lp-also-list a {
+  transition: color var(--lp-hover) var(--lp-ease);
+}
+
+.lp-also-t {
+  flex: 0 0 auto;
+  min-width: 14ch;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--lp-ink-2);
+}
+
+.lp-also-hook {
+  flex: 1 1 auto;
+  font-size: 1.02rem;
+  line-height: 1.6;
+  color: var(--lp-body);
+}
+
+.lp-also-go {
+  flex: 0 0 auto;
+  display: inline-flex;
+  color: var(--lp-blue);
+  transition: transform var(--lp-hover) var(--lp-ease);
+}
+
+.lp-also-list a:hover .lp-also-t {
+  color: var(--lp-blue);
+}
+
+/* ── questions ──────────────────────────────────────────────────── */
+.lp-faq {
+  padding: clamp(60px, 7.5vw, 96px) 0;
+  background: var(--lp-sky);
+}
+
+.lp-qs {
+  border-block-start: 1px solid #c8d5e3;
+}
+
+.lp-q {
+  border-block-end: 1px solid #c8d5e3;
+}
+
+.lp-q-h {
+  margin: 0;
+}
+
+.lp-q-btn {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: clamp(16px, 2.4vw, 32px);
+  width: 100%;
+  padding-block: clamp(18px, 2.2vw, 24px);
+  text-align: start;
+  font-size: clamp(1.02rem, 1.35vw, 1.18rem);
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--lp-ink-2);
+  transition: color var(--lp-hover) var(--lp-ease);
+}
+
+.lp-q-sign {
+  flex: 0 0 auto;
+  display: inline-flex;
+  color: var(--lp-blue);
+}
+
+.lp-plus-v {
+  transform-origin: 12px 12px;
+  transition: transform var(--lp-disclose) var(--lp-ease);
+}
+
+.lp-q[data-open="true"] .lp-plus-v {
+  transform: rotate(90deg);
+}
+
+/* Collapsed to 0fr and invisible, so the panel leaves the tab order
+   rather than merely going out of sight. */
+.lp-a {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition:
+    grid-template-rows var(--lp-disclose) var(--lp-ease),
+    visibility var(--lp-disclose) var(--lp-ease);
+}
+
+.lp-q[data-open="true"] .lp-a {
+  grid-template-rows: 1fr;
+  visibility: visible;
+}
+
+.lp-a-in {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.lp-a-in p {
+  max-width: 76ch;
+  margin: 0;
+  padding-block-end: clamp(20px, 2.6vw, 28px);
+  font-size: 1.02rem;
+  line-height: 1.8;
+  color: var(--lp-body);
+  text-wrap: pretty;
+}
+
+/* ── plans ──────────────────────────────────────────────────── */
+.lp-plans {
+  padding: clamp(44px, 5.5vw, 68px) 0;
+  background: var(--lp-ink-2);
+}
+
+.lp-plans-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(20px, 3vw, 40px);
+}
+
+.lp-plans h2 {
+  font-size: clamp(1.35rem, 2.2vw, 1.8rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.026em;
+  color: #fff;
+  margin: 0;
+}
+
+.lp-plans p {
+  max-width: 54ch;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--lp-on-ink);
+  margin: 10px 0 0;
+}
+
+/* ── buttons ──────────────────────────────────────────────────── */
+.lp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 34px;
+  border-radius: var(--radius-xl);
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-align: center;
+  transition:
+    transform var(--lp-press) var(--lp-ease),
+    box-shadow var(--lp-hover) var(--lp-ease),
+    background var(--lp-hover) var(--lp-ease),
+    color var(--lp-hover) var(--lp-ease);
+}
+
+.lp-btn:active {
+  transform: scale(0.98);
+}
+
+.lp-btn-accent {
+  background: var(--primary-gradient);
+  color: #fff;
+  box-shadow: 0 8px 24px -10px rgba(168, 16, 126, 0.75);
+}
+
+.lp-btn-light {
+  background: var(--bg-white);
+  color: var(--lp-ink-2);
+}
+
+/* ── hover ──────────────────────────────────────────────────────
+   Gated: a touch device fires :hover on tap and then leaves the
+   element stuck in its hover state, which would strand a template
+   preview halfway down its own page. */
+@media (hover: hover) and (pointer: fine) {
+  .lp-btn-accent:hover {
+    box-shadow: 0 14px 32px -12px rgba(168, 16, 126, 0.85);
+  }
+
+  .lp-btn-light:hover {
+    box-shadow: 0 12px 28px -14px rgba(0, 0, 0, 0.6);
+  }
+
+  .lp-q-btn:hover {
+    color: var(--lp-blue);
+  }
+
+  .lp-also-list a:hover .lp-also-go {
+    transform: translateX(-4px);
+  }
+
+  /* Move by the image's own height less the frame's, so the travel
+     stops exactly at the foot of the page instead of overshooting
+     into empty space. Every template is a different height, and
+     100cqh resolves that per frame without hardcoding any of them. */
+  .lp-tpl:hover .lp-tpl-frame img {
+    transform: translateY(calc(-100% + 100cqh));
+  }
+}
+
+/* ── responsive ────────────────────────────────────────────────── */
+@media (max-width: 1000px) {
+  .lp-can-split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .lp-can .lp-head {
+    position: static;
+    margin-block-end: clamp(24px, 3vw, 32px);
+  }
+
+  .lp-tpl-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .lp-tpl-grid {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 320px;
+  }
+
+  .lp-also-t {
+    min-width: 0;
+    flex: 1 1 100%;
+  }
+
+  .lp-plans-row {
+    align-items: stretch;
+  }
+
+  .lp-plans-row .lp-btn,
+  .lp-hero .lp-btn {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lp-btn,
+  .lp-q-btn,
+  .lp-plus-v,
+  .lp-a,
+  .lp-also-go,
+  .lp-tpl-frame img {
+    transition: none;
+  }
+
+  .lp-btn:active {
+    transform: none;
+  }
+
+  /* No travel at all: the preview stays at the top of the page. */
+  .lp-tpl:hover .lp-tpl-frame img {
+    transform: none;
+  }
+}

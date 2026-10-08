@@ -1,0 +1,365 @@
+/* ============================================================
+   CRM page (.crm-*)
+
+   Same world as the other service pages: Primary Blue #0D598C as
+   structural ink, the magenta-purple gradient as the single
+   accent, start-aligned editorial headings with a short rule.
+
+   The live page is short and its best line is an admission, not a
+   boast. So the page is built around that line: it gets display
+   size and empty space, and nothing on the page competes with it.
+
+   Shape: surfaces take --crm-r, buttons stay pills because every
+   other button on the site is.
+
+   Motion: ease-out only, hover gated behind a real pointer, only
+   transform / opacity / colour animate.
+   ============================================================ */
+
+.crm {
+  --crm-ink: #0b1f33;
+  --crm-ink-2: #16324f;
+  --crm-blue: #0d598c;
+  --crm-sky: #e9eff6;
+  --crm-line: #d7e0ea;
+  --crm-body: #4b6076;
+  --crm-on-ink: #c6d7e8;
+  --crm-on-ink-dim: #93aec9;
+
+  --crm-r: 14px;
+
+  --crm-ease: cubic-bezier(0.23, 1, 0.32, 1);
+  --crm-hover: 150ms;
+  --crm-press: 160ms;
+}
+
+.crm ::selection {
+  background: rgba(13, 89, 140, 0.18);
+}
+
+.crm-ltr {
+  unicode-bidi: isolate;
+  direction: ltr;
+  white-space: nowrap;
+}
+
+/* ── hero ───────────────────────────────────────────────────────── */
+.crm-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--crm-ink);
+  padding: clamp(60px, 7.5vw, 100px) 0 clamp(52px, 6.5vw, 84px);
+}
+
+.crm-hero::before {
+  content: "";
+  position: absolute;
+  inset: -60% -10% auto;
+  height: 160%;
+  z-index: -1;
+  background:
+    radial-gradient(34em 18em at 88% 4%, rgba(168, 16, 126, 0.26), transparent 62%),
+    radial-gradient(30em 16em at 4% 96%, rgba(99, 40, 167, 0.26), transparent 64%);
+}
+
+.crm-hero h1 {
+  font-size: clamp(2.1rem, 4.6vw, 3.4rem);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.032em;
+  color: #fff;
+  text-wrap: balance;
+  margin: 0;
+}
+
+.crm-hero-sub {
+  font-size: clamp(1.1rem, 1.5vw, 1.3rem);
+  line-height: 1.65;
+  color: var(--crm-on-ink);
+  max-width: 44ch;
+  text-wrap: pretty;
+  margin: 20px 0 0;
+}
+
+.crm-hero-note {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--crm-on-ink-dim);
+  max-width: 56ch;
+  text-wrap: pretty;
+  margin: 18px 0 clamp(28px, 3.4vw, 38px);
+  padding-block-start: 18px;
+  border-block-start: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ── shared heading ─────────────────────────────────────────────── */
+.crm-head {
+  max-width: 50ch;
+  margin-block-end: clamp(32px, 4vw, 48px);
+}
+
+.crm-head h2 {
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
+  font-weight: 800;
+  line-height: 1.18;
+  letter-spacing: -0.028em;
+  color: var(--crm-ink-2);
+  text-wrap: balance;
+  margin: 0;
+}
+
+.crm-head h2::after {
+  content: "";
+  display: block;
+  width: 44px;
+  height: 3px;
+  margin-block-start: 16px;
+  border-radius: 2px;
+  background: var(--primary-gradient);
+}
+
+.crm-head p {
+  font-size: clamp(1rem, 1.25vw, 1.1rem);
+  line-height: 1.7;
+  color: var(--crm-body);
+  text-wrap: pretty;
+  margin: 16px 0 0;
+}
+
+/* ── the admission ──────────────────────────────────────────────
+   One start edge, two sizes. No frame: the sentence is the
+   argument, and a box would make it look like a disclaimer. */
+.crm-claim {
+  padding: clamp(68px, 8.5vw, 112px) 0;
+  background: var(--bg-white);
+}
+
+.crm-claim-in {
+  max-width: 68ch;
+}
+
+.crm-claim-lead {
+  font-size: clamp(1.6rem, 3.2vw, 2.6rem);
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -0.03em;
+  color: var(--crm-ink-2);
+  text-wrap: balance;
+  max-width: 26ch;
+  margin: 0;
+}
+
+.crm-claim-body {
+  font-size: clamp(1.02rem, 1.3vw, 1.15rem);
+  line-height: 1.8;
+  color: var(--crm-body);
+  max-width: 62ch;
+  text-wrap: pretty;
+  margin: clamp(26px, 3.2vw, 36px) 0 0;
+  padding-block-start: clamp(24px, 3vw, 32px);
+  border-block-start: 1px solid var(--crm-line);
+}
+
+/* ── capabilities ───────────────────────────────────────────────
+   The heading stays beside the list it names. */
+.crm-caps {
+  padding: clamp(60px, 7.5vw, 96px) 0;
+  background: var(--crm-sky);
+}
+
+.crm-caps-split {
+  display: grid;
+  grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
+  gap: clamp(28px, 4vw, 72px);
+  align-items: start;
+}
+
+.crm-caps .crm-head {
+  margin-block-end: 0;
+  position: sticky;
+  top: clamp(90px, 11vh, 120px);
+}
+
+.crm-cap-list {
+  border-block-start: 1px solid #c8d5e3;
+}
+
+.crm-cap-list li {
+  padding-block: clamp(14px, 1.7vw, 18px);
+  border-block-end: 1px solid #c8d5e3;
+  font-size: clamp(1.02rem, 1.3vw, 1.12rem);
+  line-height: 1.6;
+  color: var(--crm-ink-2);
+  text-wrap: pretty;
+}
+
+/* ── what else is included ──────────────────────────────────────── */
+.crm-also {
+  padding: clamp(60px, 7.5vw, 96px) 0;
+  background: var(--bg-white);
+}
+
+.crm-also-list {
+  border-block-start: 1px solid var(--crm-line);
+}
+
+.crm-also-list li {
+  border-block-end: 1px solid var(--crm-line);
+}
+
+.crm-also-list a {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px clamp(16px, 2.4vw, 32px);
+  padding-block: clamp(16px, 2vw, 22px);
+  transition: color var(--crm-hover) var(--crm-ease);
+}
+
+.crm-also-t {
+  flex: 0 0 auto;
+  min-width: 16ch;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--crm-ink-2);
+}
+
+.crm-also-hook {
+  flex: 1 1 auto;
+  font-size: 1.02rem;
+  line-height: 1.6;
+  color: var(--crm-body);
+}
+
+.crm-also-go {
+  flex: 0 0 auto;
+  display: inline-flex;
+  color: var(--crm-blue);
+  transition: transform var(--crm-hover) var(--crm-ease);
+}
+
+/* ── plans ──────────────────────────────────────────────────── */
+.crm-plans {
+  padding: clamp(44px, 5.5vw, 68px) 0;
+  background: var(--crm-ink-2);
+}
+
+.crm-plans-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(20px, 3vw, 40px);
+}
+
+.crm-plans h2 {
+  font-size: clamp(1.35rem, 2.2vw, 1.8rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.026em;
+  color: #fff;
+  margin: 0;
+}
+
+.crm-plans p {
+  max-width: 56ch;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--crm-on-ink);
+  margin: 10px 0 0;
+}
+
+/* ── buttons ──────────────────────────────────────────────────── */
+.crm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 34px;
+  border-radius: var(--radius-xl);
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-align: center;
+  transition:
+    transform var(--crm-press) var(--crm-ease),
+    box-shadow var(--crm-hover) var(--crm-ease),
+    background var(--crm-hover) var(--crm-ease),
+    color var(--crm-hover) var(--crm-ease);
+}
+
+.crm-btn:active {
+  transform: scale(0.98);
+}
+
+.crm-btn-accent {
+  background: var(--primary-gradient);
+  color: #fff;
+  box-shadow: 0 8px 24px -10px rgba(168, 16, 126, 0.75);
+}
+
+.crm-btn-light {
+  background: var(--bg-white);
+  color: var(--crm-ink-2);
+}
+
+/* ── hover ──────────────────────────────────────────────────────
+   Gated: a touch device fires :hover on tap and then leaves the
+   element stuck in its hover state. */
+@media (hover: hover) and (pointer: fine) {
+  .crm-btn-accent:hover {
+    box-shadow: 0 14px 32px -12px rgba(168, 16, 126, 0.85);
+  }
+
+  .crm-btn-light:hover {
+    box-shadow: 0 12px 28px -14px rgba(0, 0, 0, 0.6);
+  }
+
+  .crm-also-list a:hover .crm-also-t {
+    color: var(--crm-blue);
+  }
+
+  .crm-also-list a:hover .crm-also-go {
+    transform: translateX(-4px);
+  }
+}
+
+/* ── responsive ────────────────────────────────────────────────── */
+@media (max-width: 1000px) {
+  .crm-caps-split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .crm-caps .crm-head {
+    position: static;
+    margin-block-end: clamp(24px, 3vw, 32px);
+  }
+}
+
+@media (max-width: 560px) {
+  .crm-also-t {
+    min-width: 0;
+    flex: 1 1 100%;
+  }
+
+  .crm-plans-row {
+    align-items: stretch;
+  }
+
+  .crm-plans-row .crm-btn,
+  .crm-hero .crm-btn {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .crm-btn,
+  .crm-also-list a,
+  .crm-also-go {
+    transition: none;
+  }
+
+  .crm-btn:active {
+    transform: none;
+  }
+}

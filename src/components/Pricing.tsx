@@ -16,9 +16,11 @@ import { openSignup, PANEL_URL } from "./SignupDialog"
    holds across all 16 priced steps, so it is derived.
 
    Re-check these against the live calculator when prices change. */
-type Tier = { contacts: number; month: number; year: number }
+export type Tier = { contacts: number; month: number; year: number }
 
-const TIERS: Tier[] = [
+/* Exported so other pages can quote a real tier rather than restate a
+   price: /affiliate/ computes its commission example from this list. */
+export const TIERS: Tier[] = [
   { contacts: 250, month: 40, year: 36 },
   { contacts: 500, month: 79, year: 71 },
   { contacts: 1000, month: 89, year: 80 },

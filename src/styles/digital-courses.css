@@ -1,0 +1,601 @@
+/* ============================================================
+   Digital courses page (.dc-*)
+
+   Same world as the other service pages: Primary Blue #0D598C as
+   structural ink, the magenta-purple gradient as the single
+   accent, start-aligned editorial headings with a short rule.
+
+   The page's spine is an argument about price, so its centre is
+   the one place two columns are honest: what the free course
+   already is, facing what paying adds. Everything else is a list
+   that runs down a single edge.
+
+   Shape: surfaces take --dc-r, buttons stay pills because every
+   other button on the site is.
+
+   Motion: ease-out only, hover gated behind a real pointer, only
+   transform / opacity / colour / grid-template-rows animate.
+   ============================================================ */
+
+.dc {
+  --dc-ink: #0b1f33;
+  --dc-ink-2: #16324f;
+  --dc-blue: #0d598c;
+  --dc-sky: #e9eff6;
+  --dc-line: #d7e0ea;
+  --dc-body: #4b6076;
+  --dc-on-ink: #c6d7e8;
+  --dc-on-ink-dim: #93aec9;
+
+  --dc-r: 14px;
+  --dc-r-sm: 8px;
+
+  --dc-ease: cubic-bezier(0.23, 1, 0.32, 1);
+  --dc-hover: 150ms;
+  --dc-press: 160ms;
+  --dc-disclose: 250ms;
+}
+
+.dc ::selection {
+  background: rgba(13, 89, 140, 0.18);
+}
+
+.dc-ltr {
+  unicode-bidi: isolate;
+  direction: ltr;
+  white-space: nowrap;
+}
+
+/* ── hero ───────────────────────────────────────────────────────── */
+.dc-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--dc-ink);
+  padding: clamp(60px, 7.5vw, 100px) 0 clamp(52px, 6.5vw, 84px);
+}
+
+.dc-hero::before {
+  content: "";
+  position: absolute;
+  inset: -60% -10% auto;
+  height: 160%;
+  z-index: -1;
+  background:
+    radial-gradient(34em 18em at 88% 4%, rgba(168, 16, 126, 0.26), transparent 62%),
+    radial-gradient(30em 16em at 4% 96%, rgba(99, 40, 167, 0.26), transparent 64%);
+}
+
+.dc-hero h1 {
+  font-size: clamp(2.1rem, 4.6vw, 3.4rem);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.032em;
+  color: #fff;
+  text-wrap: balance;
+  max-width: 20ch;
+  margin: 0;
+}
+
+.dc-hero-sub {
+  font-size: clamp(1.1rem, 1.5vw, 1.3rem);
+  font-weight: 700;
+  line-height: 1.6;
+  color: var(--dc-on-ink);
+  margin: 20px 0 0;
+}
+
+.dc-hero-note {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--dc-on-ink-dim);
+  max-width: 56ch;
+  text-wrap: pretty;
+  margin: 18px 0 clamp(28px, 3.4vw, 38px);
+  padding-block-start: 18px;
+  border-block-start: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ── shared heading ─────────────────────────────────────────────── */
+.dc-head {
+  max-width: 56ch;
+  margin-block-end: clamp(32px, 4vw, 48px);
+}
+
+.dc-head h2 {
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
+  font-weight: 800;
+  line-height: 1.18;
+  letter-spacing: -0.028em;
+  color: var(--dc-ink-2);
+  text-wrap: balance;
+  margin: 0;
+}
+
+.dc-head h2::after {
+  content: "";
+  display: block;
+  width: 44px;
+  height: 3px;
+  margin-block-start: 16px;
+  border-radius: 2px;
+  background: var(--primary-gradient);
+}
+
+.dc-head p {
+  font-size: clamp(1rem, 1.25vw, 1.1rem);
+  line-height: 1.7;
+  color: var(--dc-body);
+  text-wrap: pretty;
+  margin: 16px 0 0;
+}
+
+.dc-inline-link {
+  font-weight: 700;
+  color: var(--dc-blue);
+  border-block-end: 1px solid currentColor;
+  transition: color var(--dc-hover) var(--dc-ease);
+}
+
+/* ── capabilities ───────────────────────────────────────────────── */
+.dc-caps {
+  padding: clamp(60px, 7.5vw, 96px) 0;
+  background: var(--bg-white);
+}
+
+.dc-cap-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: clamp(28px, 4vw, 64px);
+  margin: 0;
+  border-block-start: 1px solid var(--dc-line);
+}
+
+.dc-cap {
+  padding-block: clamp(18px, 2.2vw, 24px);
+  border-block-end: 1px solid var(--dc-line);
+}
+
+.dc-cap dt {
+  font-size: 1.12rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.4;
+  color: var(--dc-ink-2);
+  margin: 0;
+}
+
+.dc-cap dd {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--dc-body);
+  text-wrap: pretty;
+  margin: 8px 0 0;
+}
+
+/* ── how it works ───────────────────────────────────────────────
+   Numbered because it is an order of operations, not a set. */
+.dc-flow {
+  padding: clamp(60px, 7.5vw, 96px) 0;
+  background: var(--dc-sky);
+}
+
+.dc-flow-list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(24px, 3.2vw, 44px);
+  counter-reset: none;
+}
+
+.dc-flow-list li {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-block-start: clamp(18px, 2.2vw, 24px);
+  border-block-start: 2px solid var(--dc-blue);
+}
+
+.dc-flow-n {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--dc-blue);
+  font-variant-numeric: tabular-nums;
+  /* isolate without forcing ltr: digits render left-to-right inside
+     the isolate anyway, and the box keeps the page's direction so the
+     number sits at the start edge with its title, not opposite it */
+  unicode-bidi: isolate;
+}
+
+.dc-flow-t {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.35;
+  color: var(--dc-ink-2);
+}
+
+.dc-flow-d {
+  display: block;
+  margin-block-start: 8px;
+  font-size: 0.98rem;
+  line-height: 1.7;
+  color: var(--dc-body);
+  text-wrap: pretty;
+}
+
+/* ── free against premium ───────────────────────────────────────
+   The one place on the page where two columns are honest: these
+   are two halves of the same question. */
+.dc-plans {
+  padding: clamp(60px, 7.5vw, 96px) 0;
+  background: var(--bg-white);
+}
+
+.dc-nolimits {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(18px, 2.4vw, 32px);
+  margin-block-end: clamp(36px, 4.5vw, 56px);
+}
+
+.dc-nolimits li {
+  padding-block-start: 16px;
+  border-block-start: 1px solid var(--dc-line);
+  font-size: 1.02rem;
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--dc-ink-2);
+  text-wrap: pretty;
+}
+
+.dc-compare {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+  gap: clamp(24px, 3.2vw, 48px);
+  align-items: start;
+}
+
+.dc-col h3 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.022em;
+  color: var(--dc-ink-2);
+  margin: 0 0 clamp(16px, 2vw, 22px);
+}
+
+.dc-col ul {
+  border-block-start: 1px solid var(--dc-line);
+}
+
+.dc-col li {
+  padding-block: 13px;
+  border-block-end: 1px solid var(--dc-line);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--dc-ink-2);
+  text-wrap: pretty;
+}
+
+/* The premium column is the quieter one on purpose: the page's
+   argument is that the free course is already whole. */
+.dc-col-pro {
+  padding: clamp(24px, 3vw, 32px);
+  background: var(--dc-sky);
+  border-radius: var(--dc-r);
+}
+
+.dc-col-pro ul {
+  border-block-start-color: #c8d5e3;
+}
+
+.dc-col-pro li {
+  border-block-end-color: #c8d5e3;
+}
+
+.dc-col-note {
+  margin: clamp(18px, 2.2vw, 24px) 0 0;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--dc-body);
+  text-wrap: pretty;
+}
+
+.dc-col-link {
+  display: inline-block;
+  margin-block-start: 14px;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--dc-blue);
+  border-block-end: 1px solid currentColor;
+  transition: color var(--dc-hover) var(--dc-ease);
+}
+
+/* ── who it suits ───────────────────────────────────────────────── */
+.dc-who {
+  padding: clamp(60px, 7.5vw, 96px) 0;
+  background: var(--dc-sky);
+}
+
+.dc-who-list {
+  margin: 0;
+  border-block-start: 1px solid #c8d5e3;
+}
+
+.dc-who-row {
+  display: grid;
+  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+  gap: 8px clamp(20px, 3vw, 48px);
+  padding-block: clamp(18px, 2.2vw, 26px);
+  border-block-end: 1px solid #c8d5e3;
+}
+
+.dc-who-row dt {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.4;
+  color: var(--dc-ink-2);
+  margin: 0;
+}
+
+.dc-who-row dd {
+  font-size: 1.02rem;
+  line-height: 1.75;
+  color: var(--dc-body);
+  text-wrap: pretty;
+  margin: 0;
+}
+
+/* ── what else is included ──────────────────────────────────────── */
+.dc-also {
+  padding: clamp(60px, 7.5vw, 96px) 0;
+  background: var(--bg-white);
+}
+
+.dc-also-list {
+  border-block-start: 1px solid var(--dc-line);
+}
+
+.dc-also-list li {
+  border-block-end: 1px solid var(--dc-line);
+}
+
+.dc-also-list a,
+.dc-also-list div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px clamp(16px, 2.4vw, 32px);
+  padding-block: clamp(16px, 2vw, 22px);
+}
+
+.dc-also-list a {
+  transition: color var(--dc-hover) var(--dc-ease);
+}
+
+.dc-also-t {
+  flex: 0 0 auto;
+  min-width: 14ch;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--dc-ink-2);
+}
+
+.dc-also-hook {
+  flex: 1 1 auto;
+  font-size: 1.02rem;
+  line-height: 1.6;
+  color: var(--dc-body);
+}
+
+.dc-also-go {
+  flex: 0 0 auto;
+  display: inline-flex;
+  color: var(--dc-blue);
+  transition: transform var(--dc-hover) var(--dc-ease);
+}
+
+/* ── questions ──────────────────────────────────────────────────── */
+.dc-faq {
+  padding: clamp(60px, 7.5vw, 96px) 0;
+  background: var(--dc-sky);
+}
+
+.dc-qs {
+  border-block-start: 1px solid #c8d5e3;
+}
+
+.dc-q {
+  border-block-end: 1px solid #c8d5e3;
+}
+
+.dc-q-h {
+  margin: 0;
+}
+
+.dc-q-btn {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: clamp(16px, 2.4vw, 32px);
+  width: 100%;
+  padding-block: clamp(18px, 2.2vw, 24px);
+  text-align: start;
+  font-size: clamp(1.02rem, 1.35vw, 1.18rem);
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--dc-ink-2);
+  transition: color var(--dc-hover) var(--dc-ease);
+}
+
+.dc-q-sign {
+  flex: 0 0 auto;
+  display: inline-flex;
+  color: var(--dc-blue);
+}
+
+.dc-plus-v {
+  transform-origin: 12px 12px;
+  transition: transform var(--dc-disclose) var(--dc-ease);
+}
+
+.dc-q[data-open="true"] .dc-plus-v {
+  transform: rotate(90deg);
+}
+
+/* Collapsed to 0fr and invisible, so the panel leaves the tab order
+   rather than merely going out of sight. */
+.dc-a {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition:
+    grid-template-rows var(--dc-disclose) var(--dc-ease),
+    visibility var(--dc-disclose) var(--dc-ease);
+}
+
+.dc-q[data-open="true"] .dc-a {
+  grid-template-rows: 1fr;
+  visibility: visible;
+}
+
+.dc-a-in {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.dc-a-in p {
+  max-width: 76ch;
+  margin: 0 0 14px;
+  font-size: 1.02rem;
+  line-height: 1.8;
+  color: var(--dc-body);
+  text-wrap: pretty;
+}
+
+.dc-a-in p:last-child {
+  margin-block-end: clamp(20px, 2.6vw, 28px);
+}
+
+.dc-faq-foot {
+  margin: clamp(24px, 3vw, 32px) 0 0;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--dc-body);
+}
+
+/* ── buttons ──────────────────────────────────────────────────── */
+.dc-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 34px;
+  border-radius: var(--radius-xl);
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-align: center;
+  transition:
+    transform var(--dc-press) var(--dc-ease),
+    box-shadow var(--dc-hover) var(--dc-ease),
+    background var(--dc-hover) var(--dc-ease),
+    color var(--dc-hover) var(--dc-ease);
+}
+
+.dc-btn:active {
+  transform: scale(0.98);
+}
+
+.dc-btn-accent {
+  background: var(--primary-gradient);
+  color: #fff;
+  box-shadow: 0 8px 24px -10px rgba(168, 16, 126, 0.75);
+}
+
+/* ── hover ──────────────────────────────────────────────────────
+   Gated: a touch device fires :hover on tap and then leaves the
+   element stuck in its hover state. */
+@media (hover: hover) and (pointer: fine) {
+  .dc-btn-accent:hover {
+    box-shadow: 0 14px 32px -12px rgba(168, 16, 126, 0.85);
+  }
+
+  .dc-q-btn:hover {
+    color: var(--dc-blue);
+  }
+
+  .dc-inline-link:hover,
+  .dc-col-link:hover {
+    color: var(--dc-ink-2);
+  }
+
+  .dc-also-list a:hover .dc-also-t {
+    color: var(--dc-blue);
+  }
+
+  .dc-also-list a:hover .dc-also-go {
+    transform: translateX(-4px);
+  }
+}
+
+/* ── responsive ────────────────────────────────────────────────── */
+@media (max-width: 1000px) {
+  .dc-flow-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dc-compare {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 760px) {
+  .dc-cap-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dc-nolimits {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .dc-nolimits li {
+    padding-block: 14px 0;
+  }
+
+  .dc-who-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .dc-flow-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dc-also-t {
+    min-width: 0;
+    flex: 1 1 100%;
+  }
+
+  .dc-hero .dc-btn {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dc-btn,
+  .dc-q-btn,
+  .dc-plus-v,
+  .dc-a,
+  .dc-also-go,
+  .dc-inline-link,
+  .dc-col-link {
+    transition: none;
+  }
+
+  .dc-btn:active {
+    transform: none;
+  }
+}

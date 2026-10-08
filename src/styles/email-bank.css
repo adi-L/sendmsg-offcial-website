@@ -1,0 +1,697 @@
+/* ============================================================
+   Email bank page (.eb-*)
+
+   Sibling of /sms-bank/ and in the same world as /about/ and
+   /pricing/: Primary Blue #0D598C as structural ink, the
+   magenta-purple gradient as the single accent, start-aligned
+   editorial headings with a short rule.
+
+   Where the SMS bank page is one full-width console, this page is
+   an asymmetric split: the paid quote is an instrument you drive,
+   the free plan beside it is a fixed fact. The two never share a
+   layout family with anything else on the page.
+
+   Shape: surfaces take --eb-r, small controls --eb-r-sm, and
+   buttons stay pills because every other button on the site is.
+
+   Motion: ease-out only, hover gated behind a real pointer,
+   nothing animated but transform and opacity. One authored
+   moment — the quote re-entering when the bank changes.
+   ============================================================ */
+
+.eb {
+  --eb-ink: #0b1f33;
+  --eb-ink-2: #16324f;
+  --eb-blue: #0d598c;
+  --eb-sky: #e9eff6;
+  --eb-line: #d7e0ea;
+  --eb-body: #4b6076;
+  --eb-on-ink: #c6d7e8;
+  --eb-on-ink-dim: #93aec9;
+  --eb-accent: #ff8ad1;
+
+  --eb-r: 14px;
+  --eb-r-sm: 8px;
+
+  --eb-ease: cubic-bezier(0.23, 1, 0.32, 1);
+  --eb-hover: 150ms;
+  --eb-press: 160ms;
+  --eb-enter: 260ms;
+}
+
+.eb ::selection {
+  background: rgba(13, 89, 140, 0.18);
+}
+
+.eb-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── hero ───────────────────────────────────────────────────────
+   Short on purpose. The split below is the content, so the band
+   names the page and gets out of the way. */
+.eb-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--eb-ink);
+  padding: clamp(56px, 7vw, 88px) 0 clamp(44px, 5vw, 60px);
+}
+
+.eb-hero::before {
+  content: "";
+  position: absolute;
+  inset: -60% -10% auto;
+  height: 160%;
+  z-index: -1;
+  background:
+    radial-gradient(34em 18em at 88% 4%, rgba(168, 16, 126, 0.26), transparent 62%),
+    radial-gradient(30em 16em at 4% 96%, rgba(99, 40, 167, 0.26), transparent 64%);
+}
+
+.eb-hero h1 {
+  font-size: clamp(2.1rem, 4.4vw, 3.2rem);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.032em;
+  color: #fff;
+  text-wrap: balance;
+  margin: 0;
+}
+
+.eb-hero-sub {
+  font-size: clamp(1.05rem, 1.4vw, 1.2rem);
+  line-height: 1.7;
+  color: var(--eb-on-ink);
+  max-width: 46ch;
+  text-wrap: pretty;
+  margin: 18px 0 0;
+}
+
+/* an index strip, not a row of tick chips: every line here is
+   simply true, and a checkmark would add nothing to it */
+.eb-terms {
+  display: grid;
+  grid-template-columns: repeat(3, max-content);
+  align-items: baseline;
+  column-gap: clamp(18px, 2.6vw, 30px);
+  margin: clamp(26px, 3.2vw, 36px) 0 0;
+  padding-block-start: 18px;
+  border-block-start: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--eb-on-ink);
+}
+
+.eb-terms li + li {
+  padding-inline-start: clamp(18px, 2.6vw, 30px);
+  border-inline-start: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ── shared heading ─────────────────────────────────────────────── */
+.eb-head {
+  max-width: 56ch;
+  margin-block-end: clamp(32px, 4vw, 46px);
+}
+
+.eb-head h2 {
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
+  font-weight: 800;
+  line-height: 1.18;
+  letter-spacing: -0.028em;
+  color: var(--eb-ink-2);
+  text-wrap: balance;
+  margin: 0;
+}
+
+.eb-head h2::after {
+  content: "";
+  display: block;
+  width: 44px;
+  height: 3px;
+  margin-block-start: 16px;
+  border-radius: 2px;
+  background: var(--primary-gradient);
+}
+
+.eb-head p {
+  font-size: clamp(1rem, 1.25vw, 1.1rem);
+  line-height: 1.7;
+  color: var(--eb-body);
+  text-wrap: pretty;
+  margin: 16px 0 0;
+}
+
+/* ── the split ──────────────────────────────────────────────────
+   Wide instrument, narrow fact. They are not two cards in a grid:
+   only one of them has controls. */
+.eb-pick {
+  padding: clamp(48px, 6vw, 72px) 0 clamp(52px, 6.5vw, 80px);
+  background: var(--bg-white);
+}
+
+.eb-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.42fr) minmax(0, 0.58fr);
+  gap: clamp(18px, 2.2vw, 26px);
+  align-items: stretch;
+}
+
+.eb-console {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(28px, 3.4vw, 44px);
+  background: var(--eb-ink-2);
+  border-radius: var(--eb-r);
+  color: #fff;
+}
+
+.eb-console::before {
+  content: "";
+  position: absolute;
+  inset: -50% -20%;
+  z-index: -1;
+  background:
+    radial-gradient(30em 16em at 86% 2%, rgba(168, 16, 126, 0.32), transparent 62%),
+    radial-gradient(32em 18em at 6% 104%, rgba(99, 40, 167, 0.34), transparent 64%);
+}
+
+.eb-console ::selection {
+  background: rgba(255, 138, 209, 0.34);
+  color: #fff;
+}
+
+.eb-console :focus-visible {
+  outline-color: var(--eb-accent);
+}
+
+.eb-sizer {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  gap: 12px 14px;
+  padding-block-end: clamp(26px, 3.2vw, 36px);
+  border-block-end: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.eb-sizer label {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--eb-on-ink);
+}
+
+.eb-sizer-value {
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+  color: #fff;
+}
+
+.eb-sizer input[type="range"] {
+  grid-column: 1 / -1;
+  width: 100%;
+  height: 22px;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* The filled portion is painted onto the track itself rather than
+   layered over it, so the thumb never sits on a seam. --fill comes
+   from React; the gradient runs to the left because the page is RTL. */
+.eb-sizer input[type="range"]::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(
+    to left,
+    var(--primary-pink) 0 var(--fill, 0%),
+    rgba(255, 255, 255, 0.22) var(--fill, 0%) 100%
+  );
+}
+
+.eb-sizer input[type="range"]::-moz-range-track {
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(
+    to left,
+    var(--primary-pink) 0 var(--fill, 0%),
+    rgba(255, 255, 255, 0.22) var(--fill, 0%) 100%
+  );
+}
+
+.eb-sizer input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: -8px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--primary-gradient);
+  box-shadow: 0 2px 8px rgba(11, 31, 51, 0.4);
+  transition: transform var(--eb-press) var(--eb-ease);
+}
+
+.eb-sizer input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--primary-pink);
+  box-shadow: 0 2px 8px rgba(11, 31, 51, 0.4);
+}
+
+.eb-sizer input[type="range"]:active::-webkit-slider-thumb {
+  transform: scale(1.12);
+}
+
+/* Inset by half a thumb at each end so a tick sits under the thumb's
+   centre, not under its edge. */
+.eb-ticks {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  margin: -4px 10px 0;
+}
+
+.eb-ticks span {
+  width: 1px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.eb-scale {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  margin: 8px 10px 0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--eb-on-ink-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── the quote ──────────────────────────────────────────────── */
+.eb-quote {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-block-start: clamp(26px, 3.2vw, 36px);
+}
+
+.eb-quote-head {
+  font-size: clamp(1.15rem, 1.7vw, 1.38rem);
+  font-weight: 800;
+  line-height: 1.3;
+  letter-spacing: -0.022em;
+  color: #fff;
+  margin: 0;
+}
+
+.eb-quote-lead {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--eb-on-ink);
+  max-width: 34ch;
+  text-wrap: pretty;
+  margin: 12px 0 clamp(24px, 3vw, 32px);
+}
+
+.eb-price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+  margin: clamp(14px, 1.8vw, 20px) 0 0;
+  line-height: 1;
+}
+
+.eb-price-was {
+  order: 2;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--eb-on-ink-dim);
+  font-variant-numeric: tabular-nums;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+.eb-price-now {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.eb-price-num {
+  font-size: clamp(3rem, 6vw, 4.6rem);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
+  unicode-bidi: isolate;
+  direction: ltr;
+}
+
+.eb-price-cur {
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.eb-price-terms {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--eb-on-ink);
+  margin: 14px 0 clamp(24px, 3vw, 32px);
+}
+
+.eb-quote-alt {
+  margin-block-start: 14px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--eb-on-ink);
+  border-block-end: 1px solid rgba(255, 255, 255, 0.35);
+  transition: color var(--eb-hover) var(--eb-ease);
+}
+
+/* ── the free plan ──────────────────────────────────────────────
+   One number that never moves, so it gets no controls and no
+   gradient: a pale panel beside the instrument. */
+.eb-free {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: clamp(26px, 3vw, 36px);
+  background: var(--eb-sky);
+  border-radius: var(--eb-r);
+}
+
+.eb-free-eyebrow {
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--eb-blue);
+  margin: 0;
+}
+
+.eb-free-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px;
+  font-size: clamp(1.5rem, 2.4vw, 1.9rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--eb-ink-2);
+  margin: 12px 0 0;
+}
+
+.eb-free-num {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--eb-body);
+  font-variant-numeric: tabular-nums;
+  unicode-bidi: isolate;
+  direction: ltr;
+}
+
+.eb-free-note {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--eb-body);
+  margin: 10px 0 clamp(20px, 2.4vw, 26px);
+}
+
+.eb-free-list {
+  width: 100%;
+  margin: 0 0 clamp(24px, 3vw, 32px);
+  border-block-start: 1px solid #c8d5e3;
+}
+
+.eb-free-list li {
+  padding-block: 12px;
+  border-block-end: 1px solid #c8d5e3;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--eb-ink-2);
+}
+
+.eb-free .eb-btn {
+  margin-block-start: auto;
+}
+
+.eb-foot {
+  margin: clamp(18px, 2.2vw, 26px) 0 0;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--eb-body);
+}
+
+/* the one authored moment: the answer re-enters when the bank changes */
+@keyframes eb-rise {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+}
+
+.eb-quote-head,
+.eb-price,
+.eb-quote-lead {
+  animation: eb-rise var(--eb-enter) var(--eb-ease) both;
+}
+
+.eb-price,
+.eb-quote-lead {
+  animation-delay: 45ms;
+}
+
+/* ── buttons ──────────────────────────────────────────────────── */
+.eb-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 34px;
+  border-radius: var(--radius-xl);
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-align: center;
+  transition:
+    transform var(--eb-press) var(--eb-ease),
+    box-shadow var(--eb-hover) var(--eb-ease),
+    background var(--eb-hover) var(--eb-ease),
+    color var(--eb-hover) var(--eb-ease);
+}
+
+.eb-btn:active {
+  transform: scale(0.98);
+}
+
+.eb-btn-accent {
+  background: var(--primary-gradient);
+  color: #fff;
+  box-shadow: 0 8px 24px -10px rgba(168, 16, 126, 0.75);
+}
+
+.eb-btn-outline {
+  background: transparent;
+  border: 1px solid var(--eb-blue);
+  color: var(--eb-blue);
+}
+
+.eb-btn-light {
+  background: var(--bg-white);
+  color: var(--eb-ink-2);
+}
+
+/* ── gifts ──────────────────────────────────────────────────────
+   A ledger: an index number, a hairline, a name. Thirteen identical
+   checkmarks would say nothing the heading has not already said. */
+.eb-gifts {
+  padding: clamp(60px, 7.5vw, 92px) 0;
+  background: var(--eb-sky);
+}
+
+.eb-gift-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: clamp(26px, 3.6vw, 56px);
+  border-block-start: 1px solid #c8d5e3;
+  counter-reset: none;
+  list-style: none;
+}
+
+.eb-gift-list li {
+  display: grid;
+  grid-template-columns: 2.4em 1fr;
+  align-items: baseline;
+  gap: 10px;
+  padding-block: 15px;
+  border-block-end: 1px solid #c8d5e3;
+}
+
+.eb-gift-i {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--eb-blue);
+  font-variant-numeric: tabular-nums;
+  unicode-bidi: isolate;
+  direction: ltr;
+  text-align: start;
+}
+
+.eb-gift-t {
+  font-size: 1.02rem;
+  line-height: 1.5;
+  color: var(--eb-ink-2);
+}
+
+/* ── a bigger bank is a conversation, not a price column ───────── */
+.eb-custom {
+  padding: clamp(44px, 5.5vw, 68px) 0;
+  background: var(--eb-ink-2);
+}
+
+.eb-custom-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(20px, 3vw, 40px);
+}
+
+.eb-custom h2 {
+  font-size: clamp(1.35rem, 2.2vw, 1.8rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.026em;
+  color: #fff;
+  margin: 0;
+}
+
+.eb-custom p {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--eb-on-ink);
+  margin: 10px 0 0;
+}
+
+/* ── hover ──────────────────────────────────────────────────────
+   Gated: a touch device fires :hover on tap and then leaves the
+   element stuck in its hover state. */
+@media (hover: hover) and (pointer: fine) {
+  .eb-btn-accent:hover {
+    box-shadow: 0 14px 32px -12px rgba(168, 16, 126, 0.85);
+  }
+
+  .eb-btn-outline:hover {
+    background: var(--eb-blue);
+    color: #fff;
+  }
+
+  .eb-btn-light:hover {
+    box-shadow: 0 12px 28px -14px rgba(0, 0, 0, 0.6);
+  }
+
+  .eb-quote-alt:hover {
+    color: #fff;
+  }
+}
+
+/* ── responsive ────────────────────────────────────────────────── */
+@media (max-width: 1040px) {
+  .eb-gift-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .eb-split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .eb-free .eb-btn {
+    margin-block-start: 0;
+  }
+}
+
+@media (max-width: 720px) {
+  .eb-terms {
+    grid-template-columns: minmax(0, 1fr);
+    column-gap: 0;
+  }
+
+  .eb-terms li + li {
+    padding-inline-start: 0;
+    border-inline-start: 0;
+  }
+
+  .eb-terms li {
+    padding-block: 10px;
+    border-block-end: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .eb-terms li:last-child {
+    padding-block-end: 0;
+    border-block-end: 0;
+  }
+
+  .eb-gift-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .eb-custom-row {
+    align-items: stretch;
+  }
+
+  .eb-custom-row .eb-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .eb-quote .eb-btn,
+  .eb-free .eb-btn {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eb-quote-head,
+  .eb-price,
+  .eb-quote-lead {
+    animation: none;
+  }
+
+  .eb-btn,
+  .eb-quote-alt {
+    transition: none;
+  }
+
+  .eb-btn:active {
+    transform: none;
+  }
+
+  .eb-sizer input[type="range"]::-webkit-slider-thumb {
+    transition: none;
+  }
+
+  .eb-sizer input[type="range"]:active::-webkit-slider-thumb {
+    transform: none;
+  }
+}

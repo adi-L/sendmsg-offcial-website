@@ -1,0 +1,516 @@
+/* ============================================================
+   SMS system page (.sm-*)
+
+   Same world as the other service pages: Primary Blue #0D598C as
+   structural ink, the magenta-purple gradient as the single
+   accent, start-aligned editorial headings with a short rule.
+
+   This page sits between two pages that already exist, so it is
+   built to hand off: the virtual number states its price and
+   links to its own page, and the message prices link to the bank
+   calculator rather than repeating either of them here.
+
+   Shape: surfaces take --sm-r, buttons stay pills because every
+   other button on the site is.
+
+   Motion: ease-out only, hover gated behind a real pointer, only
+   transform / opacity / colour / grid-template-rows animate.
+   ============================================================ */
+
+.sm {
+  --sm-ink: #0b1f33;
+  --sm-ink-2: #16324f;
+  --sm-blue: #0d598c;
+  --sm-sky: #e9eff6;
+  --sm-line: #d7e0ea;
+  --sm-body: #4b6076;
+  --sm-on-ink: #c6d7e8;
+  --sm-on-ink-dim: #93aec9;
+  --sm-accent: #ff8ad1;
+
+  --sm-r: 14px;
+  --sm-r-sm: 8px;
+
+  --sm-ease: cubic-bezier(0.23, 1, 0.32, 1);
+  --sm-hover: 150ms;
+  --sm-press: 160ms;
+  --sm-disclose: 250ms;
+}
+
+.sm ::selection {
+  background: rgba(13, 89, 140, 0.18);
+}
+
+.sm-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.sm-ltr {
+  unicode-bidi: isolate;
+  direction: ltr;
+  white-space: nowrap;
+}
+
+/* ── hero ───────────────────────────────────────────────────────── */
+.sm-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--sm-ink);
+  padding: clamp(60px, 7.5vw, 100px) 0 clamp(52px, 6.5vw, 84px);
+}
+
+.sm-hero::before {
+  content: "";
+  position: absolute;
+  inset: -60% -10% auto;
+  height: 160%;
+  z-index: -1;
+  background:
+    radial-gradient(34em 18em at 88% 4%, rgba(168, 16, 126, 0.26), transparent 62%),
+    radial-gradient(30em 16em at 4% 96%, rgba(99, 40, 167, 0.26), transparent 64%);
+}
+
+.sm-hero h1 {
+  font-size: clamp(2.1rem, 4.6vw, 3.4rem);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.032em;
+  color: #fff;
+  text-wrap: balance;
+  margin: 0;
+}
+
+.sm-hero-sub {
+  font-size: clamp(1.08rem, 1.45vw, 1.25rem);
+  line-height: 1.7;
+  color: var(--sm-on-ink);
+  max-width: 56ch;
+  text-wrap: pretty;
+  margin: 20px 0 0;
+}
+
+.sm-hero-note {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--sm-on-ink-dim);
+  max-width: 52ch;
+  text-wrap: pretty;
+  margin: 18px 0 clamp(28px, 3.4vw, 38px);
+  padding-block-start: 18px;
+  border-block-start: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ── shared heading ─────────────────────────────────────────────── */
+.sm-head {
+  max-width: 56ch;
+  margin-block-end: clamp(32px, 4vw, 48px);
+}
+
+.sm-head h2 {
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
+  font-weight: 800;
+  line-height: 1.18;
+  letter-spacing: -0.028em;
+  color: var(--sm-ink-2);
+  text-wrap: balance;
+  margin: 0;
+}
+
+.sm-head h2::after {
+  content: "";
+  display: block;
+  width: 44px;
+  height: 3px;
+  margin-block-start: 16px;
+  border-radius: 2px;
+  background: var(--primary-gradient);
+}
+
+/* ── why sms ────────────────────────────────────────────────────── */
+.sm-why {
+  padding: clamp(60px, 7.5vw, 96px) 0;
+  background: var(--bg-white);
+}
+
+.sm-why-split {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(28px, 4vw, 64px);
+  align-items: start;
+  padding-block-start: clamp(24px, 3vw, 34px);
+  border-block-start: 1px solid var(--sm-line);
+}
+
+.sm-why h2 {
+  font-size: clamp(1.6rem, 2.8vw, 2.2rem);
+  font-weight: 800;
+  line-height: 1.22;
+  letter-spacing: -0.028em;
+  color: var(--sm-ink-2);
+  text-wrap: balance;
+  margin: 0;
+}
+
+.sm-why-body p {
+  font-size: clamp(1.02rem, 1.3vw, 1.15rem);
+  line-height: 1.8;
+  color: var(--sm-body);
+  text-wrap: pretty;
+  margin: 0;
+}
+
+.sm-why-body p + p {
+  margin-block-start: 18px;
+}
+
+/* ── capabilities ───────────────────────────────────────────────── */
+.sm-caps {
+  padding: clamp(60px, 7.5vw, 96px) 0;
+  background: var(--sm-sky);
+}
+
+.sm-cap-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: clamp(28px, 4vw, 64px);
+  border-block-start: 1px solid #c8d5e3;
+}
+
+.sm-cap-list li {
+  padding-block: clamp(14px, 1.7vw, 18px);
+  border-block-end: 1px solid #c8d5e3;
+  font-size: clamp(1.02rem, 1.3vw, 1.12rem);
+  line-height: 1.6;
+  color: var(--sm-ink-2);
+  text-wrap: pretty;
+}
+
+/* ── virtual number ─────────────────────────────────────────────── */
+.sm-vn {
+  padding: clamp(60px, 7.5vw, 96px) 0;
+  background: var(--bg-white);
+}
+
+.sm-vn-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
+  gap: clamp(28px, 4vw, 56px);
+  align-items: start;
+}
+
+.sm-vn-text h2 {
+  font-size: clamp(1.6rem, 2.8vw, 2.2rem);
+  font-weight: 800;
+  line-height: 1.22;
+  letter-spacing: -0.028em;
+  color: var(--sm-ink-2);
+  text-wrap: balance;
+  margin: 0 0 clamp(20px, 2.4vw, 26px);
+}
+
+.sm-vn-text h2::after {
+  content: "";
+  display: block;
+  width: 44px;
+  height: 3px;
+  margin-block-start: 16px;
+  border-radius: 2px;
+  background: var(--primary-gradient);
+}
+
+.sm-vn-text p {
+  font-size: 1.02rem;
+  line-height: 1.8;
+  color: var(--sm-body);
+  max-width: 62ch;
+  text-wrap: pretty;
+  margin: 0;
+}
+
+.sm-vn-text p + p {
+  margin-block-start: 16px;
+}
+
+/* A price with a button is an object, so it gets a surface. */
+.sm-vn-offer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: clamp(24px, 3vw, 32px);
+  background: var(--sm-sky);
+  border-radius: var(--sm-r);
+}
+
+.sm-vn-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--sm-blue);
+  margin: 0;
+}
+
+.sm-vn-price {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin: 10px 0 0;
+  line-height: 1;
+  color: var(--sm-ink-2);
+}
+
+.sm-vn-num {
+  font-size: clamp(2.6rem, 4.4vw, 3.4rem);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
+  unicode-bidi: isolate;
+  direction: ltr;
+}
+
+.sm-vn-cur {
+  font-size: clamp(1.2rem, 1.9vw, 1.6rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.sm-vn-terms {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--sm-body);
+  margin: 12px 0 clamp(20px, 2.4vw, 26px);
+}
+
+.sm-vn-offer .sm-btn {
+  width: 100%;
+  padding-inline: 20px;
+}
+
+.sm-vn-alt {
+  margin-block-start: 14px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--sm-blue);
+  border-block-end: 1px solid currentColor;
+  transition: color var(--sm-hover) var(--sm-ease);
+}
+
+/* ── prices band ────────────────────────────────────────────────── */
+.sm-prices {
+  padding: clamp(44px, 5.5vw, 68px) 0;
+  background: var(--sm-ink-2);
+}
+
+.sm-prices-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(20px, 3vw, 40px);
+}
+
+.sm-prices h2 {
+  font-size: clamp(1.35rem, 2.2vw, 1.8rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.026em;
+  color: #fff;
+  margin: 0;
+}
+
+.sm-prices p {
+  max-width: 58ch;
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--sm-on-ink);
+  text-wrap: pretty;
+  margin: 10px 0 0;
+}
+
+/* ── questions ──────────────────────────────────────────────────── */
+.sm-faq {
+  padding: clamp(60px, 7.5vw, 96px) 0;
+  background: var(--bg-white);
+}
+
+.sm-qs {
+  border-block-start: 1px solid var(--sm-line);
+}
+
+.sm-q {
+  border-block-end: 1px solid var(--sm-line);
+}
+
+.sm-q-h {
+  margin: 0;
+}
+
+.sm-q-btn {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: clamp(16px, 2.4vw, 32px);
+  width: 100%;
+  padding-block: clamp(18px, 2.2vw, 24px);
+  text-align: start;
+  font-size: clamp(1.02rem, 1.35vw, 1.18rem);
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--sm-ink-2);
+  transition: color var(--sm-hover) var(--sm-ease);
+}
+
+.sm-q-sign {
+  flex: 0 0 auto;
+  display: inline-flex;
+  color: var(--sm-blue);
+}
+
+.sm-plus-v {
+  transform-origin: 12px 12px;
+  transition: transform var(--sm-disclose) var(--sm-ease);
+}
+
+.sm-q[data-open="true"] .sm-plus-v {
+  transform: rotate(90deg);
+}
+
+/* Collapsed to 0fr and invisible, so the panel leaves the tab order
+   rather than merely going out of sight. */
+.sm-a {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition:
+    grid-template-rows var(--sm-disclose) var(--sm-ease),
+    visibility var(--sm-disclose) var(--sm-ease);
+}
+
+.sm-q[data-open="true"] .sm-a {
+  grid-template-rows: 1fr;
+  visibility: visible;
+}
+
+.sm-a-in {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.sm-a-in p {
+  max-width: 76ch;
+  margin: 0 0 14px;
+  font-size: 1.02rem;
+  line-height: 1.8;
+  color: var(--sm-body);
+  text-wrap: pretty;
+}
+
+.sm-a-in p:last-child {
+  margin-block-end: clamp(20px, 2.6vw, 28px);
+}
+
+/* ── buttons ──────────────────────────────────────────────────── */
+.sm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 34px;
+  border-radius: var(--radius-xl);
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-align: center;
+  transition:
+    transform var(--sm-press) var(--sm-ease),
+    box-shadow var(--sm-hover) var(--sm-ease),
+    background var(--sm-hover) var(--sm-ease),
+    color var(--sm-hover) var(--sm-ease);
+}
+
+.sm-btn:active {
+  transform: scale(0.98);
+}
+
+.sm-btn-accent {
+  background: var(--primary-gradient);
+  color: #fff;
+  box-shadow: 0 8px 24px -10px rgba(168, 16, 126, 0.75);
+}
+
+.sm-btn-light {
+  background: var(--bg-white);
+  color: var(--sm-ink-2);
+}
+
+/* ── hover ──────────────────────────────────────────────────────
+   Gated: a touch device fires :hover on tap and then leaves the
+   element stuck in its hover state. */
+@media (hover: hover) and (pointer: fine) {
+  .sm-btn-accent:hover {
+    box-shadow: 0 14px 32px -12px rgba(168, 16, 126, 0.85);
+  }
+
+  .sm-btn-light:hover {
+    box-shadow: 0 12px 28px -14px rgba(0, 0, 0, 0.6);
+  }
+
+  .sm-q-btn:hover {
+    color: var(--sm-blue);
+  }
+
+  .sm-vn-alt:hover {
+    color: var(--sm-ink-2);
+  }
+}
+
+/* ── responsive ────────────────────────────────────────────────── */
+@media (max-width: 1000px) {
+  .sm-why-split,
+  .sm-vn-split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 760px) {
+  .sm-cap-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sm-prices-row {
+    align-items: stretch;
+  }
+
+  .sm-prices-row .sm-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 560px) {
+  .sm-hero .sm-btn {
+    width: 100%;
+  }
+
+  .sm-vn-offer {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sm-btn,
+  .sm-q-btn,
+  .sm-plus-v,
+  .sm-a,
+  .sm-vn-alt {
+    transition: none;
+  }
+
+  .sm-btn:active {
+    transform: none;
+  }
+}

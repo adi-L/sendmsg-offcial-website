@@ -1,0 +1,455 @@
+/* ============================================================
+   Virtual number page (.vn-*)
+
+   Same world as /sms-bank/ and /email-bank/: Primary Blue #0D598C
+   as structural ink, the magenta-purple gradient as the single
+   accent, start-aligned editorial headings with a short rule.
+
+   The live page is one paragraph, one price and one demo. So this
+   page is built around the demo rather than around a price table:
+   the message mock is the only authored moment, and everything
+   else is type on a ground.
+
+   Shape: surfaces take --vn-r, buttons stay pills because every
+   other button on the site is.
+
+   Motion: ease-out only, hover gated behind a real pointer,
+   nothing animated but transform and opacity.
+   ============================================================ */
+
+.vn {
+  --vn-ink: #0b1f33;
+  --vn-ink-2: #16324f;
+  --vn-blue: #0d598c;
+  --vn-sky: #e9eff6;
+  --vn-line: #d7e0ea;
+  --vn-body: #4b6076;
+  --vn-on-ink: #c6d7e8;
+  --vn-on-ink-dim: #93aec9;
+  --vn-accent: #ff8ad1;
+
+  --vn-r: 14px;
+  --vn-r-sm: 8px;
+
+  --vn-ease: cubic-bezier(0.23, 1, 0.32, 1);
+  --vn-hover: 150ms;
+  --vn-press: 160ms;
+}
+
+.vn ::selection {
+  background: rgba(13, 89, 140, 0.18);
+}
+
+.vn-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Hebrew sentences carry Latin-digit phone numbers; isolate them so
+   the hyphens and digits do not reorder around the punctuation. */
+.vn-num {
+  unicode-bidi: isolate;
+  direction: ltr;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ── hero ───────────────────────────────────────────────────────
+   Claim on one side, the whole offer on the other. There is only
+   one price on this product, so it is a panel, not a list item. */
+.vn-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--vn-ink);
+  padding: clamp(56px, 7vw, 92px) 0 clamp(52px, 6.5vw, 84px);
+}
+
+.vn-hero::before {
+  content: "";
+  position: absolute;
+  inset: -60% -10% auto;
+  height: 160%;
+  z-index: -1;
+  background:
+    radial-gradient(34em 18em at 88% 4%, rgba(168, 16, 126, 0.26), transparent 62%),
+    radial-gradient(30em 16em at 4% 96%, rgba(99, 40, 167, 0.26), transparent 64%);
+}
+
+.vn-hero-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
+  align-items: center;
+  gap: clamp(28px, 4vw, 56px);
+}
+
+.vn-hero h1 {
+  font-size: clamp(2.05rem, 4.2vw, 3.1rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.032em;
+  color: #fff;
+  text-wrap: balance;
+  margin: 0;
+}
+
+.vn-lead {
+  font-size: clamp(1.05rem, 1.4vw, 1.2rem);
+  line-height: 1.75;
+  color: var(--vn-on-ink);
+  max-width: 50ch;
+  text-wrap: pretty;
+  margin: 20px 0 0;
+}
+
+.vn-offer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: clamp(24px, 2.8vw, 32px);
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--vn-r);
+}
+
+.vn-offer-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--vn-on-ink);
+  margin: 0;
+}
+
+.vn-offer-price {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  margin: 10px 0 0;
+  line-height: 1;
+  color: #fff;
+}
+
+.vn-offer-num {
+  font-size: clamp(2.8rem, 5vw, 3.8rem);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
+  unicode-bidi: isolate;
+  direction: ltr;
+}
+
+.vn-offer-cur {
+  font-size: clamp(1.3rem, 2vw, 1.7rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.vn-offer .vn-btn {
+  width: 100%;
+  padding-inline: 20px;
+}
+
+.vn-offer-terms {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--vn-on-ink);
+  margin: 12px 0 clamp(22px, 2.6vw, 28px);
+}
+
+/* ── shared heading ─────────────────────────────────────────────── */
+.vn-head h2 {
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
+  font-weight: 800;
+  line-height: 1.18;
+  letter-spacing: -0.028em;
+  color: var(--vn-ink-2);
+  text-wrap: balance;
+  margin: 0;
+}
+
+.vn-head h2::after {
+  content: "";
+  display: block;
+  width: 44px;
+  height: 3px;
+  margin-block-start: 16px;
+  border-radius: 2px;
+  background: var(--primary-gradient);
+}
+
+.vn-head p {
+  font-size: clamp(1rem, 1.25vw, 1.1rem);
+  line-height: 1.7;
+  color: var(--vn-body);
+  max-width: 42ch;
+  text-wrap: pretty;
+  margin: 16px 0 0;
+}
+
+/* ── what it does ───────────────────────────────────────────────
+   A heading column that stays put beside rows that scroll past it.
+   Term, then one sentence: a card grid would pad this out. */
+.vn-what {
+  padding: clamp(60px, 7.5vw, 96px) 0;
+  background: var(--bg-white);
+}
+
+.vn-what-split {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(32px, 4.5vw, 72px);
+  align-items: start;
+}
+
+.vn-list {
+  margin: 0;
+  border-block-start: 1px solid var(--vn-line);
+}
+
+.vn-list-row {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 6px clamp(18px, 2.4vw, 32px);
+  padding-block: clamp(16px, 1.9vw, 20px);
+  border-block-end: 1px solid var(--vn-line);
+}
+
+.vn-list dt {
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.45;
+  color: var(--vn-ink-2);
+  margin: 0;
+}
+
+.vn-list dd {
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--vn-body);
+  text-wrap: pretty;
+  margin: 0;
+}
+
+/* ── the demo ───────────────────────────────────────────────────
+   The page shows the message instead of describing it. The mock is
+   decorative — the same instruction is written in full beside it,
+   so it is hidden from assistive tech rather than read twice. */
+.vn-demo {
+  padding: clamp(60px, 7.5vw, 96px) 0;
+  background: var(--vn-sky);
+}
+
+.vn-demo-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr);
+  gap: clamp(32px, 4.5vw, 64px);
+  align-items: center;
+}
+
+.vn-demo .vn-head p .vn-num {
+  font-weight: 700;
+  color: var(--vn-ink-2);
+}
+
+.vn-phone {
+  padding: clamp(18px, 2.2vw, 24px);
+  background: var(--bg-white);
+  border: 1px solid #c8d5e3;
+  border-radius: var(--vn-r);
+  box-shadow: 0 18px 40px -28px rgba(11, 31, 51, 0.5);
+}
+
+.vn-phone-to {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding-block-end: 14px;
+  border-block-end: 1px solid var(--vn-line);
+  font-size: 1rem;
+  color: var(--vn-ink-2);
+}
+
+.vn-phone-to-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--vn-body);
+}
+
+.vn-phone-to .vn-num {
+  font-weight: 700;
+}
+
+/* An outgoing message sits at the start edge of the thread, which in
+   RTL is the right: margin-inline-start pushes it off the far side. */
+.vn-bubble {
+  width: max-content;
+  max-width: min(100%, 30ch);
+  margin: 18px 0 0 auto;
+  margin-inline-start: auto;
+  margin-inline-end: 0;
+  padding: 14px 18px;
+  background: var(--vn-ink-2);
+  border-radius: var(--vn-r);
+  border-end-end-radius: 4px;
+  font-size: 1.02rem;
+  line-height: 1.5;
+  color: #fff;
+}
+
+.vn-bubble-mail {
+  unicode-bidi: isolate;
+  direction: ltr;
+  color: var(--vn-on-ink);
+}
+
+/* ── buy band ───────────────────────────────────────────────── */
+.vn-buy {
+  padding: clamp(44px, 5.5vw, 68px) 0;
+  background: var(--vn-ink-2);
+}
+
+.vn-buy-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(20px, 3vw, 40px);
+}
+
+.vn-buy h2 {
+  font-size: clamp(1.35rem, 2.2vw, 1.8rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.026em;
+  color: #fff;
+  margin: 0;
+}
+
+.vn-buy p {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--vn-on-ink);
+  margin: 10px 0 0;
+  unicode-bidi: isolate;
+}
+
+.vn-buy-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(16px, 2vw, 26px);
+}
+
+.vn-buy-alt {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--vn-on-ink);
+  border-block-end: 1px solid rgba(255, 255, 255, 0.35);
+  transition: color var(--vn-hover) var(--vn-ease);
+}
+
+/* ── buttons ──────────────────────────────────────────────────── */
+.vn-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 32px;
+  border-radius: var(--radius-xl);
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-align: center;
+  transition:
+    transform var(--vn-press) var(--vn-ease),
+    box-shadow var(--vn-hover) var(--vn-ease),
+    background var(--vn-hover) var(--vn-ease),
+    color var(--vn-hover) var(--vn-ease);
+}
+
+.vn-btn:active {
+  transform: scale(0.98);
+}
+
+.vn-btn-accent {
+  background: var(--primary-gradient);
+  color: #fff;
+  box-shadow: 0 8px 24px -10px rgba(168, 16, 126, 0.75);
+}
+
+.vn-btn-light {
+  background: var(--bg-white);
+  color: var(--vn-ink-2);
+}
+
+/* ── hover ──────────────────────────────────────────────────────
+   Gated: a touch device fires :hover on tap and then leaves the
+   element stuck in its hover state. */
+@media (hover: hover) and (pointer: fine) {
+  .vn-btn-accent:hover {
+    box-shadow: 0 14px 32px -12px rgba(168, 16, 126, 0.85);
+  }
+
+  .vn-btn-light:hover {
+    box-shadow: 0 12px 28px -14px rgba(0, 0, 0, 0.6);
+  }
+
+  .vn-buy-alt:hover {
+    color: #fff;
+  }
+}
+
+/* ── responsive ────────────────────────────────────────────────── */
+@media (max-width: 1000px) {
+  .vn-hero-split,
+  .vn-what-split,
+  .vn-demo-split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .vn-offer {
+    align-self: start;
+  }
+}
+
+@media (max-width: 720px) {
+  .vn-list-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .vn-buy-row {
+    align-items: stretch;
+  }
+
+  .vn-buy-actions {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+}
+
+@media (max-width: 640px) {
+  .vn-offer {
+    width: 100%;
+  }
+
+  .vn-offer .vn-btn,
+  .vn-buy-actions .vn-btn {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vn-btn,
+  .vn-buy-alt {
+    transition: none;
+  }
+
+  .vn-btn:active {
+    transform: none;
+  }
+}

@@ -3,12 +3,12 @@ import { withPrefix } from "gatsby"
 import logo from "../images/logo.png"
 
 const serviceLinks = [
-  { label: "ניוזלטרים", href: "https://www.sendmsg.co.il/newsletters/" },
-  { label: "SMS", href: "https://www.sendmsg.co.il/%d7%a9%d7%9c%d7%99%d7%97%d7%aa-%d7%a1%d7%9e%d7%a1%d7%99%d7%9d/" },
-  { label: "דפי נחיתה", href: "https://www.sendmsg.co.il/landingpages/" },
-  { label: "קורסים דיגיטליים", href: "https://www.sendmsg.co.il/digitalcourses/" },
-  { label: "CRM", href: "https://www.sendmsg.co.il/crm/" },
-  { label: "פגישות", href: "https://www.sendmsg.co.il/meetings/" },
+  { label: "ניוזלטרים", href: "/newsletters/" },
+  { label: "SMS", href: "/sms/" },
+  { label: "דפי נחיתה", href: "/landing-pages/" },
+  { label: "קורסים דיגיטליים", href: "/digital-courses/" },
+  { label: "CRM", href: "/crm/" },
+  { label: "פגישות", href: "/meetings/" },
   { label: "AI דיוור", href: "https://ai.sendmsg.co.il/" },
   { label: "Creaditor", href: "/creaditor/" },
 ]
