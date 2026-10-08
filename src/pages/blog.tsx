@@ -1,5 +1,5 @@
 import React from "react"
-import { graphql, PageProps, HeadFC } from "gatsby"
+import { graphql, Link, PageProps, HeadFC } from "gatsby"
 import Layout from "../components/Layout"
 import SEO from "../components/SEO"
 import InlineCTA from "../components/InlineCTA"
@@ -101,7 +101,7 @@ const BlogPage: React.FC<PageProps<BlogData>> = ({ data }) => {
             </div>
 
             {featured && (
-              <a href={`/blog/${featured.frontmatter.slug}/`} className="bl-featured">
+              <Link to={`/blog/${featured.frontmatter.slug}/`} className="bl-featured">
                 <div className="bl-featured-img">
                   {postImage(featured) && (
                     <img src={postImage(featured)!} alt={featured.frontmatter.title} />
@@ -116,12 +116,12 @@ const BlogPage: React.FC<PageProps<BlogData>> = ({ data }) => {
                   <PostMeta post={featured} />
                   <span className="bl-more">להמשך קריאה ←</span>
                 </div>
-              </a>
+              </Link>
             )}
 
             <div className="bl-grid">
               {rest.filter(Boolean).map((post) => (
-                <a key={post!.id} href={`/blog/${post!.frontmatter.slug}/`} className="bl-card">
+                <Link key={post!.id} to={`/blog/${post!.frontmatter.slug}/`} className="bl-card">
                   <div className="bl-card-img">
                     {postImage(post!) && (
                       <img src={postImage(post!)!} alt={post!.frontmatter.title} loading="lazy" />
@@ -134,7 +134,7 @@ const BlogPage: React.FC<PageProps<BlogData>> = ({ data }) => {
                     <div className="bl-tear" aria-hidden="true" />
                     <PostMeta post={post!} />
                   </div>
-                </a>
+                </Link>
               ))}
             </div>
 
@@ -164,8 +164,14 @@ export const Head: HeadFC = () => (
 
 export const query = graphql`
   query BlogList {
+    # Scoped to content/blog. The knowledge base is markdown too, so
+    # without the path filter all 98 guides list themselves as blog
+    # posts — which is exactly what happened the first time.
     allMarkdownRemark(
-      filter: { frontmatter: { slug: { ne: null } } }
+      filter: {
+        frontmatter: { slug: { ne: null } }
+        fileAbsolutePath: { regex: "//content/blog//" }
+      }
       sort: { frontmatter: { date: DESC } }
     ) {
       nodes {

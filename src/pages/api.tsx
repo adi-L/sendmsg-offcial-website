@@ -1,3 +1,4 @@
+import { withPrefix } from "gatsby"
 import React from "react"
 import type { HeadFC } from "gatsby"
 import DocsLayout from "../components/docs/DocsLayout"
@@ -119,15 +120,15 @@ const ApiPage: React.FC = () => (
         </p>
         <ul className="doc-machine-links">
           <li>
-            <a href="/api/llms.txt">llms.txt</a>
+            <a href={withPrefix("/api/llms.txt")}>llms.txt</a>
             <span>Structured index of every endpoint.</span>
           </li>
           <li>
-            <a href="/api/llms-full.txt">llms-full.txt</a>
+            <a href={withPrefix("/api/llms-full.txt")}>llms-full.txt</a>
             <span>The complete reference as one markdown file.</span>
           </li>
           <li>
-            <a href="/api/openapi.json">openapi.json</a>
+            <a href={withPrefix("/api/openapi.json")}>openapi.json</a>
             <span>Import into Postman, or generate a client.</span>
           </li>
         </ul>
