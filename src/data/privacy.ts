@@ -1,24 +1,36 @@
 /* ── מדיניות פרטיות שלח מסר ──────────────────────────────────────
-   Extracted from the live sendmsg.co.il/privacy/ markup rather than
-   retyped, so the wording is the published one.
+   Sections 1-5 and 9 were extracted from the live sendmsg.co.il/privacy/
+   markup rather than retyped, so their wording is the published one.
+   Edit those only against the live page.
 
-   INCOMPLETE ON PURPOSE — three sections are missing and must be
-   supplied before this page is treated as the real policy:
+   Sections 6, 7 and 8 are NOT from the live page, and that is deliberate.
+   The live page publishes all three headings with the wrong bodies: under
+   "6. הסכמה לקבלת דברי פרסומת" it prints the תקנון's forbidden-content and
+   liability clauses, under "7. מידע אנונימי" its copyright clauses, and
+   under "8. שימוש בקבצי עוגיות" its AS-IS, maintenance and backup clauses.
+   None of it is privacy policy, and section 2.2 of the policy points at a
+   cookie section that therefore did not exist. Carrying that over would
+   have published a legal document that contradicts its own headings.
 
-     6. הסכמה לקבלת דברי פרסומת
-     7. מידע אנונימי
-     8. שימוש בקבצי עוגיות
+   So they were written here instead, and section 8 in particular states
+   verified facts about this build rather than boilerplate:
 
-   On the live page those three headings carry text copied out of the
-   תקנון (forbidden content, copyright, and the AS-IS liability
-   clause). It does not match the headings, so it is not the privacy
-   policy and was not carried over. Paste the real text into the gap
-   below and the page will render it; the numbering deliberately
-   keeps the published 1-9 so the internal "9.1.", "9.2." references
-   inside the text stay correct.
+     - no cookies are set by this site (nothing calls document.cookie,
+       there is no analytics, tag manager, pixel or third-party script,
+       and every script in the build is first-party)
+     - the three browser-storage keys named in 8.3 are the real ones, in
+       PromoPopup.tsx, AIAssistant.tsx and docs/useToken.tsx
+     - ASP.NET_SessionId in 8.4 is the cookie panel.sendmsg.co.il actually
+       returns
+     - Google Fonts and cdn.trustindex.io were each checked for Set-Cookie
+       and return none
 
-   Edit this file only against the live page or against text the
-   company supplies. Nothing here is prose the site may rewrite. */
+   IF THAT CHANGES, THIS SECTION BECOMES FALSE. Adding analytics, a pixel,
+   a tag manager or any embedded third-party widget means updating 8.2-8.5
+   in the same commit.
+
+   These three sections are drafted text, not text the company supplied.
+   They need a human sign-off before they are relied on as the policy. */
 
 export type PrivacyBlock =
   | { kind: "p"; text: string }
@@ -30,12 +42,6 @@ export type PrivacySection = {
   heading: string
   blocks: PrivacyBlock[]
 }
-
-export const PRIVACY_GAPS = [
-  "6. הסכמה לקבלת דברי פרסומת",
-  "7. מידע אנונימי",
-  "8. שימוש בקבצי עוגיות",
-]
 
 export const PRIVACY: PrivacySection[] = [
   {
@@ -133,6 +139,50 @@ export const PRIVACY: PrivacySection[] = [
   },
   {
     id: "p7",
+    heading: "6. הסכמה לקבלת דברי פרסומת",
+    blocks: [
+      { kind: "p", text: "6.1. הגדרה: \"דבר פרסומת\" הוא מסר המופץ באופן מסחרי, שמטרתו לעודד רכישת מוצר או שירות או לעודד הוצאת כספים בדרך אחרת, כמשמעותו בסעיף 30א לחוק התקשורת (בזק ושידורים), התשמ\"ב-1982." },
+      { kind: "p", text: "6.2. דיוור מטעם הספק: הספק ישלח אליך דברי פרסומת בדואר אלקטרוני, במסרון או בהודעה מיידית רק לאחר שנתת את הסכמתך לכך — בין במסגרת ההרשמה למערכת, בעת פתיחת חשבון ניסיון, בעת מסירת פרטיך בטופס יצירת קשר באתר ובין בדרך אחרת. מתן ההסכמה הוא מרצון ואינו תנאי לקבלת השירות." },
+      { kind: "p", text: "6.3. תוכן הדיוור: דיוור כאמור עשוי לכלול עדכונים על שירותי הספק, מבצעים והטבות, תכנים מקצועיים ומדריכים, והזמנות לפעילויות ולהדרכות." },
+      { kind: "p", text: "6.4. הסרה מרשימת הדיוור: באפשרותך לחזור בך מהסכמתך בכל עת ולהודיע על סירוב לקבלת דברי פרסומת. בכל דבר פרסומת שיישלח אליך מטעם הספק תימצא דרך פשוטה להסרה מרשימת התפוצה, ובנוסף ניתן לפנות בבקשת הסרה בדרכים המפורטות בסעיף 9 להלן. בקשת הסרה תטופל בתוך זמן סביר ממועד קבלתה." },
+      { kind: "p", text: "6.5. הודעות שירות: הודעות תפעוליות הנוגעות לחשבונך — ובכלל זה אישורי רכישה, חשבוניות, התראות אבטחה, הודעות על תקלות ועדכוני מדיניות — אינן דברי פרסומת. הודעות אלה יוסיפו להישלח אליך כל עוד חשבונך פעיל, גם אם ביקשת להסירך מרשימת הדיוור השיווקי." },
+      { kind: "p", text: "6.6. דיוור שהלקוח מפיץ באמצעות המערכת: בכל הנוגע למסרים שהלקוח שולח לנמעניו שלו באמצעות המערכת, הלקוח הוא המפרסם והשולח לכל דבר ועניין, והאחריות לקיום הוראות הדין מוטלת עליו בלבד. על הלקוח מוטלת החובה לוודא כי בידיו הסכמת הנמענים לקבלת דברי פרסומת, כי כל מסר נושא את פרטי המפרסם ואפשרות הסרה ברורה, וכי בקשות הסרה מכובדות ללא דיחוי. הספק מעמיד את התשתית הטכנולוגית בלבד, ואינו אחראי לתוכן המסרים המופצים דרך המערכת ולא לאופן שבו נאספו רשימות התפוצה של הלקוח." },
+    ],
+  },
+  {
+    id: "p8",
+    heading: "7. מידע אנונימי",
+    blocks: [
+      { kind: "p", text: "7.1. הגדרה: \"מידע אנונימי\" הוא מידע שאינו מזהה אותך באופן אישי ואינו ניתן לקשירה אליך, לרבות מידע מצטבר וסטטיסטי על דפוסי שימוש באתר ובמערכת." },
+      { kind: "p", text: "7.2. אופן היווצרותו: מידע אנונימי נוצר, בין היתר, באמצעות צבירה (אגרגציה) של נתוני שימוש של משתמשים רבים והסרת כל פרט מזהה מתוכם." },
+      { kind: "p", text: "7.3. שימושים: הספק רשאי לעשות שימוש במידע אנונימי לצורך הפקת סטטיסטיקות, ניתוח ביצועים ושיפור השירות, פיתוח כלים ותכונות חדשים, הפקת דוחות ומחקרי שוק, והצגת נתונים מצרפיים בחומרים מקצועיים ושיווקיים." },
+      { kind: "p", text: "7.4. מעמד המידע: מידע אנונימי אינו \"מידע\" ואינו \"מידע רגיש\" כהגדרתם בחוק הגנת הפרטיות, התשמ\"א-1981, ואינו מזהה אותך. הספק רשאי להחזיק בו, להשתמש בו ולהעבירו לצדדים שלישיים ללא הגבלת זמן." },
+      { kind: "p", text: "7.5. איסור זיהוי מחדש: הספק לא יפעל לשחזור זהותך מתוך מידע אנונימי. ככל שמידע אנונימי יחדל מלהיות אנונימי ויאפשר את זיהויך, יחולו עליו הוראות מדיניות פרטיות זו החלות על מידע אישי." },
+    ],
+  },
+  {
+    id: "p9",
+    heading: "8. שימוש בקבצי עוגיות",
+    blocks: [
+      { kind: "p", text: "8.1. מהי עוגייה: \"עוגייה\" (Cookie) היא קובץ טקסט קטן שאתר שומר בדפדפן שלך, ושנשלח בחזרה לשרת בכל פנייה נוספת לאותו אתר." },
+      { kind: "p", text: "8.2. אתר זה: אתר שלח מסר אינו עושה שימוש בעוגיות. האתר אינו מפעיל כלי מדידה, ניתוח או פרסום מטעם צד שלישי, אינו מטמיע פיקסלים של רשתות חברתיות, ואינו עוקב אחר גלישתך באתרים אחרים." },
+      { kind: "p", text: "8.3. אחסון מקומי בדפדפן: לצורך תפעול תקין בלבד שומר האתר שלושה פריטים באחסון המקומי של הדפדפן (localStorage ו-sessionStorage). פריטים אלה נשמרים במכשיר שלך בלבד, אינם נשלחים לשרתי הספק ואינם משמשים למעקב:" },
+      {
+        kind: "dl",
+        items: [
+          { t: "sendmsg-promo-seen", d: "סימון שחלון המבצע כבר הוצג לך, כדי שלא יוצג שוב." },
+          { t: "sendmsg-assistant-bubble-dismissed", d: "סימון שסגרת את בועת העוזר החכם. נמחק בתום הגלישה." },
+          { t: "sendmsg.api-docs.credentials", d: "מפתח ה-API שהזנת בדף תיעוד ה-API כדי להריץ דוגמאות. המפתח נשמר בדפדפן שלך בלבד ואינו נשלח לספק." },
+        ],
+      },
+      { kind: "p", text: "8.4. עוגייה במערכת: בעת כניסה למערכת נשמרת בדפדפנך עוגיית הפעלה בשם ASP.NET_SessionId. עוגייה זו חיונית לתפעול — היא המאפשרת למערכת לזהות שאתה מחובר לאורך הגלישה — ותוקפה פג בתום ההפעלה או עם היציאה מהחשבון." },
+      { kind: "p", text: "8.5. פניות לשרתים חיצוניים: האתר טוען גופנים משירות Google Fonts וסמלי דירוג משירות Trustindex. שירותים אלה אינם מריצים קוד באתר ואינם שומרים עוגיות בדפדפנך, אך ככל פנייה לשרת חיצוני הם נחשפים לפנייה עצמה ולנתוניה הטכניים, לרבות כתובת ה-IP שלך וסוג הדפדפן." },
+      { kind: "p", text: "8.6. שליטה ומחיקה: באפשרותך לחסום או למחוק עוגיות ואחסון מקומי בכל עת דרך הגדרות הדפדפן. חסימתם באתר זה לא תפגע בשימוש בו; חסימת עוגיית ההפעלה של המערכת תמנע את ההתחברות לחשבונך." },
+      { kind: "p", text: "8.7. עדכון סעיף זה: ייעשה בעתיד שימוש בעוגיות או בכלי מדידה נוספים, יעודכן סעיף זה בהתאם ותתבקש הסכמתך ככל שהדין מחייב זאת." },
+    ],
+  },
+  {
+    id: "p10",
     heading: "9. יצירת קשר בנושא פרטיות וזכויותיך",
     blocks: [
       { kind: "p", text: "9.1. זכות עיון ותיקון מידע: על-פי חוק הגנת הפרטיות, התשמ\"א-1981, באפשרותך, או מי מטעמך, לעיין במידע אודותיך המצוי במאגרי המערכת ואף לבקש לתקנו אם הוא אינו נכון, שלם או מדויק. כדי לממש זכות זו, יש לשלוח בקשה בכתב כמפורט להלן." },

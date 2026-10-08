@@ -30,7 +30,7 @@ excerpt: "בין שלח מסר למערכת הסליקה האינטרנטית ו
 
 במידה ועדיין אין לכם חשבון בוריפון, לחצו כאן לפתיחת חשבון:
 
-[![](/kb-images/%D7%94%D7%AA%D7%9E%D7%9E%D7%A9%D7%A7%D7%95%D7%AA-verifone-%D7%9C%D7%A9%D7%9C%D7%97-%D7%9E%D7%A1%D7%A8/03.png)](https://comstar.minisite.ms/Verifone)
+[![מעבר ל-comstar.minisite.ms](/kb-images/%D7%94%D7%AA%D7%9E%D7%9E%D7%A9%D7%A7%D7%95%D7%AA-verifone-%D7%9C%D7%A9%D7%9C%D7%97-%D7%9E%D7%A1%D7%A8/03.png)](https://comstar.minisite.ms/Verifone)
 
 ## שלב ראשון - הגדרות דף הסליקה של וריפון לשלח מסר:
 

@@ -56,21 +56,24 @@ const Footer: React.FC = () => (
     <div className="container">
       <div className="footer-grid">
         <div style={styles.col}>
-          <h4 style={styles.colTitle}>שירותים</h4>
+          {/* h2, not h4: these sit after the CTA's h2 on every page, and
+              h2 -> h4 is a skipped level under WCAG 1.3.1. The look is set by
+              colTitle, so the level is free to be correct. */}
+          <h2 style={styles.colTitle}>שירותים</h2>
           {serviceLinks.map((link) => (
             <a key={link.label} href={withPrefix(link.href)} style={styles.link}>{link.label}</a>
           ))}
         </div>
 
         <div style={styles.col}>
-          <h4 style={styles.colTitle}>תמיכה ומשאבים</h4>
+          <h2 style={styles.colTitle}>תמיכה ומשאבים</h2>
           {supportLinks.map((link) => (
             <a key={link.label} href={withPrefix(link.href)} style={styles.link}>{link.label}</a>
           ))}
         </div>
 
         <div style={styles.col}>
-          <h4 style={styles.colTitle}>על החברה</h4>
+          <h2 style={styles.colTitle}>על החברה</h2>
           <a href={withPrefix("/about/")} style={styles.link}>אודות</a>
           <a href={withPrefix("/pricing/")} style={styles.link}>מחירון</a>
           <a href={withPrefix("/shomer-shabbat/")} style={styles.link}>שומר שבת</a>
@@ -78,7 +81,7 @@ const Footer: React.FC = () => (
         </div>
 
         <div style={styles.col}>
-          <h4 style={styles.colTitle}>צרו קשר</h4>
+          <h2 style={styles.colTitle}>צרו קשר</h2>
           <a href="tel:077-4600600" style={styles.contactLink}>
             ☎ 077-4600600
           </a>

@@ -183,7 +183,10 @@ const Sidebar: React.FC<{ onNavigate: () => void }> = ({ onNavigate }) => {
       {endpointsByGroup.map(({ group, endpoints: list }) => {
         const open = openGroups.includes(group.id)
         return (
-          <div key={group.id} className="doc-sidebar-group" id={group.id}>
+          /* no id here: the content <section> already owns group.id, and
+             a duplicate both breaks 4.1.1 and makes "#group" land on the
+             sidebar instead of the section it names */
+          <div key={group.id} className="doc-sidebar-group">
             <button
               type="button"
               className={`doc-sidebar-heading${open ? " is-open" : ""}`}
@@ -379,6 +382,12 @@ const Shell: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   return (
     <div className="api-docs" dir="ltr" lang="en">
+      {/* This page does not use the site Layout, so it needs its own bypass
+          link: the sidebar lists every endpoint, which is a lot to tab
+          through to reach the reference (WCAG 2.4.1). */}
+      <a className="skip-link" href="#doc-main">
+        Skip to content
+      </a>
       <header className="doc-topbar">
         <a className="doc-brand" href={withPrefix("/")}>
           <img className="doc-brand-logo" src={logo} alt="שלח מסר - Sendmsg" />
@@ -411,7 +420,9 @@ const Shell: React.FC<{ children: ReactNode }> = ({ children }) => {
 
       <div className={`doc-body${navOpen ? " nav-open" : ""}`}>
         <Sidebar onNavigate={() => setNavOpen(false)} />
-        <main className="doc-main">{children}</main>
+        <main className="doc-main" id="doc-main" tabIndex={-1}>
+          {children}
+        </main>
         <Rail
           open={railOpen}
           onClose={() => setRailOpen(false)}

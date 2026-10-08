@@ -18,7 +18,7 @@ excerpt: "מערכת CRM מתקדמת לניהול סטודיו ובתי ספר 
 
 במידה ועוד אין לכם חשבון:
 
-[![](/kb-images/%D7%94%D7%AA%D7%9E%D7%9E%D7%A9%D7%A7%D7%95%D7%AA-%D7%91%D7%99%D7%9F-tazman-%D7%9C%D7%A9%D7%9C%D7%97-%D7%9E%D7%A1%D7%A8/02.jpg)](https://get.tazman.co.il/sendmsg)
+[![מעבר ל-get.tazman.co.il](/kb-images/%D7%94%D7%AA%D7%9E%D7%9E%D7%A9%D7%A7%D7%95%D7%AA-%D7%91%D7%99%D7%9F-tazman-%D7%9C%D7%A9%D7%9C%D7%97-%D7%9E%D7%A1%D7%A8/02.jpg)](https://get.tazman.co.il/sendmsg)
 
 **אז בואו נתחיל!**
 

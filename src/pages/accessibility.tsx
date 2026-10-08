@@ -23,9 +23,24 @@ import "../styles/legal.css"
    is the company's own declaration and is left as published.
 
    The declared conformance level is the company's to make, not the
-   site's to assume: if this build has not been re-audited against
-   תקן ישראלי 5568, the level below must be re-checked before the
-   page goes live. */
+   site's to assume. What has been done about it, 2026-10-08: the
+   machine-checkable parts of WCAG 2 AA now pass across all 157 pages
+   (scripts/check-a11y.py, run against a clean --prefix-paths build).
+   Getting there fixed real level-A failures that this build had while
+   the page already declared AA: no skip link on any page, a heading
+   level skipped on 149 pages, four links whose only content was an
+   unlabelled image, and four text colours under 4.5:1.
+
+   That is not the whole standard. Keyboard order and focus traps,
+   focus visibility in practice, whether alt text is meaningful, and
+   reflow at 320px still need a person. The sentence below about
+   testing with NVDA, JAWS and VoiceOver is the company's published
+   claim and was carried over as-is; it has not been re-verified
+   against this build. */
+
+/* Set from the last run of scripts/check-a11y.py against a release build. */
+const LAST_CHECK = "8 באוקטובר 2026"
+const PAGE_COUNT = 157
 
 const ACCESS_EMAIL = "negishut@comstar.co.il"
 const ACCESS_PHONE = "077-4600600"
@@ -43,8 +58,9 @@ const TESTED = [
 const SECTIONS = [
   { id: "a1", heading: "הנגשת האתר" },
   { id: "a2", heading: "מה נבדק" },
-  { id: "a3", heading: "רכיבים אשר עשויים להיות לא מונגשים" },
-  { id: "a4", heading: "הגבלת אחריות" },
+  { id: "a3", heading: "בדיקה אחרונה" },
+  { id: "a4", heading: "רכיבים אשר עשויים להיות לא מונגשים" },
+  { id: "a5", heading: "הגבלת אחריות" },
 ]
 
 const CheckIcon = () => (
@@ -124,7 +140,33 @@ const AccessibilityPage: React.FC = () => (
                 </ul>
               </section>
 
+              {/* 5568 statements are expected to say when the site was last
+                  reviewed. This section records the automated pass that runs
+                  from scripts/check-a11y.py, and is explicit that it does not
+                  cover the parts only a person can judge -- so the date here
+                  is never mistaken for a full manual audit. Update LAST_CHECK
+                  whenever that script is run against a release. */}
               <section className="lg-sec" id="a3">
+                <h2>בדיקה אחרונה</h2>
+                <p>
+                  בדיקת הנגישות האוטומטית האחרונה של האתר בוצעה בתאריך{" "}
+                  {LAST_CHECK}. נבדקו, בכל {PAGE_COUNT} עמודי האתר: הגדרת שפה
+                  וכיווניות, קיום כותרת ייחודית לכל עמוד, טקסט חלופי לתמונות,
+                  היררכיית כותרות רציפה, קיום אזור תוכן ראשי וקישור דילוג
+                  אליו, תיוג שדות טפסים, שם נגיש לכל קישור וכפתור, ייחודיות
+                  מזהים, סדר טאבים, וניגודיות צבעים ביחס של 4.5:1 לטקסט רגיל
+                  ו-3:1 לטקסט גדול.
+                </p>
+                <p>
+                  בדיקה אוטומטית אינה מחליפה בדיקה אנושית. הנושאים הבאים
+                  נבחנים בנפרד ואינם מכוסים על ידה: סדר הניווט במקלדת ומלכודות
+                  מיקוד, נראות סימון המיקוד בפועל, ניגודיות של טקסט מעל רקעים
+                  מרובדים, האם הטקסט החלופי אכן מתאר את התמונה, והתנהגות העמוד
+                  בהגדלה ובמסך צר.
+                </p>
+              </section>
+
+              <section className="lg-sec" id="a4">
                 <h2>רכיבים אשר עשויים להיות לא מונגשים</h2>
                 <p>
                   האתר עשוי להכיל קודים חיצוניים ואלמנטים המוטמעים באמצעות{" "}
@@ -135,7 +177,7 @@ const AccessibilityPage: React.FC = () => (
                 </p>
               </section>
 
-              <section className="lg-sec" id="a4">
+              <section className="lg-sec" id="a5">
                 <h2>הגבלת אחריות</h2>
                 <p>
                   חברת קומסטאר מערכות בע״מ עושה מאמצים להנגשה מלאה באמצעות

@@ -409,6 +409,32 @@ def optimise_existing(verbose=True):
           f"{saved / 1024 / 1024:.1f} MB, repointed {touched} markdown files")
 
 
+def normalise_headings(md: str) -> str:
+    """Make a guide's headings descend one level at a time.
+
+    The template renders the title as the h1, so a body should start at h2 and
+    never skip a level (WCAG 1.3.1 -- a skipped level reads to a screen reader
+    as a missing section). The live pages do skip: some open at h3, and many
+    use h2 then h4 with no h3 between.
+
+    Only the nesting carries meaning, so the headings are walked in order and
+    re-emitted at the shallowest level that preserves it: one deeper than the
+    parent when the original went deeper, the same when it stayed, and back to
+    the matching ancestor when it came up."""
+    stack: list[tuple[int, int]] = []   # (level in the source, level emitted)
+
+    def level_for(original: int) -> int:
+        while stack and stack[-1][0] >= original:
+            stack.pop()
+        emitted = stack[-1][1] + 1 if stack else 2
+        emitted = min(emitted, 6)
+        stack.append((original, emitted))
+        return emitted
+
+    return re.sub(r"(?m)^(#{1,6})(\s)",
+                  lambda m: "#" * level_for(len(m.group(1))) + m.group(2), md)
+
+
 def to_markdown(body: str, slug: str, img_map: dict) -> str:
     s = undo_cf_email(body)
 
@@ -450,6 +476,18 @@ def to_markdown(body: str, slug: str, img_map: dict) -> str:
             return ""
         if not href:
             return text
+
+        # A link whose only content is an image with no alt has no accessible
+        # name at all -- a screen reader announces the URL, or nothing (WCAG
+        # 2.4.4). The live pages ship these bare, so name them by where they
+        # go, which is the one thing that is always true of them.
+        only_image = re.fullmatch(r"!\[\]\((.+)\)", text)
+        if only_image:
+            host = urllib.parse.urlparse(href.group(1)).netloc
+            if host:
+                label = "מעבר ל-" + host[4:] if host.startswith("www.") else "מעבר ל-" + host
+                text = f"![{label}]({only_image.group(1)})"
+
         return f"[{text}]({href.group(1)})"
 
     s = re.sub(r"(?is)<a([^>]*)>(.*?)</a>", lambda m: a_sub(m), s)
@@ -479,6 +517,7 @@ def to_markdown(body: str, slug: str, img_map: dict) -> str:
     s = re.sub(r"\n{3,}", "\n\n", s).strip()
 
     s = fix_live_typos(s)
+    s = normalise_headings(s)
 
     # code samples go back in last, so the tidy pass cannot touch them
     s = re.sub(r"\x01CODE(\d+)\x01",

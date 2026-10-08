@@ -1263,7 +1263,7 @@ input, textarea {
   background: #eceff4;
   border: 2px dashed #c3ccd9;
   border-radius: var(--radius-md);
-  color: #8494a9;
+  color: #5d6e85;
   font-size: 0.95rem;
   font-weight: 500;
 }
@@ -2181,7 +2181,7 @@ article img {
   direction: ltr;
   text-align: left;
   font-size: 0.72rem;
-  color: #7b8a9f;
+  color: #68788e;
   background: var(--bg-white);
   border: 1px solid #e3e8f0;
   border-radius: 20px;
@@ -2253,7 +2253,7 @@ article img {
 
 .lp-demo-field {
   font-size: 0.68rem;
-  color: #97785f;
+  color: #8b6e57;
   background: #fdfaf6;
   border: 1px solid #ecdfd0;
   border-radius: 7px;
@@ -2319,7 +2319,7 @@ article img {
 
 .lp-phone-field {
   font-size: 0.6rem;
-  color: #97785f;
+  color: #8e715a;
   background: #fff;
   border: 1px solid #ecdfd0;
   border-radius: 6px;
@@ -2929,4 +2929,33 @@ body:has(.ink-hero) .site-header :focus-visible {
   .cm-dup {
     display: none;
   }
+}
+
+/* ── Skip link ──
+   WCAG 2.4.1: a keyboard user must be able to jump the header, which on
+   this site is a topbar plus a logo row plus a mega-menu. Off-screen until
+   focused rather than display:none, so it stays in the tab order. */
+.skip-link {
+  position: absolute;
+  inset-inline-start: 50%;
+  top: 0;
+  z-index: 2000;
+  transform: translate(50%, -120%);
+  padding: 12px 22px;
+  background: var(--ink);
+  color: #fff;
+  font-weight: 700;
+  border-end-start-radius: var(--radius-sm);
+  border-end-end-radius: var(--radius-sm);
+  transition: transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.skip-link:focus-visible {
+  transform: translate(50%, 0);
+  outline: 3px solid var(--primary-pink);
+  outline-offset: 2px;
+}
+
+main:focus {
+  outline: none;
 }

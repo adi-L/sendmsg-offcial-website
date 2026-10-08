@@ -9,7 +9,9 @@ const FieldTable: React.FC<{ title: string; fields: Field[]; description?: strin
   description,
 }) => (
   <div className="doc-fields">
-    <h4 className="doc-fields-title">{title}</h4>
+    {/* h3, not h4: these sit directly under the group h2 and the page
+        has no h3, so h4 skipped a level (WCAG 1.3.1) */}
+    <h3 className="doc-fields-title">{title}</h3>
     {description ? <p className="doc-fields-desc">{description}</p> : null}
     <ScrollArea label={title}>
       <table className="doc-table">
@@ -154,7 +156,7 @@ const EndpointSection: React.FC<{ endpoint: Endpoint }> = ({ endpoint }) => {
               original documentation is silent or contradicts itself. */}
           {endpoint.gaps?.length ? (
             <div className="doc-gap">
-              <h4 className="doc-gap-title">Undocumented at source</h4>
+              <h3 className="doc-gap-title">Undocumented at source</h3>
               <ul>
                 {endpoint.gaps.map((gap) => (
                   <li key={gap}>{gap}</li>
