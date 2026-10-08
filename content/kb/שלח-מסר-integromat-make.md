@@ -7,6 +7,7 @@ categories:
   - "חיבור למערכות חיצוניות"
 featuredImage: "/kb-images/%D7%A9%D7%9C%D7%97-%D7%9E%D7%A1%D7%A8-integromat-make/cover.png"
 author: "אסף שטרן"
+excerpt: "שימו לב: אינטגרומט (Intergomat) הפכו להיות Make."
 ---
 
 ![במדריך תוכלו למצוא קישורים להורדה, לביצוע חיבור בין שלח מסר ל make/ Integromat](/kb-images/%D7%A9%D7%9C%D7%97-%D7%9E%D7%A1%D7%A8-integromat-make/02.jpg)

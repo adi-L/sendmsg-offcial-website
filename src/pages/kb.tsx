@@ -63,11 +63,15 @@ const GoIcon = () => (
 const Row: React.FC<{
   a: KbArticle
   showCats?: boolean
-  localSlug?: string
-}> = ({ a, showCats, localSlug }) => {
+  local?: Local
+}> = ({ a, showCats, local }) => {
+  const localSlug = local?.slug
   const inner = (
     <>
       <span className="kb-row-t">{a.title}</span>
+      {showCats && local?.excerpt && (
+        <span className="kb-row-ex">{local.excerpt}</span>
+      )}
       {showCats && (
         <span className="kb-row-cats">
           {a.cats.map((c) => LABELS.get(c)).join(" · ")}
@@ -97,18 +101,39 @@ const Row: React.FC<{
 
 interface Data {
   allMarkdownRemark: {
-    nodes: Array<{ frontmatter: { slug: string; source: string | null } }>
+    nodes: Array<{
+      frontmatter: {
+        slug: string
+        source: string | null
+        excerpt: string | null
+      }
+    }>
   }
 }
 
+type Local = { slug: string; excerpt: string | null }
+
 const KbPage: React.FC<PageProps<Data>> = ({ data }) => {
-  /* source url -> local slug, for the guides already imported */
+  /* source url -> the imported guide, matched on the decoded path
+     because the live links are inconsistent about percent-encoding. */
   const local = useMemo(() => {
-    const m = new Map<string, string>()
-    for (const n of data.allMarkdownRemark.nodes) {
-      if (n.frontmatter.source) m.set(n.frontmatter.source, n.frontmatter.slug)
+    const key = (u: string) => {
+      try {
+        return decodeURIComponent(new URL(u).pathname).replace(/^\/|\/$/g, "").toLowerCase()
+      } catch {
+        return u
+      }
     }
-    return m
+    const m = new Map<string, Local>()
+    for (const n of data.allMarkdownRemark.nodes) {
+      if (n.frontmatter.source) {
+        m.set(key(n.frontmatter.source), {
+          slug: n.frontmatter.slug,
+          excerpt: n.frontmatter.excerpt,
+        })
+      }
+    }
+    return { get: (u: string) => m.get(key(u)) }
   }, [data])
 
   const [query, setQuery] = useState("")
@@ -116,11 +141,18 @@ const KbPage: React.FC<PageProps<Data>> = ({ data }) => {
 
   const q = query.trim()
 
+  /* Search covers the opening paragraph too, not just the title. Most
+     guide titles name a feature, so a reader searching for the problem
+     ("לא מגיע לתיבה") matches nothing on titles alone. */
   const matches = useMemo(() => {
     if (!q) return null
     const needle = q.toLowerCase()
-    return KB_ARTICLES.filter((a) => a.title.toLowerCase().includes(needle))
-  }, [q])
+    return KB_ARTICLES.filter((a) => {
+      if (a.title.toLowerCase().includes(needle)) return true
+      const ex = local.get(a.url)?.excerpt
+      return !!ex && ex.toLowerCase().includes(needle)
+    })
+  }, [q, local])
 
   /* Search wins over the chips: typing is a more specific intent than
      the category you happened to have open. */
@@ -238,7 +270,7 @@ const KbPage: React.FC<PageProps<Data>> = ({ data }) => {
             {shown.length > 0 && (q || cat) && (
               <ul className="kb-rows">
                 {shown.map((a) => (
-                  <Row key={a.url} a={a} showCats={!!q} localSlug={local.get(a.url)} />
+                  <Row key={a.url} a={a} showCats={!!q} local={local.get(a.url)} />
                 ))}
               </ul>
             )}
@@ -252,7 +284,7 @@ const KbPage: React.FC<PageProps<Data>> = ({ data }) => {
                   </div>
                   <ul className="kb-rows">
                     {items.map((a) => (
-                      <Row key={a.url} a={a} localSlug={local.get(a.url)} />
+                      <Row key={a.url} a={a} local={local.get(a.url)} />
                     ))}
                   </ul>
                 </div>
@@ -274,6 +306,7 @@ export const query = graphql`
         frontmatter {
           slug
           source
+          excerpt
         }
       }
     }

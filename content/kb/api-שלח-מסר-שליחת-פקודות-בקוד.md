@@ -7,6 +7,7 @@ categories:
   - "אפשרויות מתקדמות"
 featuredImage: "/kb-images/api-%D7%A9%D7%9C%D7%97-%D7%9E%D7%A1%D7%A8-%D7%A9%D7%9C%D7%99%D7%97%D7%AA-%D7%A4%D7%A7%D7%95%D7%93%D7%95%D7%AA-%D7%91%D7%A7%D7%95%D7%93/cover.png"
 author: "אסף שטרן"
+excerpt: "או למשל שליחה של ניוזלטר (ליצור ניוזלטר עם קוד HTML מוכן מראש של הניוזלטר עצמו,"
 ---
 
 ![API שלח מסר שליחת פקודות בקוד](/kb-images/api-%D7%A9%D7%9C%D7%97-%D7%9E%D7%A1%D7%A8-%D7%A9%D7%9C%D7%99%D7%97%D7%AA-%D7%A4%D7%A7%D7%95%D7%93%D7%95%D7%AA-%D7%91%D7%A7%D7%95%D7%93/cover.png)

@@ -7,6 +7,7 @@ categories:
   - "חיבור למערכות חיצוניות"
 featuredImage: "/kb-images/%D7%97%D7%99%D7%91%D7%95%D7%A8-fixdigital-%D7%A9%D7%9C%D7%97-%D7%9E%D7%A1%D7%A8/cover.png"
 author: "אסף שטרן"
+excerpt: "ראשית אם עדיין אין לכם חשבון ומערכת ניהול קמפיינים בחברת פיקסדיגיטל יש לפתוח את החשבון כאן:"
 ---
 
 ![](/kb-images/%D7%97%D7%99%D7%91%D7%95%D7%A8-fixdigital-%D7%A9%D7%9C%D7%97-%D7%9E%D7%A1%D7%A8/cover.png)

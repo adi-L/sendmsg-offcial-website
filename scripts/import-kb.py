@@ -314,13 +314,173 @@ def import_one(art, verbose=True):
     return {"slug": slug, "file": fname, "images": len(img_map), "chars": len(md)}
 
 
+
+def first_paragraph(md: str) -> str:
+    """The guide's own opening sentence, for the index and for search.
+
+    Headings, images and list items are skipped: the first prose line is
+    what actually tells a reader whether this is the guide they want.
+    """
+    for line in md.split("\n"):
+        line = line.strip()
+        if not line or line.startswith(("#", "!", "-", "*", ">", "|")):
+            continue
+        if re.match(r"^\d+[.)]\s", line):
+            continue
+        text = re.sub(r"!\[[^\]]*\]\([^)]*\)", "", line)
+        text = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", text)
+        text = re.sub(r"[*_`]", "", text).strip()
+        if len(text) < 40:
+            continue
+        if len(text) > 190:
+            cut = text.rfind(" ", 0, 190)
+            text = text[: cut if cut > 120 else 190].rstrip(" ,.;:-") + "…"
+        return text
+    return ""
+
+
+def add_excerpts(verbose=True):
+    """Backfill `excerpt` into guides already on disk, without refetching."""
+    n = 0
+    for name in sorted(os.listdir(OUT_MD)):
+        if not name.endswith(".md"):
+            continue
+        path = os.path.join(OUT_MD, name)
+        text = open(path, encoding="utf-8").read()
+        parts = text.split("---\n", 2)
+        if len(parts) < 3:
+            continue
+        fm, body = parts[1], parts[2]
+        ex = first_paragraph(body)
+        fm = re.sub(r"^excerpt: .*\n", "", fm, flags=re.M)
+        if ex:
+            fm = fm.rstrip("\n") + "\nexcerpt: " + yaml_quote(ex) + "\n"
+            n += 1
+        open(path, "w", encoding="utf-8").write("---\n" + fm + "---\n" + body)
+    if verbose:
+        print(f"excerpts written for {n} guides")
+    return n
+
+
+# ── relinking ───────────────────────────────────────────────────
+# The guides link to each other, and to the marketing pages, by
+# absolute sendmsg.co.il URL. Imported as-is, every guide sends the
+# reader back out to the old WordPress site, which undoes most of the
+# point of having them here. This pass runs at the end of an import so
+# a re-import cannot quietly restore the outbound links.
+
+# Live path -> the page that replaced it in this repo.
+SERVICE_PAGES = {
+    "": "/",
+    "newsletters": "/newsletters/",
+    "landingpages": "/landing-pages/",
+    "digitalcourses": "/digital-courses/",
+    "virtualnumber": "/virtual-number/",
+    "crm": "/crm/",
+    "meetings": "/meetings/",
+    "contact": "/contact/",
+    "support": "/support/",
+    "about": "/about/",
+    "terms": "/terms/",
+    "privacy": "/privacy/",
+    "accessibility": "/accessibility/",
+    "affiliate": "/affiliate/",
+    "api": "/api/",
+    "kb": "/kb/",
+    "services": "/services/",
+    "shomer-shabbat": "/shomer-shabbat/",
+    "pricelist": "/pricing/",
+    "pricelist/packages": "/pricing/",
+    "pricelist/smsbank": "/sms-bank/",
+    "pricelist/emailbank": "/email-bank/",
+    "שליחת-סמסים": "/sms/",
+    "דומיין-פרטי": "/domain/",
+}
+
+
+def norm_path(url: str) -> str:
+    """Decoded, lowercased, slash-trimmed path — the only reliable key.
+
+    The guides are inconsistent about percent-encoding case, so comparing
+    raw URLs matches barely half of the links that should match.
+    """
+    return urllib.parse.unquote(urllib.parse.urlparse(url).path).strip("/").lower()
+
+
+def guide_map():
+    """source path -> local /kb/<slug>/ for everything imported so far."""
+    out = {}
+    if not os.path.isdir(OUT_MD):
+        return out
+    for name in os.listdir(OUT_MD):
+        if not name.endswith(".md"):
+            continue
+        text = open(os.path.join(OUT_MD, name), encoding="utf-8").read()
+        src = re.search(r'^source: "([^"]+)"', text, re.M)
+        slug = re.search(r'^slug: "([^"]+)"', text, re.M)
+        if src and slug:
+            out[norm_path(src.group(1))] = "/kb/" + urllib.parse.quote(slug.group(1)) + "/"
+    return out
+
+
+def relink_all(verbose=True):
+    guides = guide_map()
+    changed = 0
+    rewritten = 0
+    left = {}
+
+    for name in sorted(os.listdir(OUT_MD)):
+        if not name.endswith(".md"):
+            continue
+        path = os.path.join(OUT_MD, name)
+        text = open(path, encoding="utf-8").read()
+        before = text
+
+        def sub(m):
+            nonlocal rewritten
+            url = m.group(1)
+            key = norm_path(url)
+            dest = guides.get(key) or SERVICE_PAGES.get(key)
+            if dest:
+                rewritten += 1
+                return "](" + dest + ")"
+            left[key] = left.get(key, 0) + 1
+            return m.group(0)
+
+        text = re.sub(r"\]\((https://(?:www\.)?sendmsg\.co\.il[^)]*)\)", sub, text)
+
+        if text != before:
+            open(path, "w", encoding="utf-8").write(text)
+            changed += 1
+
+    if verbose:
+        print(f"relinked {rewritten} links across {changed} guides")
+        if left:
+            print("left pointing off-site (no local equivalent):")
+            for k, n in sorted(left.items(), key=lambda x: -x[1]):
+                print(f"  {n:3}  /{k}/")
+    return rewritten
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--list", action="store_true")
     ap.add_argument("--slug")
     ap.add_argument("--all", action="store_true")
     ap.add_argument("--limit", type=int)
+    ap.add_argument("--excerpts", action="store_true",
+                    help="only backfill excerpts, do not fetch")
+    ap.add_argument("--relink", action="store_true",
+                    help="only rewrite links in content/kb, do not fetch")
     args = ap.parse_args()
+
+    if args.relink:
+        relink_all()
+        return
+
+    if args.excerpts:
+        add_excerpts()
+        return
 
     arts = read_catalogue()
 
@@ -343,6 +503,9 @@ def main():
     done = [import_one(a) for a in targets]
     ok = [d for d in done if d]
     print(f"\n{len(ok)}/{len(targets)} imported, {sum(d['images'] for d in ok)} images")
+    print()
+    relink_all()
+    add_excerpts()
 
 
 if __name__ == "__main__":

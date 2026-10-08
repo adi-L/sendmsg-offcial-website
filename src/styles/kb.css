@@ -308,7 +308,14 @@
 
 .kb-rows a {
   display: grid;
+  /* The excerpt and the category line both span the row, so the
+     affordance has to be placed rather than flowed — otherwise it is
+     pushed onto a line of its own below them. */
   grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "t  go"
+    "ex ex"
+    "cats cats";
   align-items: baseline;
   column-gap: clamp(14px, 2vw, 28px);
   row-gap: 5px;
@@ -316,6 +323,7 @@
 }
 
 .kb-row-t {
+  grid-area: t;
   font-size: 1.06rem;
   font-weight: 700;
   line-height: 1.5;
@@ -325,16 +333,28 @@
   transition: color var(--kb-hover) var(--kb-ease);
 }
 
-.kb-row-cats {
-  grid-column: 1 / -1;
-  font-size: 0.9rem;
-  line-height: 1.5;
+/* Shown only in search results, where the reader is deciding between
+   near-identical titles and needs a sentence to choose on. */
+.kb-row-ex {
+  grid-area: ex;
+  font-size: 0.96rem;
+  line-height: 1.6;
   color: var(--kb-body);
   text-wrap: pretty;
 }
 
+.kb-row-cats {
+  grid-area: cats;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  font-weight: 600;
+  color: var(--kb-blue);
+  text-wrap: pretty;
+}
+
 .kb-row-go {
-  align-self: center;
+  grid-area: go;
+  align-self: baseline;
   display: inline-flex;
   color: var(--kb-blue);
   transition: transform var(--kb-hover) var(--kb-ease);
