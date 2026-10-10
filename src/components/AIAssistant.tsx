@@ -18,14 +18,14 @@ const BUBBLE_TO = 2100
 // The four links the panel has always shown. They are also the failure
 // state: whenever the gateway is unreachable, degraded, or times out, the
 // panel must look exactly like today's site, not like something broken.
-const FallbackActions: React.FC<{ onSignupClick: (e: React.MouseEvent) => void }> = ({
-  onSignupClick,
+const FallbackActions: React.FC<{ onPanelLinkClick: (e: React.MouseEvent) => void }> = ({
+  onPanelLinkClick,
 }) => (
   <div className="ai-panel-actions">
     <a href={withPrefix("/contact")} className="ai-panel-action">
       מעבר ממערכת אחרת, בחינם
     </a>
-    <a href={PANEL_URL} className="ai-panel-action" onClick={onSignupClick}>
+    <a href={PANEL_URL} className="ai-panel-action" onClick={onPanelLinkClick}>
       פתיחת חשבון חינם
     </a>
     <a href={withPrefix("/contact")} className="ai-panel-action">
@@ -92,21 +92,25 @@ const AIAssistant: React.FC = () => {
     avatarRef.current?.focus()
   }
 
+  // Opening the widget is not a conversion — only an actual departure to
+  // the signup flow or to the product (panel.sendmsg.co.il) is.
   const handleAvatarClick = () => {
-    setOpen((v) => {
-      const next = !v
-      if (next) trackConversion("panel_click")
-      return next
-    })
+    setOpen((v) => !v)
   }
 
   const handlePanelKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "Escape") closePanel()
   }
 
-  const handleSignupClick = (e: React.MouseEvent) => {
+  // This anchor points at panel.sendmsg.co.il and calls openSignup, which
+  // intercepts the click (preventDefault) to open the in-page signup modal
+  // when the signup widget script has loaded, and otherwise leaves the
+  // click to navigate there directly. Track which one actually happened:
+  // the modal opening is "signup_click"; the visitor actually leaving the
+  // marketing site for the product is "panel_click".
+  const handlePanelLinkClick = (e: React.MouseEvent) => {
     openSignup(e)
-    trackConversion("signup_click")
+    trackConversion(e.defaultPrevented ? "signup_click" : "panel_click")
   }
 
   const handleSend = () => {
@@ -177,7 +181,9 @@ const AIAssistant: React.FC = () => {
             </button>
           </div>
 
-          {/* Hidden host for the lazily-loaded Turnstile challenge. */}
+          {/* Host for the lazily-loaded Turnstile challenge. Positioned
+              off-screen with real dimensions (see global.css) rather than
+              0x0, so a flexible/managed widget has room to render. */}
           <div ref={challengeHostRef} className="ai-challenge-host" aria-hidden="true" />
 
           {showFallback && (
@@ -185,7 +191,7 @@ const AIAssistant: React.FC = () => {
               <p className="ai-panel-message">
                 היי! אני שי, העוזר החכם של שלח מסר. במה אפשר לעזור לך היום?
               </p>
-              <FallbackActions onSignupClick={handleSignupClick} />
+              <FallbackActions onPanelLinkClick={handlePanelLinkClick} />
             </>
           )}
 
