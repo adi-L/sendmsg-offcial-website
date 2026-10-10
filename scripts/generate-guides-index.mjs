@@ -6,7 +6,14 @@ import { join, basename } from "node:path";
 const KB = join(process.cwd(), "content/kb");
 const out = [];
 
-const unquote = (s) => s.trim().replace(/^["']|["']$/g, "");
+// Strips the outer quotes AND un-escapes interior ones. One of the 98
+// frontmatter titles contains \" escapes, and leaving them in puts literal
+// backslashes into a message a Hebrew-speaking customer reads.
+const unquote = (s) => {
+  const t = s.trim();
+  const m = t.match(/^"([\s\S]*)"$/) || t.match(/^'([\s\S]*)'$/);
+  return (m ? m[1] : t).replace(/\\(["'\\])/g, "$1");
+};
 
 for (const file of readdirSync(KB).filter((f) => f.endsWith(".md")).sort()) {
   const raw = readFileSync(join(KB, file), "utf8");
