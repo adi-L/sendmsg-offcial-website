@@ -46,11 +46,28 @@ const withTimeout = <T,>(p: Promise<T>, ms: number): Promise<T> =>
 export function useChat() {
   const [phase, setPhase] = useState<Phase>("idle")
   const [messages, setMessages] = useState<Msg[]>([])
+  // Transient, inline notice for a condition that must NOT degrade the
+  // panel -- currently only reason: "too_fast". Degrading unmounts the
+  // whole message log (showChat becomes false) and startedRef never
+  // resets, so a visitor who presses Enter twice inside a second would
+  // otherwise lose their question and every prior answer, permanently.
+  const [notice, setNotice] = useState<string | null>(null)
   const token = useRef<string | null>(null)
 
   // Starts (or restarts) a session. Used both for the first connection
   // attempt and as an explicit retry after a degraded state.
   const retry = useCallback(async (challengeHost: HTMLElement): Promise<void> => {
+    // GATSBY_TURNSTILE_SITE_KEY is empty in .env.development and in CI
+    // pending a repo variable. Without this check, every first panel open
+    // fetches and executes challenges.cloudflare.com/turnstile/v0/api.js and
+    // lets it fail on an empty sitekey -- a third-party request and a
+    // console error on a site whose success criterion is "no blank panel,
+    // no console errors". Fail straight to degraded instead, with nothing
+    // loaded.
+    if (!SITE_KEY) {
+      setPhase("degraded")
+      return
+    }
     setPhase("starting")
     try {
       await loadTurnstile()
@@ -73,13 +90,27 @@ export function useChat() {
       setPhase("degraded")
       return
     }
+    setNotice(null)
     setMessages((m) => [...m, { role: "user", text }])
     setPhase("thinking")
     try {
       const res = await post("/message", { sessionToken: token.current, message: text })
       if (!res.ok) throw new Error(`message ${res.status}`)
-      const json = (await res.json()) as { reply?: string; degraded?: boolean }
-      if (json.degraded || !json.reply) {
+      const json = (await res.json()) as { reply?: string; degraded?: boolean; reason?: string }
+      if (json.degraded) {
+        // Only the real per-session and per-IP caps ("limit", "budget",
+        // "unavailable") degrade. "too_fast" is the 1-second min-gap
+        // throttle -- transient by nature -- so keep the panel exactly as
+        // it was and let the visitor just try again.
+        if (json.reason === "too_fast") {
+          setNotice("רגע אחד…")
+          setPhase("ready")
+          return
+        }
+        setPhase("degraded")
+        return
+      }
+      if (!json.reply) {
         setPhase("degraded")
         return
       }
@@ -109,7 +140,13 @@ export function useChat() {
     // where it is unavailable. Applied to every event uniformly so the
     // transport never has to branch on which one is "at risk".
     try {
-      const blob = new Blob([body], { type: "application/json" })
+      // "text/plain", not "application/json": a JSON content-type is not
+      // CORS-simple, which forces an OPTIONS preflight, and a preflight
+      // begun during unload is routinely dropped -- exactly the
+      // panel_click case this beacon exists for. The gateway's
+      // express.json() accepts text/plain too (src/app.ts) and still
+      // parses this body as JSON.
+      const blob = new Blob([body], { type: "text/plain" })
       if (navigator.sendBeacon?.(`${BASE}/conversion`, blob)) return
     } catch {
       // fall through to keepalive
@@ -122,5 +159,5 @@ export function useChat() {
     }).catch(() => {})
   }, [])
 
-  return { phase, messages, retry, send, trackConversion }
+  return { phase, messages, notice, retry, send, trackConversion }
 }

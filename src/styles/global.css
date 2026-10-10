@@ -1578,6 +1578,12 @@ input, textarea {
   color: var(--ink);
 }
 
+.ai-msg-assistant a {
+  color: var(--primary-blue);
+  text-decoration: underline;
+  word-break: break-all;
+}
+
 .ai-msg-user {
   /* RTL mirrors the thread: the visitor's own messages sit on the LEFT. */
   margin-inline-start: auto;

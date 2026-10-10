@@ -56,7 +56,7 @@ const AIAssistant: React.FC = () => {
   const challengeHostRef = useRef<HTMLDivElement>(null)
   const startedRef = useRef(false)
 
-  const { phase, messages, retry, send, trackConversion } = useChat()
+  const { phase, messages, notice, retry, send, trackConversion } = useChat()
 
   useEffect(() => {
     if (!sessionStorage.getItem(BUBBLE_KEY)) setBubbleDismissed(false)
@@ -230,6 +230,15 @@ const AIAssistant: React.FC = () => {
                   </div>
                 )}
               </div>
+              {notice && (
+                <p
+                  className="ai-chat-notice"
+                  role="status"
+                  style={{ margin: "2px 0 6px", textAlign: "center" }}
+                >
+                  {notice}
+                </p>
+              )}
               <div className="ai-chat-input">
                 <textarea
                   className="ai-chat-textarea"
