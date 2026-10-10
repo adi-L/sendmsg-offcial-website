@@ -19,6 +19,22 @@ const LINK_ORIGIN = "https://sendmsg.co.il/"
 const ISOLATE =
   /((?:https:\/\/sendmsg\.co\.il\/[^\s֑-״"'()[\]<>,.;:!?]*)|(?:₪\s?[\d][\d.,]*)|(?:[\d][\d.,]*\s?(?:₪|ש"ח))|(?:0\d{1,2}-?\d{7})|(?:\d{3}-\d{7}))/g
 
+// A guide href arrives percent-encoded on purpose: ISOLATE above excludes
+// Hebrew characters, so a raw Hebrew slug would truncate the match and
+// break the link, which is why the gateway's match.ts runs encodeURI. The
+// encoding therefore has to stay on the href, and only the visible text is
+// decoded. decodeURI throws a URIError on a malformed escape (a truncated
+// %D7 is not hypothetical in model-generated text), and an exception raised
+// during render would take the whole reply down, so fall back to the raw
+// string rather than showing nothing.
+const displayUrl = (url: string): string => {
+  try {
+    return decodeURI(url)
+  } catch {
+    return url
+  }
+}
+
 export const renderRtlText = (text: string): React.ReactNode[] =>
   text.split(ISOLATE).map((part, i) => {
     if (i % 2 !== 1) return part
@@ -27,7 +43,7 @@ export const renderRtlText = (text: string): React.ReactNode[] =>
       // target="_blank" (and therefore no rel="noopener" need either).
       return (
         <a key={i} href={part} dir="ltr">
-          {part}
+          {displayUrl(part)}
         </a>
       )
     }
