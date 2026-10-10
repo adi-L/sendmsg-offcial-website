@@ -1424,7 +1424,7 @@ input, textarea {
 }
 
 .ai-panel {
-  width: 300px;
+  width: 320px;
   background: var(--bg-white);
   border: 1px solid #dde3ec;
   border-radius: var(--radius-md);
@@ -1523,10 +1523,149 @@ input, textarea {
     bottom: 14px;
     right: 14px;
   }
-  .ai-bubble,
-  .ai-panel {
+  .ai-bubble {
     width: min(280px, calc(100vw - 100px));
   }
+  .ai-panel {
+    width: min(320px, calc(100vw - 100px));
+  }
+}
+
+/* The Turnstile challenge mounts here on first open. It stays out of the
+   layout without display:none, which can keep the widget from sizing. */
+.ai-challenge-host {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.ai-chat {
+  display: flex;
+  flex-direction: column;
+  max-height: 70vh;
+}
+
+.ai-chat-notice {
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: #6b7686;
+  padding: 10px 14px 0;
+}
+
+.ai-chat-log {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 14px;
+  overflow-y: auto;
+  max-height: 320px;
+}
+
+.ai-msg {
+  max-width: 85%;
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.ai-msg-assistant {
+  background: #f0f5fa;
+  color: var(--ink);
+}
+
+.ai-msg-user {
+  /* RTL mirrors the thread: the visitor's own messages sit on the LEFT. */
+  margin-inline-start: auto;
+  background: var(--primary-blue);
+  color: #fff;
+}
+
+.ai-typing {
+  display: flex;
+  gap: 4px;
+  padding: 4px 12px;
+}
+
+.ai-typing span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #aab6c4;
+  animation: ai-typing-bounce 1.1s ease-in-out infinite;
+}
+
+.ai-typing span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.ai-typing span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes ai-typing-bounce {
+  0%, 60%, 100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  30% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ai-typing span {
+    animation: none;
+    opacity: 0.7;
+  }
+}
+
+.ai-chat-input {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 10px 14px 14px;
+  border-top: 1px solid #eef1f6;
+}
+
+.ai-chat-textarea {
+  flex: 1;
+  resize: none;
+  border: 1px solid #d5dbe6;
+  border-radius: var(--radius-md);
+  padding: 8px 10px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  color: var(--ink);
+  max-height: 100px;
+}
+
+.ai-chat-textarea:disabled {
+  background: #f5f6f8;
+}
+
+.ai-chat-send {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--primary-blue);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+.ai-chat-send:hover:not(:disabled) {
+  background: #0a4a75;
+}
+
+.ai-chat-send:disabled {
+  background: #c7cedb;
 }
 
 /* ── Ad spot ── */

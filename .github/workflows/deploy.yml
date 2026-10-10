@@ -27,6 +27,11 @@ jobs:
       - run: npx gatsby build --prefix-paths
         env:
           GATSBY_ASSET_ORIGIN: https://${{ github.repository_owner }}.github.io
+          GATSBY_AGENT_URL: https://agent.sendmsg.co.il
+          # Public Turnstile *site* key, set as a repo variable once the
+          # owner creates it. Blank is safe: the widget then falls back to
+          # the four static buttons, same as any other gateway outage.
+          GATSBY_TURNSTILE_SITE_KEY: ${{ vars.GATSBY_TURNSTILE_SITE_KEY }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: public
