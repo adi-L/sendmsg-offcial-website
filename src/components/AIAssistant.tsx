@@ -10,6 +10,13 @@ const WHATSAPP_URL =
   "https://api.whatsapp.com/send?phone=972559377588&text=היי, אולי תוכלו לסייע לי?"
 const BUBBLE_KEY = "sendmsg-assistant-bubble-dismissed"
 
+// The agent appends this on its own line when the visitor has shown real
+// interest, and the widget turns it into a button. Deciding it agent-side
+// rather than by sniffing the reply text keeps the judgement where the
+// context is, and keeps it to once per conversation. Kept in sync with the
+// rule in the gateway's knowledge/00-identity.md.
+const CTA_MARKER = "[[CTA]]"
+
 // The suggestion bubble shows only inside this scroll window,
 // so it appears once mid-page and slips away on further scrolling.
 const BUBBLE_FROM = 800
@@ -57,6 +64,24 @@ const AIAssistant: React.FC = () => {
   const startedRef = useRef(false)
 
   const { phase, messages, notice, retry, send, trackConversion } = useChat()
+
+  // Keep the newest message in view. The log is a fixed 320px box
+  // (global.css .ai-chat-log), so without this a reply taller than the box
+  // renders below the fold and the visitor sees a mid-sentence fragment with
+  // nothing indicating there is more. Depends on `phase` as well as
+  // `messages` so the thinking indicator scrolls into view too, rather than
+  // animating just off the bottom edge.
+  const logRef = useRef<HTMLDivElement | null>(null)
+  useEffect(() => {
+    const el = logRef.current
+    if (!el) return
+    // Honour reduced-motion: an animated scroll on every single turn is
+    // exactly the movement that setting exists to suppress.
+    const reduced =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
+    el.scrollTo({ top: el.scrollHeight, behavior: reduced ? "auto" : "smooth" })
+  }, [messages, phase])
 
   useEffect(() => {
     if (!sessionStorage.getItem(BUBBLE_KEY)) setBubbleDismissed(false)
@@ -211,17 +236,34 @@ const AIAssistant: React.FC = () => {
                 role="log"
                 aria-live="polite"
                 aria-relevant="additions"
+                ref={logRef}
               >
-                {messages.map((m, i) => (
-                  <div
-                    key={i}
-                    className={
-                      m.role === "user" ? "ai-msg ai-msg-user" : "ai-msg ai-msg-assistant"
-                    }
-                  >
-                    {m.role === "assistant" ? renderRtlText(m.text) : m.text}
-                  </div>
-                ))}
+                {messages.map((m, i) => {
+                  const isAssistant = m.role === "assistant"
+                  const hasCta = isAssistant && m.text.includes(CTA_MARKER)
+                  // Strip the marker whether or not we render the button, so a
+                  // stray one never reaches the visitor as literal text.
+                  const text = isAssistant ? m.text.split(CTA_MARKER).join("").trim() : m.text
+                  return (
+                    <div
+                      key={i}
+                      className={
+                        m.role === "user" ? "ai-msg ai-msg-user" : "ai-msg ai-msg-assistant"
+                      }
+                    >
+                      {isAssistant ? renderRtlText(text) : text}
+                      {hasCta && (
+                        <a
+                          href={PANEL_URL}
+                          className="ai-chat-cta"
+                          onClick={handlePanelLinkClick}
+                        >
+                          פתיחת חשבון חינם
+                        </a>
+                      )}
+                    </div>
+                  )
+                })}
                 {phase === "thinking" && (
                   <div className="ai-typing" aria-hidden="true">
                     <span />

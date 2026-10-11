@@ -16,6 +16,10 @@ const CHALLENGE_TIMEOUT_MS = 12_000
 export type Phase = "idle" | "starting" | "ready" | "thinking" | "degraded"
 export type Msg = { role: "user" | "assistant"; text: string }
 
+// Kept in sync with the line in knowledge/00-identity.md that tells the agent
+// how the conversation opened. Change one, change the other.
+const GREETING = "היי, אני שי. איך קוראים לך?"
+
 const post = async (path: string, body: unknown): Promise<Response> =>
   fetch(`${BASE}${path}`, {
     method: "POST",
@@ -79,6 +83,14 @@ export function useChat() {
       if (!res.ok) throw new Error(`session ${res.status}`)
       const json = (await res.json()) as { sessionToken: string }
       token.current = json.sessionToken
+      // Open with a greeting so the panel is never an empty box waiting to be
+      // filled. It is added client-side on purpose: send() posts only the
+      // visitor's text and the conversation history lives server-side, so this
+      // costs no tokens and no upstream turn. The agent is told in its system
+      // prompt that the UI already opened this way, otherwise a visitor whose
+      // first reply is just a name would be answering a question the agent has
+      // no record of asking.
+      setMessages((m) => (m.length ? m : [{ role: "assistant", text: GREETING }]))
       setPhase("ready")
     } catch {
       setPhase("degraded")

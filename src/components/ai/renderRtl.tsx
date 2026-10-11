@@ -35,21 +35,79 @@ const displayUrl = (url: string): string => {
   }
 }
 
-export const renderRtlText = (text: string): React.ReactNode[] =>
+// Splits one run of text into links, prices and phone numbers, each isolated
+// from bidi reordering. This is the inner layer; the block renderer below
+// handles lines, lists and bold.
+const isolate = (text: string, key: string): React.ReactNode[] =>
   text.split(ISOLATE).map((part, i) => {
     if (i % 2 !== 1) return part
     if (part.startsWith(LINK_ORIGIN)) {
       // Same tab, same site -- not an external destination, so no
       // target="_blank" (and therefore no rel="noopener" need either).
       return (
-        <a key={i} href={part} dir="ltr">
+        <a key={`${key}-${i}`} href={part} dir="ltr">
           {displayUrl(part)}
         </a>
       )
     }
     return (
-      <span key={i} dir="ltr">
+      <span key={`${key}-${i}`} dir="ltr">
         {part}
       </span>
     )
   })
+
+// The only inline markup the model is allowed to produce. Deliberately a
+// whitelist of two constructs rather than a markdown library: this is
+// model-generated text going into a real page, so it is built as React
+// elements and never as HTML. There is no dangerouslySetInnerHTML anywhere in
+// this file, which is what makes the whole class of injection impossible
+// rather than merely filtered.
+const BOLD = /\*\*([^*\n]+)\*\*/
+
+const renderInline = (text: string, key: string): React.ReactNode[] =>
+  text.split(BOLD).map((part, i) =>
+    i % 2 === 1 ? (
+      <strong key={`${key}-b${i}`}>{isolate(part, `${key}-b${i}`)}</strong>
+    ) : (
+      <React.Fragment key={`${key}-t${i}`}>{isolate(part, `${key}-t${i}`)}</React.Fragment>
+    )
+  )
+
+// Block level: blank-line-separated paragraphs and "- " bullet lists, which is
+// all the model actually emits. An unmatched "**" is left as literal text
+// rather than guessed at -- a half-rendered bold is worse than a visible
+// asterisk.
+const BULLET = /^\s*[-*]\s+(.*)$/
+
+export const renderRtlText = (text: string): React.ReactNode[] => {
+  const out: React.ReactNode[] = []
+  let items: React.ReactNode[] = []
+
+  const flushList = (key: string): void => {
+    if (!items.length) return
+    out.push(
+      <ul className="ai-md-list" key={`ul-${key}`}>
+        {items}
+      </ul>
+    )
+    items = []
+  }
+
+  text.split("\n").forEach((line, i) => {
+    const bullet = BULLET.exec(line)
+    if (bullet) {
+      items.push(<li key={`li-${i}`}>{renderInline(bullet[1], `li-${i}`)}</li>)
+      return
+    }
+    flushList(String(i))
+    if (!line.trim()) return
+    out.push(
+      <p className="ai-md-p" key={`p-${i}`}>
+        {renderInline(line, `p-${i}`)}
+      </p>
+    )
+  })
+  flushList("end")
+  return out
+}

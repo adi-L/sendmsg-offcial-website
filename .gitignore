@@ -21,3 +21,13 @@ test.html
 
 # OS
 .DS_Store
+
+# .env.development is tracked ON PURPOSE: it holds only GATSBY_ values, which
+# are compiled into the bundle and public by definition. Every other env file
+# is not -- there were no env rules here at all, so a stray .env holding a real
+# secret would have been one `git add -A` away from the history.
+.env
+.env.local
+.env.production
+.env.*.local
+.env.*.bak

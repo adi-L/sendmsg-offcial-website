@@ -1564,6 +1564,65 @@ input, textarea {
   max-height: 320px;
 }
 
+/* Markdown subset rendered by renderRtl.tsx. Tight margins because these sit
+   inside a chat bubble, not an article: default <p>/<ul> spacing makes a
+   three-line answer look like a page. */
+.ai-md-p {
+  margin: 0 0 6px;
+}
+.ai-md-p:last-child {
+  margin-bottom: 0;
+}
+.ai-md-list {
+  margin: 0 0 6px;
+  /* RTL: the marker hangs off the right edge, so pad that side. */
+  padding-inline-start: 0;
+  padding-inline-end: 18px;
+  list-style-position: outside;
+}
+.ai-md-list:last-child {
+  margin-bottom: 0;
+}
+.ai-md-list li {
+  margin: 0 0 2px;
+}
+
+/* Inline call to action, shown only when the agent marks a reply as a good
+   moment to offer it. Deliberately a calm inline button, not a banner: it
+   appears inside the assistant's own bubble, after the answer, so it reads as
+   an offer rather than an interruption. */
+/* Must out-specify `.ai-msg-assistant a` below, which paints links
+   --primary-blue and underlines them: on this button that is blue text on a
+   blue pill, i.e. an invisible label. Scoping to the same parent gives equal
+   specificity plus a class, so this wins regardless of source order. */
+.ai-msg-assistant a.ai-chat-cta {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: var(--primary-blue);
+  color: #fff;
+  font-size: 0.86rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: filter 0.15s ease;
+}
+.ai-msg-assistant a.ai-chat-cta {
+  color: #fff;
+  text-decoration: none;
+  word-break: normal;
+}
+.ai-msg-assistant a.ai-chat-cta:hover,
+.ai-msg-assistant a.ai-chat-cta:focus-visible {
+  filter: brightness(1.08);
+  text-decoration: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ai-msg-assistant a.ai-chat-cta {
+    transition: none;
+  }
+}
+
 .ai-msg {
   max-width: 85%;
   padding: 8px 12px;
