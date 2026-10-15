@@ -6,6 +6,7 @@ import CTA from "../components/CTA"
 import SEO from "../components/SEO"
 import { KB_ARTICLES, KB_CATEGORIES, KbArticle } from "../data/kb"
 import "../styles/kb.css"
+import type { PageContext } from "../locales/config"
 
 /* ── /kb/ — מרכז ההדרכה ─────────────────────────────────────────
    The index over every guide. src/data/kb.ts holds the full crawled
@@ -313,8 +314,8 @@ export const query = graphql`
   }
 `
 
-export const Head: HeadFC = () => (
-  <SEO
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => (
+  <SEO locale={pageContext.locale}
     title="מרכז ההדרכה"
     description="כל המדריכים למערכת שלח מסר במקום אחד: צעדים ראשונים, מנויים וקבוצות דיוור, ניוזלטרים, מסרונים, דפי נחיתה, קורסים דיגיטליים, אוטומציות וחיבור למערכות חיצוניות."
     pathname="/kb/"

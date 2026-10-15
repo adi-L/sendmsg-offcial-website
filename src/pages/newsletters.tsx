@@ -6,6 +6,7 @@ import CTA from "../components/CTA"
 import SEO from "../components/SEO"
 import { openSignup, PANEL_URL } from "../components/SignupDialog"
 import "../styles/newsletters.css"
+import type { PageContext } from "../locales/config"
 
 /* Every line below is the live /newsletters/ page's own copy. The one
    edit: the body said "Creaditor 2.0" while its own FAQ said 3.0, and
@@ -282,8 +283,8 @@ const NewslettersPage: React.FC = () => {
 
 export default NewslettersPage
 
-export const Head: HeadFC = () => (
-  <SEO
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => (
+  <SEO locale={pageContext.locale}
     title="קמפיינים וניוזלטרים"
     description="מערכת דיוור של שלח מסר: ממשק נוח, עורך AI שחוסך עבודה, תבניות ממירות ואוטומציות חכמות כבר מהחבילה החינמית, עד 250 מנויים בחינם."
     pathname="/newsletters/"

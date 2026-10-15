@@ -6,6 +6,7 @@ import CTA from "../components/CTA"
 import SEO from "../components/SEO"
 import { openSignup, PANEL_URL } from "../components/SignupDialog"
 import "../styles/sms.css"
+import type { PageContext } from "../locales/config"
 
 /* Copy is the live SMS page's own. Where it names the virtual number
    or the message banks, this page links to ours instead of to the
@@ -257,8 +258,8 @@ const SmsPage: React.FC = () => {
 
 export default SmsPage
 
-export const Head: HeadFC = () => (
-  <SEO
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => (
+  <SEO locale={pageContext.locale}
     title="מערכת סמסים"
     description="מערכת שליחת סמסים של שלח מסר: קישורים מקוצרים, מספר וירטואלי, אוטומציות, שליחה בפולסים וסטטיסטיקות הקלקות. נרשמים ומקבלים 5 סמסים לבדיקות."
     pathname="/sms/"

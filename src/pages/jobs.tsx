@@ -5,6 +5,7 @@ import SEO from "../components/SEO"
 import CTA from "../components/CTA"
 import { SUPPORT_EMAIL } from "../data/api"
 import "../styles/jobs.css"
+import type { PageContext } from "../locales/config"
 
 /* Applications have nowhere to go yet: the form flips to a success state
    in the browser, exactly like /contact/. The mail row beside it is the
@@ -544,8 +545,8 @@ const JobsPage: React.FC = () => {
 
 export default JobsPage
 
-export const Head: HeadFC = () => (
-  <SEO
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => (
+  <SEO locale={pageContext.locale}
     title="דרושים"
     description="המשרות הפתוחות בשלח מסר: תמיכה ושירות לקוחות, Fullstack AI Developer ופיתוח עסקי. כל המשרות בעבודה מרחוק."
     pathname="/jobs/"

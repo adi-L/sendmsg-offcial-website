@@ -6,6 +6,7 @@ import SEO from "../components/SEO"
 import { TERMS } from "../data/terms"
 import { SUPPORT_PHONE } from "../data/support-hours"
 import "../styles/legal.css"
+import type { PageContext } from "../locales/config"
 
 /* ── /terms/ ────────────────────────────────────────────────────
    The agreement, rendered from src/data/terms.ts, which holds the
@@ -132,8 +133,8 @@ const TermsPage: React.FC = () => (
 
 export default TermsPage
 
-export const Head: HeadFC = () => (
-  <SEO
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => (
+  <SEO locale={pageContext.locale}
     title="תקנון"
     description="תקנון מערכת שלח מסר: תנאי השימוש, זכויות יוצרים, מדיניות תשלום וביטולים, דואר זבל, תכנית שותפים, מספרים וירטואליים ודומיינים."
     pathname="/terms/"

@@ -4,6 +4,7 @@ import Layout from "../components/Layout"
 import CTA from "../components/CTA"
 import SEO from "../components/SEO"
 import "../styles/legal.css"
+import type { PageContext } from "../locales/config"
 
 /* ── /accessibility/ ────────────────────────────────────────────
    הצהרת נגישות, following the live sendmsg.co.il/accessibility/
@@ -227,8 +228,8 @@ const AccessibilityPage: React.FC = () => (
 
 export default AccessibilityPage
 
-export const Head: HeadFC = () => (
-  <SEO
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => (
+  <SEO locale={pageContext.locale}
     title="הצהרת נגישות"
     description="הצהרת הנגישות של שלח מסר: תקן ישראלי 5568 ברמה AA לפי WCAG 2, מה נבדק, אילו רכיבים עשויים להיות לא מונגשים, ופרטי התקשרות לפניות בנושא נגישות."
     pathname="/accessibility/"

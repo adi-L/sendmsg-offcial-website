@@ -7,6 +7,7 @@ import SEO from "../components/SEO"
 import { openSignup, PANEL_URL } from "../components/SignupDialog"
 import { TIERS } from "../components/Pricing"
 import "../styles/affiliate.css"
+import type { PageContext } from "../locales/config"
 
 /* Copy is the live /affiliate/ page's own.
 
@@ -232,8 +233,8 @@ const AffiliatePage: React.FC = () => (
 
 export default AffiliatePage
 
-export const Head: HeadFC = () => (
-  <SEO
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => (
+  <SEO locale={pageContext.locale}
     title="תכנית שותפים"
     description="תכנית השותפים של שלח מסר: 20% עמלה לכל החיים על חבילות דיוור, בנק מיילים וקורסים דיגיטליים, עם משיכה מ-₪400 רווחים מצטברים."
     pathname="/affiliate/"

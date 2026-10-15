@@ -5,6 +5,7 @@ import CTA from "../components/CTA"
 import SEO from "../components/SEO"
 import { openSignup, PANEL_URL } from "../components/SignupDialog"
 import "../styles/virtual-number.css"
+import type { PageContext } from "../locales/config"
 
 /* Where the live page's "לרכישת מס' וירטואלי חדש" button goes */
 const BUY_URL =
@@ -151,8 +152,8 @@ const VirtualNumberPage: React.FC = () => (
 
 export default VirtualNumberPage
 
-export const Head: HeadFC = () => (
-  <SEO
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => (
+  <SEO locale={pageContext.locale}
     title="מספר וירטואלי"
     description="מספר וירטואלי לשליחת הודעות: ההודעות יוצאות ממספר ייעודי, כל התשובות מתרכזות ברשימה אחת שניתן לייצא. ₪118 לשנה, לפני מע״מ."
     pathname="/virtual-number/"

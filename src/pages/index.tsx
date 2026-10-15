@@ -19,6 +19,7 @@ import CTA from "../components/CTA"
 import AIAssistant from "../components/AIAssistant"
 import InlineCTA from "../components/InlineCTA"
 import SEO from "../components/SEO"
+import type { PageContext } from "../locales/config"
 
 const IndexPage: React.FC = () => (
   <Layout>
@@ -49,4 +50,4 @@ const IndexPage: React.FC = () => (
 
 export default IndexPage
 
-export const Head: HeadFC = () => <SEO />
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => <SEO locale={pageContext.locale} />

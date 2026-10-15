@@ -6,6 +6,7 @@ import GoogleReviews from "../components/GoogleReviews"
 import CTA from "../components/CTA"
 import SEO from "../components/SEO"
 import "../styles/pricing.css"
+import type { PageContext } from "../locales/config"
 
 const PricingPage: React.FC = () => (
   <Layout>
@@ -18,8 +19,8 @@ const PricingPage: React.FC = () => (
 
 export default PricingPage
 
-export const Head: HeadFC = () => (
-  <SEO
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => (
+  <SEO locale={pageContext.locale}
     title="מחירון"
     description="מחירון פשוט ושקוף למערכת הדיוור של שלח מסר. מתחילים בחינם, בלי כרטיס אשראי, ומשדרגים רק כשזה מתאים לעסק שלכם."
     pathname="/pricing/"

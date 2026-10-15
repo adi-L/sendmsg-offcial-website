@@ -6,6 +6,7 @@ import CTA from "../components/CTA"
 import SEO from "../components/SEO"
 import { openSignup, PANEL_URL } from "../components/SignupDialog"
 import "../styles/digital-courses.css"
+import type { PageContext } from "../locales/config"
 
 /* Copy is the live /digitalcourses/ page's own, with its typos
    corrected: "ווצא]" -> וואטסאפ, "הקהליטו" -> הקליטו, "ניתן הגדיר
@@ -386,8 +387,8 @@ const DigitalCoursesPage: React.FC = () => {
 
 export default DigitalCoursesPage
 
-export const Head: HeadFC = () => (
-  <SEO
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => (
+  <SEO locale={pageContext.locale}
     title="קורסים דיגיטליים"
     description="פלטפורמת קורסים דיגיטליים של שלח מסר: קורס אחד עד 250 תלמידים חינם לתמיד, ללא הגבלת שיעורים, עם סליקה, אוטומציות ומבחנים אמריקאיים."
     pathname="/digital-courses/"

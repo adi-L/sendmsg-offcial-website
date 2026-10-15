@@ -11,6 +11,7 @@ import imgMarketingStrategy from "../images/blog/marketing-strategy.webp"
 
 import authorAsaf from "../images/team/asaf-stern.webp"
 import authorYifat from "../images/team/yifat.webp"
+import type { PageContext } from "../locales/config"
 
 /* Thumbnails and author photos live in src/images; posts reference them
    by slug / author name until frontmatter carries real image paths. */
@@ -163,8 +164,8 @@ const BlogPage: React.FC<PageProps<BlogData>> = ({ data }) => {
 
 export default BlogPage
 
-export const Head: HeadFC = () => (
-  <SEO title="מרכז הידע" description="מדריכים, טיפים ורעיונות לשיווק דיגיטלי מוצלח מצוות שלח מסר" pathname="/blog/" />
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => (
+  <SEO locale={pageContext.locale} title="מרכז הידע" description="מדריכים, טיפים ורעיונות לשיווק דיגיטלי מוצלח מצוות שלח מסר" pathname="/blog/" />
 )
 
 export const query = graphql`

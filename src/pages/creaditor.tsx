@@ -3,6 +3,7 @@ import type { HeadFC } from "gatsby"
 import Layout from "../components/Layout"
 import SEO from "../components/SEO"
 import "../styles/creaditor.css"
+import type { PageContext } from "../locales/config"
 
 /* Creaditor is a separate product with its own site. Every outbound
    link here leaves sendmsg.co.il, so they all open in a new tab and
@@ -413,8 +414,8 @@ const CreaditorPage = () => {
 
 export default CreaditorPage
 
-export const Head: HeadFC = () => (
-  <SEO
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => (
+  <SEO locale={pageContext.locale}
     title="Creaditor"
     description="Creaditor: חמישה בונים שמשתלבים בתוך המוצר שלכם, לקורסים, טפסים, ניוזלטרים, דפי נחיתה ואתרים, כולם עם מוח AI אחד שמכיר את המותג של הלקוח."
     pathname="/creaditor/"

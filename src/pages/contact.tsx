@@ -12,6 +12,7 @@ import {
   useSupportStatus,
 } from "../data/support-hours"
 import "../styles/contact.css"
+import type { PageContext } from "../locales/config"
 
 
 /* The site's own icon set: 24-grid, 1.8 stroke, round caps. The WhatsApp
@@ -342,8 +343,8 @@ const ContactPage: React.FC = () => {
 
 export default ContactPage
 
-export const Head: HeadFC = () => (
-  <SEO
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => (
+  <SEO locale={pageContext.locale}
     title="צרו קשר"
     description="הצוות של שלח מסר כאן בשבילכם. טלפון 077-4600911, מייל, וואטסאפ או טופס חזרה, ראשון עד חמישי 9:00 עד 17:00."
     pathname="/contact/"

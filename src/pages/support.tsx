@@ -12,6 +12,7 @@ import {
   useSupportStatus,
 } from "../data/support-hours"
 import "../styles/support.css"
+import type { PageContext } from "../locales/config"
 
 /* ── /support/ ──────────────────────────────────────────────────
    Copy is the live /support/ page's own.
@@ -376,8 +377,8 @@ const SupportPage: React.FC = () => {
 
 export default SupportPage
 
-export const Head: HeadFC = () => (
-  <SEO
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => (
+  <SEO locale={pageContext.locale}
     title="תמיכה ושירות"
     description="התמיכה של שלח מסר: ראשון עד חמישי 9:00 עד 17:00, טלפון 077-4600911, מייל ווואטסאפ, ותשובות לשאלות הנפוצות על רשימות תפוצה, כשרות לשומרי שבת ומה המערכת כוללת."
     pathname="/support/"

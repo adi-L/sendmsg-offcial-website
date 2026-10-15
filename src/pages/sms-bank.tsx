@@ -5,6 +5,7 @@ import SmsBank from "../components/SmsBank"
 import CTA from "../components/CTA"
 import SEO from "../components/SEO"
 import "../styles/sms-bank.css"
+import type { PageContext } from "../locales/config"
 
 const SmsBankPage: React.FC = () => (
   <Layout>
@@ -15,8 +16,8 @@ const SmsBankPage: React.FC = () => (
 
 export default SmsBankPage
 
-export const Head: HeadFC = () => (
-  <SEO
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => (
+  <SEO locale={pageContext.locale}
     title="בנק סמסים"
     description="חבילות בנק SMS של שלח מסר. רוכשים מסרונים מראש בתשלום חד פעמי, בלי מנוי חודשי, ומשתמשים בקצב שלכם."
     pathname="/sms-bank/"

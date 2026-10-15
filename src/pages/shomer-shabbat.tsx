@@ -6,6 +6,7 @@ import CTA from "../components/CTA"
 import SEO from "../components/SEO"
 import { openSignup, PANEL_URL } from "../components/SignupDialog"
 import "../styles/shomer-shabbat.css"
+import type { PageContext } from "../locales/config"
 
 const CheckIcon = () => (
   <svg width="15" height="15" viewBox="0 0 12 12" fill="none" aria-hidden="true">
@@ -258,8 +259,8 @@ const ShomerShabbatPage: React.FC = () => {
 
 export default ShomerShabbatPage
 
-export const Head: HeadFC = () => (
-  <SEO
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => (
+  <SEO locale={pageContext.locale}
     title="שומר שבת"
     description="מערכת הדיוור היחידה בעולם עם מצב שומר שבת מובנה: חסימת דפים בשבת ובחג, עיכוב דיוורים, תאריכים עבריים ועוד. בחינם עד 250 מנויים."
     pathname="/shomer-shabbat/"

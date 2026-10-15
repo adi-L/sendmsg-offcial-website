@@ -6,6 +6,7 @@ import CTA from "../components/CTA"
 import SEO from "../components/SEO"
 import { openSignup, PANEL_URL } from "../components/SignupDialog"
 import "../styles/domain.css"
+import type { PageContext } from "../locales/config"
 
 /* Copy is the live domain page's own. Its answers arrive as one run-on
    string because the source joins paragraphs without spaces; they are
@@ -259,8 +260,8 @@ const DomainPage: React.FC = () => {
 
 export default DomainPage
 
-export const Head: HeadFC = () => (
-  <SEO
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => (
+  <SEO locale={pageContext.locale}
     title="רכישת דומיין פרטי"
     description="רכישת דומיין פרטי דרך שלח מסר: co.il ב-₪120 ו-com ב-₪125 לפני מע״מ, כולל תיבה וירטואלית, תעודת SSL והגדרת רשומות אוטומטית."
     pathname="/domain/"

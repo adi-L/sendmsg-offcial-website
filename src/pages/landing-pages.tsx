@@ -10,6 +10,7 @@ import tplProgram from "../images/templates/template-program.webp"
 import tplTherapy from "../images/templates/template-therapy.webp"
 import tplTech from "../images/templates/template-tech.webp"
 import "../styles/landing-pages.css"
+import type { PageContext } from "../locales/config"
 
 /* Copy below is the live /landingpages/ page's own. */
 
@@ -265,8 +266,8 @@ const LandingPagesPage: React.FC = () => {
 
 export default LandingPagesPage
 
-export const Head: HeadFC = () => (
-  <SEO
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => (
+  <SEO locale={pageContext.locale}
     title="יצירת דפי נחיתה"
     description="בונים דפי נחיתה רספונסיביים בשלח מסר, בלי מתכנת ובלי דומיין משלכם. טפסים מעוצבים, פיקסלים, סליקה ולידים שנכנסים ישר למערכת. עד 5 דפים בחינם."
     pathname="/landing-pages/"

@@ -5,6 +5,7 @@ import Layout from "../components/Layout"
 import CTA from "../components/CTA"
 import SEO from "../components/SEO"
 import "../styles/kb-article.css"
+import type { PageContext } from "../locales/config"
 
 /* ── a single guide ─────────────────────────────────────────────
    Imported from the live knowledge base by scripts/import-kb.py.
@@ -132,10 +133,10 @@ export const query = graphql`
   }
 `
 
-export const Head: HeadFC<Data> = ({ data }) => {
+export const Head: HeadFC<Data, PageContext> = ({ data, pageContext }) => {
   const f = data.markdownRemark.frontmatter
   return (
-    <SEO
+    <SEO locale={pageContext.locale}
       title={f.title}
       description={`מדריך שלח מסר: ${f.title}. צעד אחר צעד, עם צילומי מסך מהמערכת.`}
       pathname={`/kb/${f.slug}/`}

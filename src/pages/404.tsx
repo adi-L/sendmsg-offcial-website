@@ -2,6 +2,7 @@ import React from "react"
 import { withPrefix, type HeadFC } from "gatsby"
 import Layout from "../components/Layout"
 import SEO from "../components/SEO"
+import type { PageContext } from "../locales/config"
 
 const NotFoundPage: React.FC = () => (
   <Layout>
@@ -20,7 +21,7 @@ const NotFoundPage: React.FC = () => (
 
 export default NotFoundPage
 
-export const Head: HeadFC = () => <SEO title="404 - העמוד לא נמצא" />
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => <SEO locale={pageContext.locale} title="404 - העמוד לא נמצא" />
 
 const styles: Record<string, React.CSSProperties> = {
   section: { padding: "120px 0" },

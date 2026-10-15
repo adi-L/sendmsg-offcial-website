@@ -6,6 +6,7 @@ import CTA from "../components/CTA"
 import SEO from "../components/SEO"
 import { openSignup, PANEL_URL } from "../components/SignupDialog"
 import "../styles/meetings.css"
+import type { PageContext } from "../locales/config"
 
 /* Copy is the live /meetings/ page's own, grouped rather than
    rewritten. Its "מודל" is corrected to "מודול" throughout: the
@@ -140,8 +141,8 @@ const MeetingsPage: React.FC = () => (
 
 export default MeetingsPage
 
-export const Head: HeadFC = () => (
-  <SEO
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => (
+  <SEO locale={pageContext.locale}
     title="פגישות ושיתופי פעולה"
     description="מודול הפגישות ושיתופי הפעולה של שלח מסר: אלגוריתם שמזהה עסקים רלוונטיים לשיתוף פעולה, ופגישות שנקבעות בבחירת תאריך ושעה בממשק."
     pathname="/meetings/"

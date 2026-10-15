@@ -6,6 +6,7 @@ import CTA from "../components/CTA"
 import SEO from "../components/SEO"
 import { openSignup, PANEL_URL } from "../components/SignupDialog"
 import "../styles/services.css"
+import type { PageContext } from "../locales/config"
 
 /* ── The services hub ───────────────────────────────────────────
    This page routes. Every module below now has its own page, so
@@ -331,8 +332,8 @@ const ServicesPage: React.FC = () => (
 
 export default ServicesPage
 
-export const Head: HeadFC = () => (
-  <SEO
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => (
+  <SEO locale={pageContext.locale}
     title="שירותים"
     description="כל המודולים של שלח מסר במקום אחד: ניוזלטרים, דפי נחיתה, קורסים דיגיטליים, מערכת סמסים, בנק SMS, מספר וירטואלי, CRM, פגישות, בנק שליחות, דומיין פרטי ו-API."
     pathname="/services/"

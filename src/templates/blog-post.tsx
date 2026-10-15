@@ -3,6 +3,7 @@ import { graphql, withPrefix, PageProps, HeadFC } from "gatsby"
 import { prepareArticleImages, ImageSizes } from "../utils/article-images"
 import Layout from "../components/Layout"
 import SEO from "../components/SEO"
+import type { PageContext } from "../locales/config"
 
 interface BlogPostData {
   markdownRemark: {
@@ -66,8 +67,8 @@ const BlogPostTemplate: React.FC<PageProps<BlogPostData, Context>> = ({
 
 export default BlogPostTemplate
 
-export const Head: HeadFC<BlogPostData> = ({ data }) => (
-  <SEO
+export const Head: HeadFC<BlogPostData, PageContext> = ({ data, pageContext }) => (
+  <SEO locale={pageContext.locale}
     title={data.markdownRemark.frontmatter.title}
     description={data.markdownRemark.frontmatter.excerpt}
     pathname={`/blog/${data.markdownRemark.frontmatter.slug}/`}

@@ -20,6 +20,7 @@ import almogKapach from "../images/team/almog-kapach.webp"
 import mariaKal from "../images/team/maria.webp"
 import yifatHalevi from "../images/team/yifat.webp"
 import orSkahi from "../images/team/or.webp"
+import type { PageContext } from "../locales/config"
 
 /* Outcomes first, tooling second: that is the order the reader cares about.
    What changes for my business, then how.
@@ -769,8 +770,8 @@ const AboutPage: React.FC = () => {
 
 export default AboutPage
 
-export const Head: HeadFC = () => (
-  <SEO
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => (
+  <SEO locale={pageContext.locale}
     title="אודות"
     description="הכירו את שלח מסר, מערכת דיוור ושיווק חכמה לעסקים ישראליים מאז 2009. למעלה מ-50 אלף משתמשים."
     pathname="/about/"

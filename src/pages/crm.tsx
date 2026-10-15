@@ -6,6 +6,7 @@ import CTA from "../components/CTA"
 import SEO from "../components/SEO"
 import { openSignup, PANEL_URL } from "../components/SignupDialog"
 import "../styles/crm.css"
+import type { PageContext } from "../locales/config"
 
 /* Copy is the live /crm/ page's own. */
 
@@ -141,8 +142,8 @@ const CrmPage: React.FC = () => (
 
 export default CrmPage
 
-export const Head: HeadFC = () => (
-  <SEO
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => (
+  <SEO locale={pageContext.locale}
     title="מועדון לקוחות (CRM)"
     description="ניהול מועדון לקוחות בשלח מסר: כרטיס לקוח, פילוח מתקדם, תיעוד שיחות, משימות ותזכורות במייל וב-SMS, הכל מחובר לדיוור ולמסרונים."
     pathname="/crm/"

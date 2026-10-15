@@ -6,6 +6,7 @@ import CTA from "../components/CTA"
 import SEO from "../components/SEO"
 import { PRIVACY, PrivacyBlock } from "../data/privacy"
 import "../styles/legal.css"
+import type { PageContext } from "../locales/config"
 
 /* ── /privacy/ ──────────────────────────────────────────────────
    The policy, rendered from src/data/privacy.ts, which holds the
@@ -142,8 +143,8 @@ const PrivacyPage: React.FC = () => (
 
 export default PrivacyPage
 
-export const Head: HeadFC = () => (
-  <SEO
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => (
+  <SEO locale={pageContext.locale}
     title="מדיניות פרטיות"
     description="מדיניות הפרטיות של שלח מסר: איסוף מידע, השימוש בו, העברת מידע לצדדים שלישיים, אבטחת מידע לפי תקן ISO 27001, וזכות העיון והתיקון לפי חוק הגנת הפרטיות."
     pathname="/privacy/"
