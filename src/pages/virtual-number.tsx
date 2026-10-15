@@ -8,6 +8,7 @@ import "../styles/virtual-number.css"
 import type { PageContext } from "../locales/config"
 import { useT } from "../locales/LocaleContext"
 import { getT } from "../locales/messages"
+import Fmt from "../locales/Fmt"
 
 /* Where the live page's "לרכישת מס' וירטואלי חדש" button goes */
 const BUY_URL =
@@ -109,7 +110,7 @@ const VirtualNumberPage: React.FC = () => {
               <div>
                 <h2>{t.h23}</h2>
                 <p>
-                  <span className="vn-num">₪118</span>{t.p4}
+                  <Fmt text={t.p4} vars={{ price: <span className="vn-num">{t.yearlyPrice}</span> }} />
                 </p>
               </div>
               <div className="vn-buy-actions">

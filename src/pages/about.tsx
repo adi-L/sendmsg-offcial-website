@@ -24,6 +24,7 @@ import type { PageContext } from "../locales/config"
 import { useT } from "../locales/LocaleContext"
 import { getT } from "../locales/messages"
 import type { Messages } from "../locales/messages"
+import Fmt from "../locales/Fmt"
 
 /* outcomes: moved to src/locales/he/pages/about.json as "outcomes". */
 /* The platform's seven modules. Icons are the site's own set, lifted
@@ -371,13 +372,13 @@ const AboutPage: React.FC = () => {
             </p>
             <ul className="ab-facts">
               <li>
-                <Counter target={50000} suffix="+" />{t.li}
+                <Fmt text={t.users} vars={{ n: <Counter target={50000} suffix="+" /> }} />
               </li>
               <li>
-                <span className="ab-num">2009</span>{t.li2}
+                <Fmt text={t.founded} vars={{ n: <span className="ab-num">2009</span> }} />
               </li>
               <li>
-                <span className="ab-num">7</span>{t.li3}
+                <Fmt text={t.toolsCount} vars={{ n: <span className="ab-num">7</span> }} />
               </li>
             </ul>
           </div>

@@ -190,8 +190,12 @@ const KbPage: React.FC<PageProps<Data>> = ({ data }) => {
               {t.heroSub}
             </p>
             <p className="kb-hero-note">
-              {KB_ARTICLES.length}{t.heroNote}{KB_CATEGORIES.length}{t.heroNote2}{" "}
-              <LocalizedLink to="/support/">{t.heroNote3}</LocalizedLink>.
+              <Rich
+                text={formatText(t.heroNote, {
+                  guides: KB_ARTICLES.length,
+                  cats: KB_CATEGORIES.length,
+                })}
+              />
             </p>
           </div>
         </section>
@@ -290,7 +294,7 @@ const KbPage: React.FC<PageProps<Data>> = ({ data }) => {
                 <div className="kb-group" key={c.id}>
                   <div className="kb-group-head">
                     <h2>{c.label}</h2>
-                    <span className="kb-group-n">{items.length}{t.groupN}</span>
+                    <span className="kb-group-n">{formatText(t.groupN, { n: items.length })}</span>
                   </div>
                   <ul className="kb-rows">
                     {items.map((a) => (

@@ -7,6 +7,7 @@ import { openSignup, PANEL_URL } from "../components/SignupDialog"
 import "../styles/sms.css"
 import type { PageContext } from "../locales/config"
 import { useT } from "../locales/LocaleContext"
+import Rich from "../locales/Rich"
 import { getT } from "../locales/messages"
 import LocalizedLink from "../locales/LocalizedLink"
 
@@ -90,8 +91,7 @@ const SmsPage: React.FC = () => {
               <div className="sm-vn-text">
                 <h2>{t.h23}</h2>
                 <p>
-                  {t.p3}
-                  <span className="sm-ltr">055</span>{t.p4}
+                  <Rich text={t.p3} ltrClass="sm-ltr" />
                 </p>
                 <p>
                   {t.p5}

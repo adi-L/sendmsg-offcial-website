@@ -1,13 +1,19 @@
-/* Turns a JSON string into a small tree: \n, <strong>, <a href="...">.
+/* Turns a JSON string into a small tree: \n, <strong>, <ltr> (a
+   left-to-right run such as a price inside a Hebrew sentence), <a href="...">.
    Anything else, including an unclosed tag, is kept as literal text, so a
    typo in a JSON file shows up on the page instead of vanishing. */
 export type RichNode =
   | { type: "text"; value: string }
   | { type: "br" }
   | { type: "strong"; children: RichNode[] }
+  | { type: "ltr"; children: RichNode[] }
   | { type: "link"; href: string; children: RichNode[] }
 
-const OPEN = /<strong>|<a href="([^"]*)">/g
+const OPEN = /<strong>|<ltr>|<a href="([^"]*)">/g
+const CLOSE: Record<string, [string, string]> = {
+  "<strong>": ["<strong>", "</strong>"],
+  "<ltr>": ["<ltr>", "</ltr>"],
+}
 
 export function parseRich(text: string): RichNode[] {
   const out: RichNode[] = []
@@ -26,13 +32,18 @@ export function parseRich(text: string): RichNode[] {
     OPEN.lastIndex = pos
     const m = OPEN.exec(text)
     if (!m) break
-    const isStrong = m[0] === "<strong>"
-    const close = isStrong ? "</strong>" : "</a>"
-    const end = findClose(text, m.index + m[0].length, isStrong ? "<strong>" : "<a ", close)
+    const [open, close] = CLOSE[m[0]] ?? ["<a ", "</a>"]
+    const end = findClose(text, m.index + m[0].length, open, close)
     if (end < 0) break
     pushText(text.slice(pos, m.index))
     const children = parseRich(text.slice(m.index + m[0].length, end))
-    out.push(isStrong ? { type: "strong", children } : { type: "link", href: m[1], children })
+    out.push(
+      m[0] === "<strong>"
+        ? { type: "strong", children }
+        : m[0] === "<ltr>"
+          ? { type: "ltr", children }
+          : { type: "link", href: m[1], children }
+    )
     pos = end + close.length
   }
   pushText(text.slice(pos))

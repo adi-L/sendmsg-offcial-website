@@ -8,6 +8,7 @@ import { SUPPORT_PHONE } from "../data/support-hours"
 import "../styles/legal.css"
 import type { PageContext } from "../locales/config"
 import { useT } from "../locales/LocaleContext"
+import Rich from "../locales/Rich"
 import { getT } from "../locales/messages"
 
 /* ── /terms/ ────────────────────────────────────────────────────
@@ -33,8 +34,7 @@ const TermsPage: React.FC = () => {
               {t.heroSub}
             </p>
             <p className="lg-hero-meta">
-              {t.heroMeta}{" "}
-              <span className="lg-ltr">514979525</span>{t.heroMeta2}
+              <Rich text={t.heroMeta} ltrClass="lg-ltr" />
             </p>
           </div>
         </section>

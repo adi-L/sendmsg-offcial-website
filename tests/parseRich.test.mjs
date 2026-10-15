@@ -42,3 +42,17 @@ test("unknown tags stay literal text", () => {
 test("unclosed strong stays literal", () => {
   assert.deepEqual(parseRich("<strong>x"), [{ type: "text", value: "<strong>x" }])
 })
+
+test("ltr marks a left-to-right run (a price, a number) inside the sentence", () => {
+  assert.deepEqual(parseRich("מנוי מ-<ltr>₪40</ltr> לחודש"), [
+    { type: "text", value: "מנוי מ-" },
+    { type: "ltr", children: [{ type: "text", value: "₪40" }] },
+    { type: "text", value: " לחודש" },
+  ])
+})
+
+test("ltr inside strong", () => {
+  assert.deepEqual(parseRich("<strong><ltr>1,165</ltr></strong>"), [
+    { type: "strong", children: [{ type: "ltr", children: [{ type: "text", value: "1,165" }] }] },
+  ])
+})

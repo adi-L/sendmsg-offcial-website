@@ -13,6 +13,7 @@ import {
 import "../styles/support.css"
 import type { PageContext } from "../locales/config"
 import { useT } from "../locales/LocaleContext"
+import Rich from "../locales/Rich"
 import { getT } from "../locales/messages"
 import type { Messages } from "../locales/messages"
 import LocalizedLink from "../locales/LocalizedLink"
@@ -170,7 +171,7 @@ const FAQS = (t: Messages["pages/support"]): Faq[] => [
           {t.p7}
         </p>
         <p>
-          {t.p8}<span className="sp-ltr">SMS</span>{t.p9}
+          <Rich text={t.p8} ltrClass="sp-ltr" />
         </p>
         <p>
           {t.p10}
@@ -206,7 +207,7 @@ const SupportPage: React.FC = () => {
                 <p className="sp-hours-label">{t.hoursLabel}</p>
                 <p className="sp-hours-days">{t.hoursDays}</p>
                 <p className="sp-hours-time">
-                  <span className="sp-ltr">9:00–17:00</span>
+                  <span className="sp-ltr">{t.hoursTime}</span>
                 </p>
                 {status && (
                   <p
@@ -280,8 +281,7 @@ const SupportPage: React.FC = () => {
               <div className="sp-head">
                 <h2>{t.h22}</h2>
                 <p>
-                  {t.p11}<span className="sp-ltr">9:00</span>{t.p12}
-                  <span className="sp-ltr">17:00</span>{t.p13}
+                  <Rich text={t.p11} ltrClass="sp-ltr" />
                 </p>
               </div>
 

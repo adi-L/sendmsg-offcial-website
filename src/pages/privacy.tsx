@@ -132,7 +132,7 @@ const PrivacyPage: React.FC = () => {
                   </a>
                 </li>
               </ul>
-              <p>{t.p2}{t.postAddress}.</p>
+              <p><Rich text={t.p2} /></p>
             </div>
           </div>
         </section>

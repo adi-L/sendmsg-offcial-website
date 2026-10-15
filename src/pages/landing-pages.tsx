@@ -11,6 +11,7 @@ import tplTech from "../images/templates/template-tech.webp"
 import "../styles/landing-pages.css"
 import type { PageContext } from "../locales/config"
 import { useT } from "../locales/LocaleContext"
+import Rich from "../locales/Rich"
 import { getT } from "../locales/messages"
 import type { Messages } from "../locales/messages"
 import LocalizedLink from "../locales/LocalizedLink"
@@ -188,9 +189,7 @@ const LandingPagesPage: React.FC = () => {
               <div>
                 <h2>{t.h25}</h2>
                 <p>
-                  {t.p3}
-                  <span className="lp-ltr">₪40</span>{t.p4}{" "}
-                  <span className="lp-ltr">₪36</span>{t.p5}
+                  <Rich text={t.p3} ltrClass="lp-ltr" />
                 </p>
               </div>
               <LocalizedLink to="/pricing/" className="lp-btn lp-btn-light">

@@ -7,6 +7,7 @@ import { openSignup, PANEL_URL } from "../components/SignupDialog"
 import "../styles/meetings.css"
 import type { PageContext } from "../locales/config"
 import { useT } from "../locales/LocaleContext"
+import Rich from "../locales/Rich"
 import { getT } from "../locales/messages"
 import LocalizedLink from "../locales/LocalizedLink"
 
@@ -94,9 +95,7 @@ const MeetingsPage: React.FC = () => {
               <div>
                 <h2>{t.h24}</h2>
                 <p>
-                  {t.p2}
-                  <span className="mt-ltr">₪40</span>{t.p3}{" "}
-                  <span className="mt-ltr">₪36</span>{t.p4}
+                  <Rich text={t.p2} ltrClass="mt-ltr" />
                 </p>
               </div>
               <LocalizedLink to="/pricing/" className="mt-btn mt-btn-light">

@@ -54,4 +54,4 @@ const IndexPage: React.FC = () => {
 
 export default IndexPage
 
-export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => <SEO locale={pageContext.locale} />
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => <SEO locale={pageContext.locale} pathname="/" />

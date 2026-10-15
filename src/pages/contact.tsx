@@ -15,6 +15,7 @@ import type { PageContext } from "../locales/config"
 import { useT } from "../locales/LocaleContext"
 import { getT } from "../locales/messages"
 import LocalizedLink from "../locales/LocalizedLink"
+import Fmt from "../locales/Fmt"
 
 
 /* The site's own icon set: 24-grid, 1.8 stroke, round caps. The WhatsApp
@@ -250,7 +251,7 @@ const ContactPage: React.FC = () => {
                       {t.submit}
                     </button>
                     <p className="ct-note">
-                      {t.note}<span className="ct-ltr">{SUPPORT_PHONE}</span>{t.note2}
+                      <Fmt text={t.note} vars={{ phone: <span className="ct-ltr">{SUPPORT_PHONE}</span> }} />
                     </p>
                   </form>
                 )}

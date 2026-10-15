@@ -53,3 +53,23 @@ test("splitTemplate separates text from {placeholders}, keeping spaces", async (
   assert.deepEqual(splitTemplate("{a}{b}"), [{ name: "a" }, { name: "b" }])
   assert.deepEqual(splitTemplate("בלי משתנים"), ["בלי משתנים"])
 })
+
+test("alternates: none while the page exists in one language", async () => {
+  const { alternates } = await import("../src/locales/config.ts")
+  assert.deepEqual(alternates("/about/", ["he"]), [])
+})
+
+test("alternates: one per language the page exists in, plus x-default", async () => {
+  const { alternates } = await import("../src/locales/config.ts")
+  assert.deepEqual(alternates("/about/", ["he", "en"]), [
+    { hrefLang: "he", path: "/about/" },
+    { hrefLang: "en", path: "/en/about/" },
+    { hrefLang: "x-default", path: "/about/" },
+  ])
+  assert.deepEqual(alternates("/", ["he", "en"])[1], { hrefLang: "en", path: "/en/" })
+})
+
+test("alternates: untranslated pages have none", async () => {
+  const { alternates } = await import("../src/locales/config.ts")
+  assert.deepEqual(alternates("/api/", ["he", "en"]), [])
+})

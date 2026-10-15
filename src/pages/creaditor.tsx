@@ -297,7 +297,7 @@ const CreaditorPage = () => {
               <div className="cr-way">
                 <p className="cr-way-t">{t.wayT2}</p>
                 <p className="cr-way-d">
-                  {t.wayD2}<span className="cr-ltr">MCP</span>{t.wayD3}
+                  <Rich text={t.wayD2} ltrClass="cr-ltr" />
                 </p>
                 <ul className="cr-chips" aria-label={t.ariaLabel3}>
                   <li>{t.li}</li>
@@ -318,8 +318,7 @@ const CreaditorPage = () => {
           <div className="container cr-label-in">
             <p className="cr-label-claim">{t.labelClaim}</p>
             <p className="cr-label-d">
-              <span className="cr-ltr">White-label</span>{t.labelD}{" "}
-              <span className="cr-ltr">Creaditor</span>.
+              <Rich text={t.labelD} ltrClass="cr-ltr" />
             </p>
           </div>
         </section>

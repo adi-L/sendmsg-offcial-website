@@ -184,7 +184,7 @@ const JobsPage: React.FC = () => {
             <div className="jb-head">
               <h2>{t.h22}</h2>
               <p>
-                {countLabel(TOTAL, t)}{t.p2}
+                {formatText(t.p2, { count: countLabel(TOTAL, t) })}
               </p>
             </div>
 

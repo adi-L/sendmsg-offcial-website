@@ -1,13 +1,6 @@
 import React from "react"
 import { withPrefix } from "gatsby"
-import {
-  defaultLocale,
-  enabledLocales,
-  Locale,
-  localePath,
-  locales,
-  untranslatedPages,
-} from "../locales/config"
+import { alternates, enabledLocales, Locale, localePath, locales } from "../locales/config"
 import { getT } from "../locales/messages"
 
 interface SEOProps {
@@ -16,6 +9,10 @@ interface SEOProps {
   /* Only for untranslated pages whose content is in another language (/api). */
   htmlLang?: string
   htmlDir?: "rtl" | "ltr"
+  /* The languages this page exists in, for hreflang. Pages exist in every
+     enabled language; an article exists only in its own until it is
+     translated. */
+  availableIn?: readonly Locale[]
   title?: string
   description?: string
   pathname?: string
@@ -26,6 +23,7 @@ const SEO: React.FC<SEOProps> = ({
   locale,
   htmlLang,
   htmlDir,
+  availableIn = enabledLocales(),
   title,
   description,
   pathname,
@@ -41,12 +39,10 @@ const SEO: React.FC<SEOProps> = ({
 
   const pageTitle = title ? `${title} | ${siteTitle}` : siteTitle
   const pageDescription = description || siteDescription
-  const canonical = pathname ? `${siteUrl}${localePath(locale, pathname)}` : siteUrl
-  /* hreflang only once there is more than one language to point at. */
-  const alternates =
-    pathname && enabledLocales().length > 1 && !untranslatedPages.includes(pathname)
-      ? enabledLocales().map((l) => ({ l, href: `${siteUrl}${localePath(l, pathname)}` }))
-      : []
+  // the Hebrew home is the bare domain, as it always was; /en/ keeps its path
+  const localized = pathname ? localePath(locale, pathname) : "/"
+  const canonical = localized === "/" ? siteUrl : `${siteUrl}${localized}`
+  const links = pathname ? alternates(pathname, availableIn) : []
   const imageUrl = `${assetOrigin}${withPrefix(image || "/images/og-image.png")}`
 
   const isHome = !pathname || pathname === "/"
@@ -87,16 +83,9 @@ const SEO: React.FC<SEOProps> = ({
       <title>{pageTitle}</title>
       <meta name="description" content={pageDescription} />
       <link rel="canonical" href={canonical} />
-      {alternates.map(({ l, href }) => (
-        <link key={l} rel="alternate" hrefLang={l} href={href} />
+      {links.map(({ hrefLang, path }) => (
+        <link key={hrefLang} rel="alternate" hrefLang={hrefLang} href={`${siteUrl}${path}`} />
       ))}
-      {alternates.length > 0 && pathname && (
-        <link
-          rel="alternate"
-          hrefLang="x-default"
-          href={`${siteUrl}${localePath(defaultLocale, pathname)}`}
-        />
-      )}
       <link
         rel="icon"
         type="image/png"

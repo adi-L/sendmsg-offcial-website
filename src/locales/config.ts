@@ -54,3 +54,14 @@ export function splitTemplate(template: string): (string | { name: string })[] {
     .filter((part) => part !== "")
     .map((part) => (/^\{\w+\}$/.test(part) ? { name: part.slice(1, -1) } : part))
 }
+
+/* hreflang links for a page that exists in `availableIn`: one per language
+   plus x-default (the default language). None while there's only one. */
+export function alternates(
+  pathname: string,
+  availableIn: readonly string[]
+): { hrefLang: string; path: string }[] {
+  if (availableIn.length < 2 || isUntranslated(pathname)) return []
+  const links = availableIn.map((l) => ({ hrefLang: l, path: localePath(l as Locale, pathname) }))
+  return [...links, { hrefLang: "x-default", path: pathname }]
+}

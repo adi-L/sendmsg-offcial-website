@@ -10,7 +10,8 @@ import { useT } from "../locales/LocaleContext"
 import { getT } from "../locales/messages"
 import type { Messages } from "../locales/messages"
 import LocalizedLink from "../locales/LocalizedLink"
-import Fmt from "../locales/Fmt"
+import { formatText } from "../locales/config"
+import Rich from "../locales/Rich"
 
 /* ── The services hub ───────────────────────────────────────────
    This page routes. Every module below now has its own page, so
@@ -39,10 +40,6 @@ type Family = {
   rows: Row[]
 }
 
-const Ltr: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <span className="sv-ltr">{children}</span>
-)
-
 const FAMILIES = (t: Messages["pages/services"]): Family[] => [
   {
     id: "mailing",
@@ -52,7 +49,7 @@ const FAMILIES = (t: Messages["pages/services"]): Family[] => [
       {
         t: t.families[0].rows[0].t,
         hook: t.families[0].rows[0].hook,
-        price: <Fmt text={t.families[0].rows[0].price} vars={{ price: <Ltr>₪40</Ltr> }} />,
+        price: <Rich text={t.families[0].rows[0].price} ltrClass="sv-ltr" />,
         to: "/newsletters/",
       },
       {
@@ -89,18 +86,13 @@ const FAMILIES = (t: Messages["pages/services"]): Family[] => [
       {
         t: t.families[1].rows[1].t,
         hook: t.families[1].rows[1].hook,
-        price: (
-          <Fmt
-            text={t.families[1].rows[1].price}
-            vars={{ price: <Ltr>₪147</Ltr>, qty: <Ltr>5,000</Ltr> }}
-          />
-        ),
+        price: <Rich text={t.families[1].rows[1].price} ltrClass="sv-ltr" />,
         to: "/sms-bank/",
       },
       {
         t: t.families[1].rows[2].t,
         hook: t.families[1].rows[2].hook,
-        price: <Fmt text={t.families[1].rows[2].price} vars={{ price: <Ltr>₪118</Ltr> }} />,
+        price: <Rich text={t.families[1].rows[2].price} ltrClass="sv-ltr" />,
         to: "/virtual-number/",
       },
     ],
@@ -138,23 +130,13 @@ const FAMILIES = (t: Messages["pages/services"]): Family[] => [
       {
         t: t.families[3].rows[0].t,
         hook: t.families[3].rows[0].hook,
-        price: (
-          <Fmt
-            text={t.families[3].rows[0].price}
-            vars={{ price: <Ltr>₪640</Ltr>, qty: <Ltr>10,000</Ltr> }}
-          />
-        ),
+        price: <Rich text={t.families[3].rows[0].price} ltrClass="sv-ltr" />,
         to: "/email-bank/",
       },
       {
         t: t.families[3].rows[1].t,
         hook: t.families[3].rows[1].hook,
-        price: (
-          <Fmt
-            text={t.families[3].rows[1].price}
-            vars={{ tld: <Ltr>.co.il</Ltr>, price: <Ltr>₪120</Ltr> }}
-          />
-        ),
+        price: <Rich text={t.families[3].rows[1].price} ltrClass="sv-ltr" />,
         to: "/domain/",
       },
       {
@@ -221,7 +203,7 @@ const ServicesPage: React.FC = () => {
                   {t.heroSub}
                 </p>
                 <p className="sv-hero-note">
-                  {MODULE_COUNT}{t.heroNote}
+                  {formatText(t.heroNote, { n: MODULE_COUNT })}
                 </p>
                 <a
                   href={PANEL_URL}

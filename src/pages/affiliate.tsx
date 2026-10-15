@@ -10,6 +10,7 @@ import type { PageContext } from "../locales/config"
 import { useT } from "../locales/LocaleContext"
 import { getT } from "../locales/messages"
 import LocalizedLink from "../locales/LocalizedLink"
+import Fmt from "../locales/Fmt"
 
 /* Copy is the live /affiliate/ page's own.
 
@@ -67,8 +68,7 @@ const AffiliatePage: React.FC = () => {
               <div className="af-head">
                 <h2>{t.h2}</h2>
                 <p>
-                  {t.p}
-                  <span className="af-ltr">₪{he(PAYOUT_MIN)}</span>{t.p2}
+                  <Fmt text={t.p} vars={{ min: <span className="af-ltr">₪{he(PAYOUT_MIN)}</span> }} />
                 </p>
               </div>
               <ul className="af-earn-list">
@@ -114,8 +114,13 @@ const AffiliatePage: React.FC = () => {
                   <tr key={r.contacts}>
                     <th scope="row">{he(r.contacts)}</th>
                     <td>
-                      {he(r.tier.contacts)}{t.td}{" "}
-                      <span className="af-ltr">₪{he(r.tier.year)}</span>{t.td2}
+                      <Fmt
+                        text={t.tierCell}
+                        vars={{
+                          contacts: he(r.tier.contacts),
+                          price: <span className="af-ltr">₪{he(r.tier.year)}</span>,
+                        }}
+                      />
                     </td>
                     <td>
                       <span className="af-ltr">₪{he(r.annual)}</span>

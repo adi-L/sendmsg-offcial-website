@@ -5,6 +5,7 @@ import Layout from "../components/Layout"
 import SEO from "../components/SEO"
 import type { PageContext } from "../locales/config"
 import { useLocalePath, useT } from "../locales/LocaleContext"
+import { formatText } from "../locales/config"
 
 interface BlogPostData {
   markdownRemark: {
@@ -48,7 +49,7 @@ const BlogPostTemplate: React.FC<PageProps<BlogPostData, Context>> = ({
               <span>·</span>
               <span>{post.frontmatter.date}</span>
               <span>·</span>
-              <span>{post.timeToRead}{t.span}</span>
+              <span>{formatText(t.readTime, { n: post.timeToRead })}</span>
             </div>
           </header>
 
@@ -71,7 +72,7 @@ const BlogPostTemplate: React.FC<PageProps<BlogPostData, Context>> = ({
 export default BlogPostTemplate
 
 export const Head: HeadFC<BlogPostData, PageContext> = ({ data, pageContext }) => (
-  <SEO locale={pageContext.locale}
+  <SEO locale={pageContext.locale} availableIn={[pageContext.locale]}
     title={data.markdownRemark.frontmatter.title}
     description={data.markdownRemark.frontmatter.excerpt}
     pathname={`/blog/${data.markdownRemark.frontmatter.slug}/`}

@@ -7,6 +7,7 @@ import { openSignup, PANEL_URL } from "../components/SignupDialog"
 import "../styles/newsletters.css"
 import type { PageContext } from "../locales/config"
 import { useT } from "../locales/LocaleContext"
+import Rich from "../locales/Rich"
 import { getT } from "../locales/messages"
 import LocalizedLink from "../locales/LocalizedLink"
 
@@ -50,8 +51,7 @@ const NewslettersPage: React.FC = () => {
               <div className="nl-editor-text">
                 <h2>{t.h2}</h2>
                 <p>
-                  {t.p}{" "}
-                  <span className="nl-ltr">Creaditor 3.0</span>{t.p2}
+                  <Rich text={t.p} ltrClass="nl-ltr" />
                 </p>
               </div>
               <p className="nl-pull">{t.pull}</p>
@@ -175,8 +175,7 @@ const NewslettersPage: React.FC = () => {
               <div>
                 <h2>{t.h26}</h2>
                 <p>
-                  {t.p6}<span className="nl-ltr">₪40</span>{t.p7}{" "}
-                  <span className="nl-ltr">₪36</span>{t.p8}
+                  <Rich text={t.p6} ltrClass="nl-ltr" />
                 </p>
               </div>
               <LocalizedLink to="/pricing/" className="nl-btn nl-btn-light">

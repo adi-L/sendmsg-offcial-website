@@ -9,6 +9,7 @@ import { formatText } from "../locales/config"
 import type { PageContext } from "../locales/config"
 import LocalizedLink from "../locales/LocalizedLink"
 import { useT } from "../locales/LocaleContext"
+import Rich from "../locales/Rich"
 import { getT } from "../locales/messages"
 
 /* ── a single guide ─────────────────────────────────────────────
@@ -107,8 +108,7 @@ const KbArticle: React.FC<PageProps<Data, Context>> = ({
                 {t.footLink}
               </LocalizedLink>
               <p>
-                {t.p}<LocalizedLink to="/support/">{t.p3}</LocalizedLink>{t.p2}{" "}
-                <span className="kba-ltr">9:00–17:00</span>.
+                <Rich text={t.p} ltrClass="kba-ltr" />
               </p>
             </div>
           </div>
@@ -142,7 +142,7 @@ export const Head: HeadFC<Data, PageContext> = ({ data, pageContext }) => {
   const f = data.markdownRemark.frontmatter
   const t = getT(pageContext.locale, "templates/kb-article")
   return (
-    <SEO locale={pageContext.locale}
+    <SEO locale={pageContext.locale} availableIn={[pageContext.locale]}
       title={f.title}
       description={formatText(t.seoDescription, { title: f.title })}
       pathname={`/kb/${f.slug}/`}

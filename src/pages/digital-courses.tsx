@@ -7,6 +7,7 @@ import { openSignup, PANEL_URL } from "../components/SignupDialog"
 import "../styles/digital-courses.css"
 import type { PageContext } from "../locales/config"
 import { useT } from "../locales/LocaleContext"
+import Rich from "../locales/Rich"
 import { getT } from "../locales/messages"
 import LocalizedLink from "../locales/LocalizedLink"
 
@@ -120,10 +121,7 @@ const DigitalCoursesPage: React.FC = () => {
                   ))}
                 </ul>
                 <p className="dc-col-note">
-                  {t.colNote}<span className="dc-ltr">₪40</span>{t.colNote2}{" "}
-                  <span className="dc-ltr">251–500</span>{t.colNote3}
-                  <span className="dc-ltr">₪79</span>{t.colNote4}{" "}
-                  <span className="dc-ltr">₪71</span>{t.colNote5}
+                  <Rich text={t.colNote} ltrClass="dc-ltr" />
                 </p>
                 <LocalizedLink to="/pricing/" className="dc-col-link">
                   {t.colLink}

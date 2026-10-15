@@ -7,6 +7,7 @@ import { openSignup, PANEL_URL } from "../components/SignupDialog"
 import "../styles/crm.css"
 import type { PageContext } from "../locales/config"
 import { useT } from "../locales/LocaleContext"
+import Rich from "../locales/Rich"
 import { getT } from "../locales/messages"
 import LocalizedLink from "../locales/LocalizedLink"
 
@@ -45,8 +46,7 @@ const CrmPage: React.FC = () => {
           <div className="container">
             <div className="crm-claim-in">
               <p className="crm-claim-lead">
-                {t.claimLead}{" "}
-                <span className="crm-ltr">SalesForce</span>.
+                <Rich text={t.claimLead} ltrClass="crm-ltr" />
               </p>
               <p className="crm-claim-body">
                 {t.claimBody}
@@ -100,9 +100,7 @@ const CrmPage: React.FC = () => {
               <div>
                 <h2>{t.h23}</h2>
                 <p>
-                  {t.p2}
-                  <span className="crm-ltr">₪40</span>{t.p3}{" "}
-                  <span className="crm-ltr">₪36</span>{t.p4}
+                  <Rich text={t.p2} ltrClass="crm-ltr" />
                 </p>
               </div>
               <LocalizedLink to="/pricing/" className="crm-btn crm-btn-light">

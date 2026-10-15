@@ -6,6 +6,7 @@ import SEO from "../components/SEO"
 import "../styles/legal.css"
 import type { PageContext } from "../locales/config"
 import { useT } from "../locales/LocaleContext"
+import Rich from "../locales/Rich"
 import { getT } from "../locales/messages"
 import { formatText } from "../locales/config"
 
@@ -98,16 +99,10 @@ const AccessibilityPage: React.FC = () => {
                 <section className="lg-sec" id="a1">
                   <h2>{t.h22}</h2>
                   <p>
-                    {t.p}<span className="lg-ltr">WCAG 2</span>{" "}
-                    {t.p2}{" "}
-                    <span className="lg-ltr">W3C</span>{t.p3}{" "}
-                    <span className="lg-ltr">AA</span>{t.p4}
+                    <Rich text={t.p} ltrClass="lg-ltr" />
                   </p>
                   <p>
-                    {t.p5}{" "}
-                    <span className="lg-ltr">NVDA</span>,{" "}
-                    <span className="lg-ltr">JAWS</span>{t.p6}
-                    <span className="lg-ltr">VoiceOver</span>.
+                    <Rich text={t.p5} ltrClass="lg-ltr" />
                   </p>
                 </section>
 
@@ -144,8 +139,7 @@ const AccessibilityPage: React.FC = () => {
                 <section className="lg-sec" id="a4">
                   <h2>{t.h25}</h2>
                   <p>
-                    {t.p11}{" "}
-                    <span className="lg-ltr">iframe</span>{t.p12}<span className="lg-ltr">YouTube</span>{t.p13}
+                    <Rich text={t.p11} ltrClass="lg-ltr" />
                   </p>
                 </section>
 
