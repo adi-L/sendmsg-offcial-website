@@ -6,11 +6,13 @@ import CTA from "../components/CTA"
 import SEO from "../components/SEO"
 import { KB_ARTICLES, KB_CATEGORIES, KbArticle } from "../data/kb"
 import "../styles/kb.css"
+import { articleLocale, defaultLocale } from "../locales/config"
 import type { PageContext } from "../locales/config"
+import { useLocale } from "../locales/LocaleContext"
 
 /* ── /kb/ — מרכז ההדרכה ─────────────────────────────────────────
    The index over every guide. src/data/kb.ts holds the full crawled
-   catalogue; the ones imported into content/kb/ are matched to it by
+   catalogue; the ones imported into content/kb/<lang>/ are matched to it by
    source url and linked internally, the rest still open on
    sendmsg.co.il. That keeps the index whole while the migration runs.
 
@@ -103,6 +105,7 @@ const Row: React.FC<{
 interface Data {
   allMarkdownRemark: {
     nodes: Array<{
+      fileAbsolutePath: string
       frontmatter: {
         slug: string
         source: string | null
@@ -115,6 +118,7 @@ interface Data {
 type Local = { slug: string; excerpt: string | null }
 
 const KbPage: React.FC<PageProps<Data>> = ({ data }) => {
+  const locale = useLocale()
   /* source url -> the imported guide, matched on the decoded path
      because the live links are inconsistent about percent-encoding. */
   const local = useMemo(() => {
@@ -127,6 +131,8 @@ const KbPage: React.FC<PageProps<Data>> = ({ data }) => {
     }
     const m = new Map<string, Local>()
     for (const n of data.allMarkdownRemark.nodes) {
+      /* Only guides in this page's language (content/kb/he/ is Hebrew). */
+      if ((articleLocale(n.fileAbsolutePath) ?? defaultLocale) !== locale) continue
       if (n.frontmatter.source) {
         m.set(key(n.frontmatter.source), {
           slug: n.frontmatter.slug,
@@ -135,7 +141,7 @@ const KbPage: React.FC<PageProps<Data>> = ({ data }) => {
       }
     }
     return { get: (u: string) => m.get(key(u)) }
-  }, [data])
+  }, [data, locale])
 
   const [query, setQuery] = useState("")
   const [cat, setCat] = useState<string | null>(null)
@@ -304,6 +310,7 @@ export const query = graphql`
   query KbIndex {
     allMarkdownRemark(filter: { frontmatter: { source: { ne: null } } }) {
       nodes {
+        fileAbsolutePath
         frontmatter {
           slug
           source

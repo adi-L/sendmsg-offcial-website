@@ -11,7 +11,9 @@ import imgMarketingStrategy from "../images/blog/marketing-strategy.webp"
 
 import authorAsaf from "../images/team/asaf-stern.webp"
 import authorYifat from "../images/team/yifat.webp"
+import { articleLocale, defaultLocale } from "../locales/config"
 import type { PageContext } from "../locales/config"
+import { useLocale } from "../locales/LocaleContext"
 
 /* Thumbnails and author photos live in src/images; posts reference them
    by slug / author name until frontmatter carries real image paths. */
@@ -31,6 +33,7 @@ interface BlogData {
   allMarkdownRemark: {
     nodes: Array<{
       id: string
+      fileAbsolutePath: string
       frontmatter: {
         title: string
         slug: string
@@ -71,7 +74,11 @@ const PostMeta: React.FC<{ post: Post }> = ({ post }) => {
 }
 
 const BlogPage: React.FC<PageProps<BlogData>> = ({ data }) => {
-  const posts = data.allMarkdownRemark.nodes
+  /* Only this page's language: the folder is the language (content/blog/he/). */
+  const locale = useLocale()
+  const posts = data.allMarkdownRemark.nodes.filter(
+    (n) => (articleLocale(n.fileAbsolutePath) ?? defaultLocale) === locale
+  )
   const [activeCategory, setActiveCategory] = React.useState("הכל")
 
   const categories = ["הכל", ...Array.from(new Set(posts.map((p) => p.frontmatter.category)))]
@@ -170,7 +177,7 @@ export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => (
 
 export const query = graphql`
   query BlogList {
-    # Scoped to content/blog. The knowledge base is markdown too, so
+    # Scoped to content/blog (every language; the page filters to its own). The knowledge base is markdown too, so
     # without the path filter all 98 guides list themselves as blog
     # posts — which is exactly what happened the first time.
     allMarkdownRemark(
@@ -182,6 +189,7 @@ export const query = graphql`
     ) {
       nodes {
         id
+        fileAbsolutePath
         frontmatter {
           title
           slug
