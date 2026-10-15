@@ -1,17 +1,40 @@
 import React from "react"
 import { withPrefix } from "gatsby"
+import { alternates, enabledLocales, Locale, localePath, locales } from "../locales/config"
+import heText from "../locales/he/common.json"
+
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 interface SEOProps {
+  /* Required, so a page's Head can't forget it: pass pageContext.locale. */
+  locale: Locale
+  /* Only for untranslated pages whose content is in another language (/api). */
+  htmlLang?: string
+  htmlDir?: "rtl" | "ltr"
+  /* The languages this page exists in, for hreflang. Pages exist in every
+     enabled language; an article exists only in its own until it is
+     translated. */
+  availableIn?: readonly Locale[]
   title?: string
   description?: string
   pathname?: string
   image?: string
 }
 
-const SEO: React.FC<SEOProps> = ({ title, description, pathname, image }) => {
-  const siteTitle = "שלח מסר - מערכת דיוור אלקטרוני"
-  const siteDescription =
-    "מערכת דיוור אלקטרוני לעסקים, נגישה וידידותית. ניוזלטרים, SMS, דפי נחיתה, קורסים דיגיטליים ו-CRM במקום אחד."
+const SEO: React.FC<SEOProps> = ({
+  locale,
+  htmlLang,
+  htmlDir,
+  availableIn = enabledLocales(),
+  title,
+  description,
+  pathname,
+  image,
+}) => {
+  const c = TEXT[locale].seo
+  const siteTitle = c.siteTitle
+  const siteDescription = c.siteDescription
   const siteUrl = "https://sendmsg.co.il"
   // og:image must be an absolute URL that resolves on the host actually
   // serving the build; the GitHub Pages preview sets GATSBY_ASSET_ORIGIN
@@ -19,7 +42,10 @@ const SEO: React.FC<SEOProps> = ({ title, description, pathname, image }) => {
 
   const pageTitle = title ? `${title} | ${siteTitle}` : siteTitle
   const pageDescription = description || siteDescription
-  const canonical = pathname ? `${siteUrl}${pathname}` : siteUrl
+  // the Hebrew home is the bare domain, as it always was; /en/ keeps its path
+  const localized = pathname ? localePath(locale, pathname) : "/"
+  const canonical = localized === "/" ? siteUrl : `${siteUrl}${localized}`
+  const links = pathname ? alternates(pathname, availableIn) : []
   const imageUrl = `${assetOrigin}${withPrefix(image || "/images/og-image.png")}`
 
   const isHome = !pathname || pathname === "/"
@@ -29,7 +55,7 @@ const SEO: React.FC<SEOProps> = ({ title, description, pathname, image }) => {
       {
         "@type": "Organization",
         "@id": `${siteUrl}/#organization`,
-        name: "שלח מסר",
+        name: c.orgName,
         alternateName: "Sendmsg",
         url: siteUrl,
         logo: `${assetOrigin}${withPrefix("/images/logo/logo.png")}`,
@@ -48,7 +74,7 @@ const SEO: React.FC<SEOProps> = ({ title, description, pathname, image }) => {
         "@id": `${siteUrl}/#website`,
         name: siteTitle,
         url: siteUrl,
-        inLanguage: "he",
+        inLanguage: locale,
         publisher: { "@id": `${siteUrl}/#organization` },
       },
     ],
@@ -56,10 +82,13 @@ const SEO: React.FC<SEOProps> = ({ title, description, pathname, image }) => {
 
   return (
     <>
-      <html lang="he" dir="rtl" />
+      <html lang={htmlLang ?? locale} dir={htmlDir ?? locales[locale].dir} />
       <title>{pageTitle}</title>
       <meta name="description" content={pageDescription} />
       <link rel="canonical" href={canonical} />
+      {links.map(({ hrefLang, path }) => (
+        <link key={hrefLang} rel="alternate" hrefLang={hrefLang} href={`${siteUrl}${path}`} />
+      ))}
       <link
         rel="icon"
         type="image/png"
@@ -83,8 +112,8 @@ const SEO: React.FC<SEOProps> = ({ title, description, pathname, image }) => {
         sizes="180x180"
         href={withPrefix("/icons/icon-180x180.png")}
       />
-      <meta property="og:site_name" content="שלח מסר - Sendmsg" />
-      <meta property="og:locale" content="he_IL" />
+      <meta property="og:site_name" content={c.ogSiteName} />
+      <meta property="og:locale" content={c.ogLocale} />
       <meta property="og:title" content={pageTitle} />
       <meta property="og:description" content={pageDescription} />
       <meta property="og:url" content={canonical} />
@@ -94,7 +123,7 @@ const SEO: React.FC<SEOProps> = ({ title, description, pathname, image }) => {
       <meta property="og:image:height" content="630" />
       <meta
         property="og:image:alt"
-        content="שלח מסר - מערכת הדיוור והשיווק הישראלית לעסקים"
+        content={c.ogImageAlt}
       />
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={pageTitle} />

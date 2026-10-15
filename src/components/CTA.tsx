@@ -2,32 +2,40 @@ import React from "react"
 
 import trustLogos from "../images/image.png"
 import { openSignup } from "./SignupDialog"
+import { useText } from "../locales/LocaleContext"
+import heText from "../locales/he/cta.json"
+
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 const PANEL_URL = "https://panel.sendmsg.co.il/"
 
-const CTA: React.FC = () => (
-  <section style={styles.section}>
-    <div className="container" style={styles.container}>
-      <h2 style={styles.title}>
-        הגיע הזמן למערכת דיוור אלקטרוני
-        <br />
-        <span className="gradient-text">ידידותית ומתקדמת</span>
-      </h2>
-      <p style={styles.subtitle}>
-        הצטרפו לאלפי עסקים שכבר משתמשים בשלח מסר לשיווק חכם
-      </p>
-      <a href={PANEL_URL} className="primary-btn" style={styles.btn} onClick={openSignup}>
-        פתיחת חשבון בחינם →
-      </a>
-      <img
-        src={trustLogos}
-        alt="Max, Cardcom, American Express, Visa, ישראכרט, מכון התקנים הישראלי, משרד הביטחון"
-        style={styles.trustLogos}
-        loading="lazy"
-      />
-    </div>
-  </section>
-)
+const CTA: React.FC = () => {
+  const t = useText(TEXT)
+  return (
+    <section style={styles.section}>
+      <div className="container" style={styles.container}>
+        <h2 style={styles.title}>
+          {t.title}
+          <br />
+          <span className="gradient-text">{t.titleHighlight}</span>
+        </h2>
+        <p style={styles.subtitle}>
+          {t.subtitle}
+        </p>
+        <a href={PANEL_URL} className="primary-btn" style={styles.btn} onClick={openSignup}>
+          {t.button}
+        </a>
+        <img
+          src={trustLogos}
+          alt={t.logosAlt}
+          style={styles.trustLogos}
+          loading="lazy"
+        />
+      </div>
+    </section>
+  )
+}
 
 const styles: Record<string, React.CSSProperties> = {
   section: {

@@ -16,6 +16,7 @@ import {
   smsRules,
 } from "../data/api"
 import "../styles/api-docs.css"
+import type { PageContext } from "../locales/config"
 
 const ApiPage: React.FC = () => (
   <DocsLayout>
@@ -160,8 +161,8 @@ const ApiPage: React.FC = () => (
 
 export default ApiPage
 
-export const Head: HeadFC = () => (
-  <SEO
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => (
+  <SEO locale={pageContext.locale} htmlLang="en" htmlDir="ltr"
     title="API Reference"
     description="Sendmsg API 5.0 reference. Manage subscribers and mailing lists, and send email and SMS campaigns, from your own code."
     pathname="/api/"

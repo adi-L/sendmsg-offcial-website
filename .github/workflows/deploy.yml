@@ -21,9 +21,14 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          # 24: the tests load src/locales/*.ts directly, which needs Node's
+          # built-in type stripping
+          node-version: 24
           cache: npm
       - run: npm ci
+      # typecheck (including that every language has every key), tests,
+      # and API docs coverage; gatsby build alone strips types unchecked
+      - run: npm run verify
       - run: npx gatsby build --prefix-paths
         env:
           GATSBY_ASSET_ORIGIN: https://${{ github.repository_owner }}.github.io

@@ -4,6 +4,14 @@ import Layout from "../components/Layout"
 import CTA from "../components/CTA"
 import SEO from "../components/SEO"
 import "../styles/legal.css"
+import type { PageContext } from "../locales/config"
+import { useText } from "../locales/LocaleContext"
+import Rich from "../locales/Rich"
+import { formatText } from "../locales/config"
+import heText from "../locales/he/pages/accessibility.json"
+
+/* This page's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 /* ── /accessibility/ ────────────────────────────────────────────
    הצהרת נגישות, following the live sendmsg.co.il/accessibility/
@@ -38,31 +46,14 @@ import "../styles/legal.css"
    claim and was carried over as-is; it has not been re-verified
    against this build. */
 
-/* Set from the last run of scripts/check-a11y.py against a release build. */
-const LAST_CHECK = "8 באוקטובר 2026"
+/* Set from the last run of scripts/check-a11y.py against a release build,
+   together with lastCheckDate in src/locales/he/pages/accessibility.json. */
 const PAGE_COUNT = 157
 
 const ACCESS_EMAIL = "negishut@comstar.co.il"
 const ACCESS_PHONE = "077-4600600"
 
-/* What the live statement says was tested. */
-const TESTED = [
-  "הגדלה והקטנה של כלל הטקסט באתר",
-  "שינוי ניגודיות צבעים, כולל רקע כהה",
-  "הדגשת קישורים",
-  "הנגשת תפריטים, טפסים והיררכיית כותרות באמצעות Tab",
-  "עדכון פונטים לפונטים קריאים",
-  "הצהרת נגישות עם הסבר אודות תאימות, פערים ופרטי קשר עבור פניות בנושאי הנגשה",
-]
-
-const SECTIONS = [
-  { id: "a1", heading: "הנגשת האתר" },
-  { id: "a2", heading: "מה נבדק" },
-  { id: "a3", heading: "בדיקה אחרונה" },
-  { id: "a4", heading: "רכיבים אשר עשויים להיות לא מונגשים" },
-  { id: "a5", heading: "הגבלת אחריות" },
-]
-
+/* TESTED: moved to src/locales/he/pages/accessibility.json as "tested". */
 const CheckIcon = () => (
   <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" focusable="false">
     <path
@@ -76,161 +67,138 @@ const CheckIcon = () => (
   </svg>
 )
 
-const AccessibilityPage: React.FC = () => (
-  <Layout>
-    <div className="lg">
-      <section className="lg-hero">
-        <div className="container">
-          <h1>הצהרת נגישות</h1>
-          <p className="lg-hero-sub">
-            חברת קומסטאר מערכות בע״מ פועלת לקידום נגישות האתרים הישראלים
-            והפיכתם למתאימים לכלל האוכלוסייה בישראל.
-          </p>
-          <p className="lg-hero-meta">
-            נתקלתם במגבלה שהפריעה לגלישה או מנעה אותה? נשמח לשמוע על כך. פרטי
-            ההתקשרות למשוב נמצאים בתחתית העמוד.
-          </p>
-        </div>
-      </section>
+const AccessibilityPage: React.FC = () => {
+  const t = useText(TEXT)
+  return (
+    <Layout>
+      <div className="lg">
+        <section className="lg-hero">
+          <div className="container">
+            <h1>{t.h1}</h1>
+            <p className="lg-hero-sub">
+              {t.heroSub}
+            </p>
+            <p className="lg-hero-meta">
+              {t.heroMeta}
+            </p>
+          </div>
+        </section>
 
-      <section className="lg-doc">
-        <div className="container">
-          <div className="lg-grid">
-            <nav className="lg-toc" aria-label="תוכן עניינים" data-count="true">
-              <h2>תוכן עניינים</h2>
-              <ol>
-                {SECTIONS.map((s) => (
-                  <li key={s.id}>
-                    <a href={`#${s.id}`}>{s.heading}</a>
-                  </li>
-                ))}
-              </ol>
-            </nav>
-
-            <div>
-              <section className="lg-sec" id="a1">
-                <h2>הנגשת האתר</h2>
-                <p>
-                  ההנגשה מתבצעת בקוד האתר עצמו, בהתאם לתקן הישראלי לנגישות 5568
-                  המבוסס על התקן העולמי <span className="lg-ltr">WCAG 2</span>{" "}
-                  והנחיות גוף התקינה הבין-לאומי{" "}
-                  <span className="lg-ltr">W3C</span> לרמה{" "}
-                  <span className="lg-ltr">AA</span>, ובעזרת ייעוץ מומחי הנגשה.
-                </p>
-                <p>
-                  התאמת הנגישות נבדקה באמצעי עזר ומכשירים שונים, והסתייעה
-                  בטכנולוגיות קוראי מסך כגון{" "}
-                  <span className="lg-ltr">NVDA</span>,{" "}
-                  <span className="lg-ltr">JAWS</span> ו-
-                  <span className="lg-ltr">VoiceOver</span>.
-                </p>
-              </section>
-
-              <section className="lg-sec" id="a2">
-                <h2>מה נבדק</h2>
-                <ul className="lg-checks">
-                  {TESTED.map((t) => (
-                    <li key={t}>
-                      <span className="lg-check" aria-hidden="true">
-                        <CheckIcon />
-                      </span>
-                      {t}
+        <section className="lg-doc">
+          <div className="container">
+            <div className="lg-grid">
+              <nav className="lg-toc" aria-label={t.ariaLabel} data-count="true">
+                <h2>{t.h2}</h2>
+                <ol>
+                  {t.sections.map((s) => (
+                    <li key={s.id}>
+                      <a href={`#${s.id}`}>{s.heading}</a>
                     </li>
                   ))}
-                </ul>
-              </section>
+                </ol>
+              </nav>
 
-              {/* 5568 statements are expected to say when the site was last
-                  reviewed. This section records the automated pass that runs
-                  from scripts/check-a11y.py, and is explicit that it does not
-                  cover the parts only a person can judge -- so the date here
-                  is never mistaken for a full manual audit. Update LAST_CHECK
-                  whenever that script is run against a release. */}
-              <section className="lg-sec" id="a3">
-                <h2>בדיקה אחרונה</h2>
-                <p>
-                  בדיקת הנגישות האוטומטית האחרונה של האתר בוצעה בתאריך{" "}
-                  {LAST_CHECK}. נבדקו, בכל {PAGE_COUNT} עמודי האתר: הגדרת שפה
-                  וכיווניות, קיום כותרת ייחודית לכל עמוד, טקסט חלופי לתמונות,
-                  היררכיית כותרות רציפה, קיום אזור תוכן ראשי וקישור דילוג
-                  אליו, תיוג שדות טפסים, שם נגיש לכל קישור וכפתור, ייחודיות
-                  מזהים, סדר טאבים, וניגודיות צבעים ביחס של 4.5:1 לטקסט רגיל
-                  ו-3:1 לטקסט גדול.
-                </p>
-                <p>
-                  בדיקה אוטומטית אינה מחליפה בדיקה אנושית. הנושאים הבאים
-                  נבחנים בנפרד ואינם מכוסים על ידה: סדר הניווט במקלדת ומלכודות
-                  מיקוד, נראות סימון המיקוד בפועל, ניגודיות של טקסט מעל רקעים
-                  מרובדים, האם הטקסט החלופי אכן מתאר את התמונה, והתנהגות העמוד
-                  בהגדלה ובמסך צר.
-                </p>
-              </section>
+              <div>
+                <section className="lg-sec" id="a1">
+                  <h2>{t.h22}</h2>
+                  <p>
+                    <Rich text={t.p} ltrClass="lg-ltr" />
+                  </p>
+                  <p>
+                    <Rich text={t.p5} ltrClass="lg-ltr" />
+                  </p>
+                </section>
 
-              <section className="lg-sec" id="a4">
-                <h2>רכיבים אשר עשויים להיות לא מונגשים</h2>
-                <p>
-                  האתר עשוי להכיל קודים חיצוניים ואלמנטים המוטמעים באמצעות{" "}
-                  <span className="lg-ltr">iframe</span>, כגון מפות גוגל,
-                  סרטוני <span className="lg-ltr">YouTube</span> ורכיבים של
-                  צד שלישי. קודים אלו עשויים להיות לא מונגשים. כמו כן, ניתן
-                  להפעיל סרטונים חיצוניים ללא כתוביות.
-                </p>
-              </section>
+                <section className="lg-sec" id="a2">
+                  <h2>{t.h23}</h2>
+                  <ul className="lg-checks">
+                    {t.tested.map((t) => (
+                      <li key={t}>
+                        <span className="lg-check" aria-hidden="true">
+                          <CheckIcon />
+                        </span>
+                        {t}
+                      </li>
+                    ))}
+                  </ul>
+                </section>
 
-              <section className="lg-sec" id="a5">
-                <h2>הגבלת אחריות</h2>
-                <p>
-                  חברת קומסטאר מערכות בע״מ עושה מאמצים להנגשה מלאה באמצעות
-                  הטכנולוגיות המוטמעות בקודי האתר, אך אינה אחראית לתוכן הדפים,
-                  לדיוקם או לשימוש בהם בצורה הנכונה לצרכי נגישות.
-                </p>
-                <p>
-                  במידה ומצאתם דף שאינו מאפשר לגלוש בצורה מונגשת, אנא פנו אלינו
-                  עם הקישור ונסייע בהנגשתו.
-                </p>
-              </section>
+                {/* 5568 statements are expected to say when the site was last
+                    reviewed. This section records the automated pass that runs
+                    from scripts/check-a11y.py, and is explicit that it does not
+                    cover the parts only a person can judge -- so the date here
+                    is never mistaken for a full manual audit. Update lastCheckDate
+                    whenever that script is run against a release. */}
+                <section className="lg-sec" id="a3">
+                  <h2>{t.h24}</h2>
+                  <p>
+                    {formatText(t.lastCheck, { date: t.lastCheckDate, pages: PAGE_COUNT })}
+                  </p>
+                  <p>
+                    {t.p10}
+                  </p>
+                </section>
+
+                <section className="lg-sec" id="a4">
+                  <h2>{t.h25}</h2>
+                  <p>
+                    <Rich text={t.p11} ltrClass="lg-ltr" />
+                  </p>
+                </section>
+
+                <section className="lg-sec" id="a5">
+                  <h2>{t.h26}</h2>
+                  <p>
+                    {t.p14}
+                  </p>
+                  <p>
+                    {t.p15}
+                  </p>
+                </section>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="lg-contact">
-        <div className="container">
-          <div className="lg-contact-in">
-            <h2>פרטי התקשרות למשוב</h2>
-            <p>
-              במידה ובמהלך הגלישה נתקלתם בכל זאת במגבלה שהפריעה לגלישה או מנעה
-              אותה לחלוטין, נשמח לשמוע על כך. אנא ידעו אותנו באחת מהדרכים האלה,
-              ואם אפשר צרפו את הקישור לדף.
-            </p>
-            <ul className="lg-contact-rows">
-              <li>
-                <a href={`tel:${ACCESS_PHONE.replace(/-/g, "")}`}>
-                  <span className="lg-contact-t">טלפון</span>
-                  <span className="lg-contact-v lg-ltr">{ACCESS_PHONE}</span>
-                </a>
-              </li>
-              <li>
-                <a href={`mailto:${ACCESS_EMAIL}`}>
-                  <span className="lg-contact-t">מייל</span>
-                  <span className="lg-contact-v lg-ltr">{ACCESS_EMAIL}</span>
-                </a>
-              </li>
-            </ul>
+        <section className="lg-contact">
+          <div className="container">
+            <div className="lg-contact-in">
+              <h2>{t.h27}</h2>
+              <p>
+                {t.p16}
+              </p>
+              <ul className="lg-contact-rows">
+                <li>
+                  <a href={`tel:${ACCESS_PHONE.replace(/-/g, "")}`}>
+                    <span className="lg-contact-t">{t.contactT}</span>
+                    <span className="lg-contact-v lg-ltr">{ACCESS_PHONE}</span>
+                  </a>
+                </li>
+                <li>
+                  <a href={`mailto:${ACCESS_EMAIL}`}>
+                    <span className="lg-contact-t">{t.contactT2}</span>
+                    <span className="lg-contact-v lg-ltr">{ACCESS_EMAIL}</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
-        </div>
-      </section>
-    </div>
-    <CTA />
-  </Layout>
-)
+        </section>
+      </div>
+      <CTA />
+    </Layout>
+  )
+}
 
 export default AccessibilityPage
 
-export const Head: HeadFC = () => (
-  <SEO
-    title="הצהרת נגישות"
-    description="הצהרת הנגישות של שלח מסר: תקן ישראלי 5568 ברמה AA לפי WCAG 2, מה נבדק, אילו רכיבים עשויים להיות לא מונגשים, ופרטי התקשרות לפניות בנושא נגישות."
-    pathname="/accessibility/"
-  />
-)
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
+  const t = TEXT[pageContext.locale]
+  return (
+    <SEO locale={pageContext.locale}
+      title={t.seo.title}
+      description={t.seo.description}
+      pathname="/accessibility/"
+    />
+  )
+}

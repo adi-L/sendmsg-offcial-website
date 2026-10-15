@@ -8,6 +8,14 @@ import {
   buildOpenApi,
 } from "./src/data/api/artifacts"
 import { articleImageSrcs, ImageSizes } from "./src/utils/article-images"
+import {
+  articleLocale,
+  defaultLocale,
+  enabledLocales,
+  Locale,
+  localePath,
+  pageVariants,
+} from "./src/locales/config"
 
 /**
  * Measures the screenshots an article references, so the template can give
@@ -95,13 +103,23 @@ export const createPages: GatsbyNode["createPages"] = async ({
   const posts = nodes.filter((n) => inDir(n.fileAbsolutePath, "blog"))
   const guides = nodes.filter((n) => inDir(n.fileAbsolutePath, "kb"))
 
+  /* The folder is the language (content/kb/he/...). Hebrew articles keep
+     their root URLs; other languages go under /<code>/, and a language
+     that is not enabled yet is not built at all. */
+  const langOf = (n: { fileAbsolutePath: string }) =>
+    (articleLocale(n.fileAbsolutePath) ?? defaultLocale) as Locale
+  const isEnabled = (n: { fileAbsolutePath: string }) =>
+    enabledLocales().includes(langOf(n))
+
   await Promise.all(
-    posts.map(async (post) => {
+    posts.filter(isEnabled).map(async (post) => {
+      const locale = langOf(post)
       createPage({
-        path: `/blog/${post.frontmatter.slug}/`,
+        path: localePath(locale, `/blog/${post.frontmatter.slug}/`),
         component: blogPostTemplate,
         context: {
           id: post.id,
+          locale,
           imageSizes: await measureArticleImages(post.html, "blog-images"),
         },
       })
@@ -109,17 +127,32 @@ export const createPages: GatsbyNode["createPages"] = async ({
   )
 
   await Promise.all(
-    guides.map(async (guide) => {
+    guides.filter(isEnabled).map(async (guide) => {
+      const locale = langOf(guide)
       createPage({
-        path: `/kb/${guide.frontmatter.slug}/`,
+        path: localePath(locale, `/kb/${guide.frontmatter.slug}/`),
         component: kbArticleTemplate,
         context: {
           id: guide.id,
+          locale,
           imageSizes: await measureArticleImages(guide.html, "kb-images"),
         },
       })
     })
   )
+}
+
+/* Every page in src/pages is built once per enabled language: Hebrew at its
+   own path, others under /<code>/. Pages we create here carry a locale, which
+   is what stops this hook from processing its own output again. */
+export const onCreatePage: GatsbyNode["onCreatePage"] = ({ page, actions }) => {
+  if ((page.context as { locale?: string } | undefined)?.locale) return
+  if (page.path.startsWith("/dev-404-page")) return
+  const { createPage, deletePage } = actions
+  deletePage(page)
+  for (const v of pageVariants(page.path)) {
+    createPage({ ...page, path: v.path, context: { ...page.context, locale: v.locale } })
+  }
 }
 
 /**

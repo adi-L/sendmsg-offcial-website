@@ -1,5 +1,10 @@
 import React, { useEffect, useRef, useState } from "react"
-import { Link, withPrefix } from "gatsby"
+import LocalizedLink from "../locales/LocalizedLink"
+import { useLocalePath, useText } from "../locales/LocaleContext"
+import heText from "../locales/he/promo-popup.json"
+
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 const COUPON_CODE = "GE5H43D"
 const SHOW_DELAY_MS = 12_000
@@ -7,6 +12,8 @@ const STORAGE_KEY = "sendmsg-promo-seen"
 const SNOOZE_DAYS = 7
 
 const PromoPopup: React.FC = () => {
+  const t = useText(TEXT)
+  const lp = useLocalePath()
   const [visible, setVisible] = useState(false)
   const [step, setStep] = useState<"form" | "code">("form")
   const [email, setEmail] = useState("")
@@ -69,23 +76,23 @@ const PromoPopup: React.FC = () => {
         className="promo-modal"
         role="dialog"
         aria-modal="true"
-        aria-label="הצטרפות למועדון הלקוחות"
+        aria-label={t.dialogLabel}
         onClick={(e) => e.stopPropagation()}
       >
-        <button className="promo-close" onClick={close} aria-label="סגירה">
+        <button className="promo-close" onClick={close} aria-label={t.close}>
           ×
         </button>
 
         {step === "form" ? (
           <>
-            <span className="promo-badge">מועדון הלקוחות של שלח מסר</span>
+            <span className="promo-badge">{t.badge}</span>
             <h3 className="promo-title">
-              <span className="promo-percent">14% הנחה</span>
+              <span className="promo-percent">{t.percent}</span>
               <br />
-              על כל המנויים השנתיים
+              {t.titleRest}
             </h3>
             <p className="promo-subtitle">
-              מצטרפים למועדון ומקבלים קוד קופון חד פעמי למייל.
+              {t.subtitle}
             </p>
 
             <form onSubmit={handleSubmit} className="promo-form">
@@ -93,13 +100,13 @@ const PromoPopup: React.FC = () => {
                 ref={emailRef}
                 type="email"
                 required
-                placeholder="המייל שלך"
+                placeholder={t.emailPlaceholder}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="promo-input"
               />
               <button type="submit" className="promo-cta">
-                שלחו לי את הקוד
+                {t.submit}
               </button>
               <label className="promo-consent">
                 <input
@@ -109,38 +116,38 @@ const PromoPopup: React.FC = () => {
                   onChange={(e) => setConsent(e.target.checked)}
                 />
                 <span>
-                  אני מאשר/ת קבלת עדכונים לפי{" "}
-                  <a href={withPrefix("/privacy/")} target="_blank" rel="noreferrer">
-                    מדיניות הפרטיות
+                  {t.consentBefore}{" "}
+                  <a href={lp("/privacy/")} target="_blank" rel="noreferrer">
+                    {t.consentLink}
                   </a>
-                  . אפשר להסיר בכל עת.
+                  {t.consentAfter}
                 </span>
               </label>
             </form>
           </>
         ) : (
           <>
-            <span className="promo-badge">הקוד שלך מוכן 🎉</span>
-            <h3 className="promo-title">קוד הקופון שלך</h3>
+            <span className="promo-badge">{t.codeBadge}</span>
+            <h3 className="promo-title">{t.codeTitle}</h3>
 
             <button
               className="promo-code"
               onClick={copyCode}
-              title="לחיצה מעתיקה את הקוד"
+              title={t.copyHint}
             >
               <span className="promo-code-text">{COUPON_CODE}</span>
               <span className="promo-code-copy">
-                {copied ? "הועתק ✓" : "העתקה"}
+                {copied ? t.copied : t.copy}
               </span>
             </button>
 
             <p className="promo-subtitle">
-              14% הנחה על כל המנויים השנתיים. מזינים את הקוד בעמוד התשלום.
+              {t.codeSubtitle}
             </p>
 
-            <Link to="/pricing" className="promo-cta" onClick={close}>
-              לבחירת חבילה
-            </Link>
+            <LocalizedLink to="/pricing" className="promo-cta" onClick={close}>
+              {t.choosePlan}
+            </LocalizedLink>
           </>
         )}
       </div>

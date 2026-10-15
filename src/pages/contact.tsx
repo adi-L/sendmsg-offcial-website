@@ -1,5 +1,4 @@
 import React, { useState, FormEvent } from "react"
-import { Link } from "gatsby"
 import type { HeadFC } from "gatsby"
 import Layout from "../components/Layout"
 import SEO from "../components/SEO"
@@ -12,6 +11,14 @@ import {
   useSupportStatus,
 } from "../data/support-hours"
 import "../styles/contact.css"
+import type { PageContext } from "../locales/config"
+import { useText } from "../locales/LocaleContext"
+import LocalizedLink from "../locales/LocalizedLink"
+import Fmt from "../locales/Fmt"
+import heText from "../locales/he/pages/contact.json"
+
+/* This page's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 
 /* The site's own icon set: 24-grid, 1.8 stroke, round caps. The WhatsApp
@@ -58,47 +65,9 @@ const GoIcon = ({ size = 20 }: { size?: number }) =>
     size
   )
 
-const steps = [
-  {
-    t: "הפרטים מגיעים לצוות התמיכה",
-    d: "לא לתיבה כללית. הטופס נוחת אצל הנציגים שעונים בטלפון.",
-  },
-  {
-    t: "נחזור אליכם בזמן שביקשתם",
-    d: "בוקר, צהריים או אחר הצהריים, לפי מה שסימנתם בטופס.",
-  },
-  {
-    t: "תוך 24 שעות, לכל היותר",
-    d: "בימי פעילות זה בדרך כלל קורה הרבה קודם.",
-  },
-]
-
-/* Labels and one-liners lifted from the site's own navigation, so the
-   page does not describe the same destinations in two different voices. */
-const elsewhere = [
-  {
-    t: "מדריכים",
-    d: "צעד אחר צעד, איך עושים הכל במערכת.",
-    href: "https://www.sendmsg.co.il/kb/",
-    external: true,
-  },
-  { t: "מאמרים מקצועיים", d: "טיפים וכלים לשיווק חכם יותר.", href: "/blog/", external: false },
-  { t: "התממשקות API", d: "מחברים את המערכת לכל כלי אחר.", href: "/api/", external: false },
-  {
-    t: "תכנית שותפים",
-    d: "ממליצים על שלח מסר ומרוויחים.",
-    href: "https://www.sendmsg.co.il/affiliate/",
-    external: true,
-  },
-]
-
-const callbackWindows = [
-  { id: "morning", label: "שעות הבוקר 9:00–11:00" },
-  { id: "midday", label: "שעות הצהריים 11:00–14:00" },
-  { id: "afternoon", label: "שעות אחה״צ 14:00–16:30" },
-]
-
+/* elsewhere: moved to src/locales/he/pages/contact.json as "elsewhere". */
 const ContactPage: React.FC = () => {
+  const t = useText(TEXT)
   const [submitted, setSubmitted] = useState(false)
   const status = useSupportStatus()
 
@@ -114,24 +83,23 @@ const ContactPage: React.FC = () => {
             with, then the only fact that expires: whether anyone is in. */}
         <section className="ct-hero">
           <div className="container">
-            <h1 className="ct-hero-title">צור קשר</h1>
-            <p className="ct-hero-claim">הצוות שלנו כאן בשבילכם</p>
+            <h1 className="ct-hero-title">{t.heroTitle}</h1>
+            <p className="ct-hero-claim">{t.heroClaim}</p>
             <p className="ct-hero-lede">
-              טלפון, מייל, וואטסאפ או טופס חזרה. בוחרים את הדרך שנוחה לכם, ומדברים
-              עם נציג אמיתי מהצוות.
+              {t.heroLede}
             </p>
             <p className="ct-status" data-open={status ? status.open : undefined}>
               <span className="ct-status-dot" aria-hidden="true" />
               {status && (
                 <>
-                  <span>{status.open ? "התמיכה פתוחה עכשיו" : "התמיכה סגורה כרגע"}</span>
+                  <span>{status.open ? t.supportOpen : t.supportClosed}</span>
                   <span className="ct-status-sep" aria-hidden="true">
                     ·
                   </span>
                 </>
               )}
               <span className="ct-status-note">
-                {status ? status.note : "ימי ראשון עד חמישי, 9:00 עד 17:00"}
+                {status ? status.note : t.hoursFallback}
               </span>
             </p>
           </div>
@@ -142,17 +110,17 @@ const ContactPage: React.FC = () => {
         <section className="ct-section">
           <div className="container">
             <div className="ct-head">
-              <h2>איך להשיג אותנו</h2>
+              <h2>{t.h2}</h2>
               <p>
-                זמני תמיכה של נציגים מהצוות: ימי ראשון עד חמישי, בשעות 9:00–17:00.
+                {t.p}
               </p>
             </div>
 
             <a className="ct-call" href={`tel:${SUPPORT_PHONE}`}>
-              <span className="ct-call-label">התקשרו אלינו</span>
+              <span className="ct-call-label">{t.callLabel}</span>
               <span className="ct-call-num ct-ltr">{SUPPORT_PHONE}</span>
             </a>
-            <p className="ct-call-note">הצוות שלנו מחכה לעזור לכם בצד השני.</p>
+            <p className="ct-call-note">{t.callNote}</p>
 
             <div className="ct-rows">
               <a className="ct-row" href={`mailto:${SUPPORT_EMAIL}`}>
@@ -160,9 +128,9 @@ const ContactPage: React.FC = () => {
                   <MailIcon />
                 </span>
                 <span className="ct-row-main">
-                  <span className="ct-row-t">שלחו לנו מייל</span>
+                  <span className="ct-row-t">{t.rowT}</span>
                   <span className="ct-row-v ct-ltr">{SUPPORT_EMAIL}</span>
-                  <span className="ct-row-note">נשתדל לענות בהקדם האפשרי.</span>
+                  <span className="ct-row-note">{t.rowNote}</span>
                 </span>
                 <span className="ct-row-go">
                   <GoIcon />
@@ -179,9 +147,9 @@ const ContactPage: React.FC = () => {
                   <WhatsAppIcon />
                 </span>
                 <span className="ct-row-main">
-                  <span className="ct-row-t">שלחו לנו וואטסאפ</span>
+                  <span className="ct-row-t">{t.rowT2}</span>
                   <span className="ct-row-v ct-ltr">{WHATSAPP_NUMBER}</span>
-                  <span className="ct-row-note">הנציגים שלנו מחכים לכם בצד השני.</span>
+                  <span className="ct-row-note">{t.rowNote2}</span>
                 </span>
                 <span className="ct-row-go">
                   <GoIcon />
@@ -197,10 +165,10 @@ const ContactPage: React.FC = () => {
           <div className="container ct-split">
             <div className="ct-after">
               <div className="ct-head">
-                <h2>מה קורה אחרי ששולחים</h2>
+                <h2>{t.h22}</h2>
               </div>
               <ol className="ct-steps">
-                {steps.map((step, i) => (
+                {t.steps.map((step, i) => (
                   <li className="ct-step" key={step.t}>
                     <span className="ct-step-n" aria-hidden="true">
                       {i + 1}
@@ -222,28 +190,28 @@ const ContactPage: React.FC = () => {
                       <circle className="ct-sent-ring" cx="26" cy="26" r="24" fill="none" />
                       <path className="ct-sent-tick" fill="none" d="M14 27l8 8 16-17" />
                     </svg>
-                    <h3>הפרטים נשלחו, תודה!</h3>
-                    <p>נחזור אליכם בזמן שביקשתם, ולא יאוחר מ-24 שעות.</p>
+                    <h3>{t.h3}</h3>
+                    <p>{t.p2}</p>
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit}>
-                    <p className="ct-form-intro">יש לך שאלה נוספת? אנחנו כאן בשבילך!</p>
+                    <p className="ct-form-intro">{t.formIntro}</p>
                     <p className="ct-form-sub">
-                      השאר את הפרטים שלך ונחזור אליך תוך 24 שעות.
+                      {t.formSub}
                     </p>
 
                     <div className="ct-field">
-                      <label htmlFor="ct-name">איך קוראים לך?</label>
+                      <label htmlFor="ct-name">{t.label}</label>
                       <input id="ct-name" name="name" type="text" autoComplete="name" required />
                     </div>
 
                     <div className="ct-pair">
                       <div className="ct-field">
-                        <label htmlFor="ct-phone">מס׳ טלפון שניתן לחזור אליו?</label>
+                        <label htmlFor="ct-phone">{t.label2}</label>
                         <input id="ct-phone" name="phone" type="tel" autoComplete="tel" required />
                       </div>
                       <div className="ct-field">
-                        <label htmlFor="ct-email">כתובת מייל פעילה?</label>
+                        <label htmlFor="ct-email">{t.label3}</label>
                         <input
                           id="ct-email"
                           name="email"
@@ -256,16 +224,16 @@ const ContactPage: React.FC = () => {
 
                     <div className="ct-field">
                       <label htmlFor="ct-message">
-                        משהו נוסף שתרצה לציין?
-                        <span className="ct-opt">לא חובה</span>
+                        {t.label4}
+                        <span className="ct-opt">{t.opt}</span>
                       </label>
                       <textarea id="ct-message" name="message" rows={4} />
                     </div>
 
                     <fieldset className="ct-when">
-                      <legend>מתי נוח לך שניצור קשר?</legend>
+                      <legend>{t.legend}</legend>
                       <div className="ct-when-opts">
-                        {callbackWindows.map(w => (
+                        {t.callbackWindows.map(w => (
                           <React.Fragment key={w.id}>
                             <input
                               className="ct-sr"
@@ -283,11 +251,10 @@ const ContactPage: React.FC = () => {
                     </fieldset>
 
                     <button type="submit" className="ct-submit">
-                      לקבלת שיחת ייעוץ עם נציג מטעם החברה
+                      {t.submit}
                     </button>
                     <p className="ct-note">
-                      דחוף? התקשרו ל־<span className="ct-ltr">{SUPPORT_PHONE}</span> ותענו מיד
-                      בשעות הפעילות.
+                      <Fmt text={t.note} vars={{ phone: <span className="ct-ltr">{SUPPORT_PHONE}</span> }} />
                     </p>
                   </form>
                 )}
@@ -301,11 +268,11 @@ const ContactPage: React.FC = () => {
         <section className="ct-section dot-grid">
           <div className="container">
             <div className="ct-head">
-              <h2>מרכז הידע</h2>
-              <p>מדריכים, מאמרים ותיעוד API. זמינים בכל שעה, גם כשאנחנו לא.</p>
+              <h2>{t.h23}</h2>
+              <p>{t.p3}</p>
             </div>
             <div className="ct-index">
-              {elsewhere.map(item =>
+              {t.elsewhere.map(item =>
                 item.external ? (
                   <a
                     className="ct-entry"
@@ -321,13 +288,13 @@ const ContactPage: React.FC = () => {
                     <span className="ct-entry-d">{item.d}</span>
                   </a>
                 ) : (
-                  <Link className="ct-entry" key={item.t} to={item.href}>
+                  <LocalizedLink className="ct-entry" key={item.t} to={item.href}>
                     <span className="ct-entry-t">
                       {item.t}
                       <GoIcon size={17} />
                     </span>
                     <span className="ct-entry-d">{item.d}</span>
-                  </Link>
+                  </LocalizedLink>
                 )
               )}
             </div>
@@ -342,10 +309,13 @@ const ContactPage: React.FC = () => {
 
 export default ContactPage
 
-export const Head: HeadFC = () => (
-  <SEO
-    title="צרו קשר"
-    description="הצוות של שלח מסר כאן בשבילכם. טלפון 077-4600911, מייל, וואטסאפ או טופס חזרה, ראשון עד חמישי 9:00 עד 17:00."
-    pathname="/contact/"
-  />
-)
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
+  const t = TEXT[pageContext.locale]
+  return (
+    <SEO locale={pageContext.locale}
+      title={t.seo.title}
+      description={t.seo.description}
+      pathname="/contact/"
+    />
+  )
+}

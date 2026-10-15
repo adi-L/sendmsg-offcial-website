@@ -1,5 +1,10 @@
 import React, { useEffect, useRef, useState } from "react"
 import worldMap from "../images/illustrations/world-map.png"
+import { useText } from "../locales/LocaleContext"
+import heText from "../locales/he/global-reach.json"
+
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 // Israel, read off the map's own geometry: the dot lattice puts 34.9°E at
 // x=584, and Africa's Mediterranean coastline begins at y≈296.
@@ -18,6 +23,7 @@ const ROUTES = [
 const STAGGER = 0.6
 
 const GlobalReach: React.FC = () => {
+  const t = useText(TEXT)
   const mapRef = useRef<HTMLDivElement>(null)
   const [live, setLive] = useState(false)
 
@@ -41,12 +47,12 @@ const GlobalReach: React.FC = () => {
     <section className="section" style={styles.section}>
       <div className="container" style={styles.container}>
         <h2 className="section-title" style={{ color: "#fff" }}>
-          התחלנו בישראל ב-2009,
+          {t.titleLine1}
           <br />
-          והיום צומחים איתנו עסקים <span style={styles.highlight}>גם בעולם</span>
+          {t.titleLine2} <span style={styles.highlight}>{t.titleHighlight}</span>
         </h2>
         <p style={styles.subtitle}>
-          למעלה מ-50 אלף משתמשים כבר עושים שיווק נכון עם שלח מסר
+          {t.subtitle}
         </p>
 
         <div
@@ -56,7 +62,7 @@ const GlobalReach: React.FC = () => {
         >
           <img
             src={worldMap}
-            alt="מפת הפעילות העולמית של שלח מסר"
+            alt={t.mapAlt}
             style={styles.mapImg}
           />
           <svg

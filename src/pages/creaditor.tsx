@@ -3,6 +3,13 @@ import type { HeadFC } from "gatsby"
 import Layout from "../components/Layout"
 import SEO from "../components/SEO"
 import "../styles/creaditor.css"
+import type { PageContext } from "../locales/config"
+import { useText } from "../locales/LocaleContext"
+import Rich from "../locales/Rich"
+import heText from "../locales/he/pages/creaditor.json"
+
+/* This page's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 /* Creaditor is a separate product with its own site. Every outbound
    link here leaves sendmsg.co.il, so they all open in a new tab and
@@ -87,56 +94,8 @@ const builderIcons: Record<string, React.ReactNode> = {
   ),
 }
 
-/* Wording follows creaditor.ai's own page, translated rather than
-   reinvented. The product names stay in Latin script because that is
-   how the product ships. */
-const builders = [
-  {
-    icon: "courses",
-    name: "Creaditor Courses",
-    claim: "להפוך את מה שהמשתמשים שלכם יודעים לקורס שהם יכולים למכור.",
-    shot: "builder-courses",
-    shotLabel: "עורך הקורסים: מסך בניית שיעורים עם תפריט הפרקים",
-  },
-  {
-    icon: "forms",
-    name: "Creaditor Forms",
-    claim: "לאסוף כל דבר, ולהציג אותו בכל מקום.",
-    shot: "builder-forms",
-    shotLabel: "עורך הטפסים: שדות בגרירה ותצוגת התשובות",
-  },
-  {
-    icon: "newsletters",
-    name: "Creaditor Newsletters",
-    claim: "לשלוח קמפיינים שנראים מעוצבים, לא מורכבים מחלקים.",
-    shot: "builder-newsletters",
-    shotLabel: "עורך הניוזלטרים: מייל מעוצב עם סרגל הבלוקים",
-  },
-  {
-    icon: "pages",
-    name: "Creaditor Pages",
-    claim: "להשיק את דף הקמפיין בלי לפתוח קריאה לפיתוח.",
-    shot: "builder-pages",
-    shotLabel: "עורך דפי הנחיתה: דף נחיתה בתצוגת עריכה",
-  },
-  {
-    icon: "sites",
-    name: "Creaditor Sites",
-    claim: "אתר שלם, מפורסם תחת המותג שלכם.",
-    shot: "builder-sites",
-    shotLabel: "בונה האתרים: מפת עמודים לצד תצוגה מקדימה",
-  },
-]
-
-/* "What it remembers", straight off the product page. */
-const memory = [
-  { t: "לוגו וצבעי המותג", d: "הנכסים של הלקוח נטענים פעם אחת ומשמשים בכל בונה." },
-  { t: "ערכת נושא וטיפוגרפיה", d: "אותן החלטות עיצוב חוזרות בכל מה שנבנה." },
-  { t: "קהל היעד", d: "למי הלקוח מדבר, ולכן באיזו רמה הטקסט נכתב." },
-  { t: "טון הדיבור", d: "איך הלקוח נשמע, לא איך מודל שפה נשמע כברירת מחדל." },
-  { t: "כל מה שנבנה בבונים האחרים", d: "דף נחיתה שנבנה אתמול הוא הקשר למייל של מחר." },
-]
-
+/* builders: moved to src/locales/he/pages/creaditor.json as "builders". */
+/* memory: moved to src/locales/he/pages/creaditor.json as "memory". */
 const frameworks = ["React", "Vue", "Angular", "Next.js", "WordPress", "Plain HTML"]
 
 /* Every image on this page is still a slot. The label is the brief:
@@ -165,6 +124,7 @@ const Shot = ({
 )
 
 const CreaditorPage = () => {
+  const t = useText(TEXT)
   return (
     <Layout>
       <div className="cr">
@@ -175,10 +135,9 @@ const CreaditorPage = () => {
           <div className="container cr-hero-in">
             <div className="cr-hero-said">
               <h1 className="cr-hero-title cr-ltr">Creaditor</h1>
-              <p className="cr-hero-claim">חמישה בונים. מוח אחד.</p>
+              <p className="cr-hero-claim">{t.heroClaim}</p>
               <p className="cr-hero-lede">
-                חמישה בונים שמשתלבים בתוך המוצר שלכם, מופעלים על ידי המשתמשים או
-                על ידי סוכני AI, וחולקים מוח אחד.
+                {t.heroLede}
               </p>
               <div className="cr-hero-acts">
                 <a
@@ -187,7 +146,7 @@ const CreaditorPage = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  לאתר Creaditor
+                  {t.a}
                   <GoIcon size={18} />
                 </a>
                 <a
@@ -196,11 +155,11 @@ const CreaditorPage = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  לתיאום שיחה
+                  {t.btnGhost}
                 </a>
               </div>
-              <ul className="cr-hero-strip" aria-label="הבונים">
-                {builders.map((b) => (
+              <ul className="cr-hero-strip" aria-label={t.ariaLabel}>
+                {t.builders.map((b) => (
                   <li key={b.name} className="cr-ltr">
                     {b.name.replace("Creaditor ", "")}
                   </li>
@@ -210,7 +169,7 @@ const CreaditorPage = () => {
             <div className="cr-hero-shot">
               <Shot
                 id="hero-editor.webp"
-                label="צילום מסך ראשי: עורך Creaditor פתוח על דיוור במותג של לקוח"
+                label={t.label}
                 ratio="16 / 11"
                 tone="ink"
               />
@@ -224,14 +183,13 @@ const CreaditorPage = () => {
         <section className="cr-section">
           <div className="container">
             <div className="cr-head">
-              <h2>חמישה בונים</h2>
+              <h2>{t.h2}</h2>
               <p>
-                אחד לכל דבר שהלקוחות שלכם צריכים לבנות, וכולם מדברים עם אותו
-                מוח.
+                {t.p}
               </p>
             </div>
             <ol className="cr-builders">
-              {builders.map((b, i) => (
+              {t.builders.map((b, i) => (
                 <li className="cr-builder" key={b.name}>
                   <span className="cr-builder-n cr-ltr" aria-hidden="true">
                     {String(i + 1).padStart(2, "0")}
@@ -259,23 +217,21 @@ const CreaditorPage = () => {
           <div className="container cr-split cr-split-brain">
             <div className="cr-brain-said">
               <div className="cr-head">
-                <h2>המוח</h2>
+                <h2>{t.h22}</h2>
                 <p>
-                  הוא כבר מכיר את העסק. במקום להתחיל מדף ריק, כל בונה נפתח עם
-                  ההקשר של הלקוח כבר בפנים. לסוכנים יש גישה לאותו הקשר עצמו דרך
-                  נקודת קצה MCP.
+                  {t.p2}
                 </p>
               </div>
               <Shot
                 id="brain-context.webp"
-                label="לוח ההקשר: לוגו, צבעים, טיפוגרפיה וטון הדיבור של הלקוח"
+                label={t.label2}
                 ratio="4 / 3"
               />
             </div>
             <div className="cr-memory-col">
-              <p className="cr-memory-kicker">מה הוא זוכר</p>
+              <p className="cr-memory-kicker">{t.memoryKicker}</p>
               <dl className="cr-memory">
-                {memory.map((m) => (
+                {t.memory.map((m) => (
                   <div className="cr-mem" key={m.t}>
                     <dt>{m.t}</dt>
                     <dd>{m.d}</dd>
@@ -291,23 +247,23 @@ const CreaditorPage = () => {
             rather than a feature table. */}
         <section className="cr-section cr-vs-sec">
           <div className="container">
-            <p className="cr-vs-kicker">קנבס ריק נמכר בנפרד. אצל אחרים.</p>
+            <p className="cr-vs-kicker">{t.vsKicker}</p>
             <div className="cr-vs">
               <div className="cr-vs-panel" data-side="other">
-                <p className="cr-vs-who">כל בונה AI אחר</p>
-                <p className="cr-vs-what">קנבס ריק ובורר צבעים.</p>
+                <p className="cr-vs-who">{t.vsWho}</p>
+                <p className="cr-vs-what">{t.vsWhat}</p>
                 <Shot
                   id="vs-empty-canvas.webp"
-                  label="קנבס ריק: עורך פתוח בלי תוכן ובלי מותג"
+                  label={t.label3}
                   ratio="16 / 10"
                 />
               </div>
               <div className="cr-vs-panel" data-side="brain">
-                <p className="cr-vs-who">עם המוח</p>
-                <p className="cr-vs-what">מייל גמור, במותג, מהפעם הראשונה.</p>
+                <p className="cr-vs-who">{t.vsWho2}</p>
+                <p className="cr-vs-what">{t.vsWhat2}</p>
                 <Shot
                   id="vs-finished-email.webp"
-                  label="אותו מסך אחרי המוח: דיוור גמור בצבעי הלקוח"
+                  label={t.label4}
                   ratio="16 / 10"
                   tone="ink"
                 />
@@ -322,20 +278,18 @@ const CreaditorPage = () => {
         <section className="cr-section cr-ways-sec">
           <div className="container">
             <div className="cr-head">
-              <h2>שתי דרכים להיכנס, מוח אחד</h2>
+              <h2>{t.h23}</h2>
               <p>
-                משלבים את הבונה למשתמשים שלכם. מפנים את הסוכנים שלכם לאותו הקשר.
-                אף אחד מהשניים לא מתחיל מדף ריק.
+                {t.p3}
               </p>
             </div>
             <div className="cr-ways">
               <div className="cr-way">
-                <p className="cr-way-t">למשתמשים שלכם</p>
+                <p className="cr-way-t">{t.wayT}</p>
                 <p className="cr-way-d">
-                  תג סקריפט אחד. בלי שלב build, בלי CSS לייבא, בלי backend
-                  להקים.
+                  {t.wayD}
                 </p>
-                <ul className="cr-chips" aria-label="סביבות נתמכות">
+                <ul className="cr-chips" aria-label={t.ariaLabel2}>
                   {frameworks.map((f) => (
                     <li key={f} className="cr-ltr">
                       {f}
@@ -344,21 +298,19 @@ const CreaditorPage = () => {
                 </ul>
               </div>
               <div className="cr-way">
-                <p className="cr-way-t">לסוכנים שלכם</p>
+                <p className="cr-way-t">{t.wayT2}</p>
                 <p className="cr-way-d">
-                  נקודת קצה <span className="cr-ltr">MCP</span> שמחזירה לסוכן את
-                  אותו הקשר ואת אותם בלוקים שהמשתמש מקבל בעורך.
+                  <Rich text={t.wayD2} ltrClass="cr-ltr" />
                 </p>
-                <ul className="cr-chips" aria-label="מה הסוכן מקבל">
-                  <li>ההקשר של הלקוח</li>
-                  <li>הבלוקים</li>
-                  <li>הפרסום</li>
+                <ul className="cr-chips" aria-label={t.ariaLabel3}>
+                  <li>{t.li}</li>
+                  <li>{t.li2}</li>
+                  <li>{t.li3}</li>
                 </ul>
               </div>
             </div>
             <p className="cr-proof">
-              הבונים האלה מריצים את העורכים של <strong>שלח מסר</strong>, מערכת
-              הדיוור שמשרתת אלפי לקוחות בישראל ובעולם.
+              <Rich text={t.proof} />
             </p>
           </div>
         </section>
@@ -367,11 +319,9 @@ const CreaditorPage = () => {
             One sentence, set as type. No card. */}
         <section className="cr-label-sec">
           <div className="container cr-label-in">
-            <p className="cr-label-claim">הלוגו שלכם. הצבעים שלכם. הבעיה שלנו.</p>
+            <p className="cr-label-claim">{t.labelClaim}</p>
             <p className="cr-label-d">
-              <span className="cr-ltr">White-label</span> מהרנדר הראשון. שום דבר
-              שהמשתמשים שלכם נוגעים בו לא אומר{" "}
-              <span className="cr-ltr">Creaditor</span>.
+              <Rich text={t.labelD} ltrClass="cr-ltr" />
             </p>
           </div>
         </section>
@@ -381,8 +331,8 @@ const CreaditorPage = () => {
         <section className="cr-section cr-out-sec">
           <div className="container cr-out">
             <div className="cr-out-said">
-              <h2>חמישה בונים בתוך המוצר שלכם</h2>
-              <p>נעזור לכם להשיק את זה.</p>
+              <h2>{t.h24}</h2>
+              <p>{t.p4}</p>
             </div>
             <div className="cr-out-acts">
               <a
@@ -391,7 +341,7 @@ const CreaditorPage = () => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                לאתר Creaditor
+                {t.a2}
                 <GoIcon size={18} />
               </a>
               <a
@@ -413,10 +363,13 @@ const CreaditorPage = () => {
 
 export default CreaditorPage
 
-export const Head: HeadFC = () => (
-  <SEO
-    title="Creaditor"
-    description="Creaditor: חמישה בונים שמשתלבים בתוך המוצר שלכם, לקורסים, טפסים, ניוזלטרים, דפי נחיתה ואתרים, כולם עם מוח AI אחד שמכיר את המותג של הלקוח."
-    pathname="/creaditor/"
-  />
-)
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
+  const t = TEXT[pageContext.locale]
+  return (
+    <SEO locale={pageContext.locale}
+      title="Creaditor"
+      description={t.seo.description}
+      pathname="/creaditor/"
+    />
+  )
+}

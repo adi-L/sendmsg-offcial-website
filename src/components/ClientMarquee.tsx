@@ -31,44 +31,50 @@ import tzagAliya from "../images/clients/tzag-aliya.webp"
 import yadSarah from "../images/clients/yad-sarah.webp"
 import yarin from "../images/clients/yarin.png"
 import zaka from "../images/clients/zaka.png"
+import { useText } from "../locales/LocaleContext"
+import heText from "../locales/he/client-marquee.json"
 
-type Logo = { src: string; alt: string }
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
+
+type Logo = { src: string }
 
 /* Ordered so the recognisable civic and national marks land early: the
    band is read for a second or two before the eye moves on, and whatever
    is on screen in that second is the whole impression it leaves. */
+/* Each logo's alt text is the same position in `alts` in client-marquee.json. */
 const logos: Logo[] = [
-  { src: telAviv, alt: "עיריית תל אביב יפו" },
-  { src: yadSarah, alt: "יד שרה" },
-  { src: habima, alt: "הבימה התיאטרון הלאומי" },
-  { src: technion, alt: "אגודת הסטודנטים בטכניון" },
-  { src: nespresso, alt: "Nespresso" },
-  { src: zaka, alt: "זק״א" },
-  { src: remax, alt: "RE/MAX" },
-  { src: igudDir, alt: "איגוד הדירקטורים בישראל" },
-  { src: tzaarBaalei, alt: "אגודת צער בעלי חיים בישראל" },
-  { src: hackeru, alt: "HackerU" },
-  { src: mischar, alt: "לשכת המסחר והתעשייה חיפה והצפון" },
-  { src: igudTaasia, alt: "איגוד התעשייה הקיבוצית" },
-  { src: tnuLachayot, alt: "תנו לחיות לחיות" },
-  { src: bni, alt: "BNI ישראל" },
-  { src: lafayette, alt: "לאפייט — רשת נעליים ותיקים" },
-  { src: betili, alt: "ביתילי" },
-  { src: atid, alt: "רשת עתיד" },
-  { src: logo019, alt: "019 Mobile" },
-  { src: dataPro, alt: "Data Pro Proximity" },
-  { src: success, alt: "Success" },
-  { src: isi, alt: "ISI Science for Life" },
-  { src: bizmakebiz, alt: "BizMakeBiz" },
-  { src: prakti, alt: "פרקטי" },
-  { src: metuka, alt: "מתוקה" },
-  { src: skediya, alt: "שקדיה" },
-  { src: enter, alt: "Enter" },
-  { src: flyfoot, alt: "פלייפוט" },
-  { src: fontbit, alt: "Fontbit" },
-  { src: tzagAliya, alt: "TZAG Computer Systems" },
-  { src: newBrand, alt: "פוקוס — מכירת רכב בתמונה" },
-  { src: yarin, alt: "Yarin Shahaf Tel Aviv" },
+  { src: telAviv },
+  { src: yadSarah },
+  { src: habima },
+  { src: technion },
+  { src: nespresso },
+  { src: zaka },
+  { src: remax },
+  { src: igudDir },
+  { src: tzaarBaalei },
+  { src: hackeru },
+  { src: mischar },
+  { src: igudTaasia },
+  { src: tnuLachayot },
+  { src: bni },
+  { src: lafayette },
+  { src: betili },
+  { src: atid },
+  { src: logo019 },
+  { src: dataPro },
+  { src: success },
+  { src: isi },
+  { src: bizmakebiz },
+  { src: prakti },
+  { src: metuka },
+  { src: skediya },
+  { src: enter },
+  { src: flyfoot },
+  { src: fontbit },
+  { src: tzagAliya },
+  { src: newBrand },
+  { src: yarin },
 ]
 
 /* A logo wall that outgrew its band. The track carries the set twice and
@@ -81,21 +87,24 @@ const logos: Logo[] = [
    Under reduced motion the duplicate is dropped and the row wraps into a
    static grid, because a paused max-content track would clip two thirds
    of the clients out of the page. */
-const ClientMarquee: React.FC = () => (
-  <div className="cm" dir="ltr">
-    <div className="cm-track">
-      {logos.map((logo) => (
-        <span className="cm-item" key={logo.alt}>
-          <img src={logo.src} alt={logo.alt} loading="lazy" decoding="async" />
-        </span>
-      ))}
-      {logos.map((logo) => (
-        <span className="cm-item cm-dup" key={`dup-${logo.alt}`} aria-hidden="true">
-          <img src={logo.src} alt="" loading="lazy" decoding="async" />
-        </span>
-      ))}
+const ClientMarquee: React.FC = () => {
+  const t = useText(TEXT)
+  return (
+    <div className="cm" dir="ltr">
+      <div className="cm-track">
+        {logos.map((logo, i) => (
+          <span className="cm-item" key={logo.src}>
+            <img src={logo.src} alt={t.alts[i]} loading="lazy" decoding="async" />
+          </span>
+        ))}
+        {logos.map((logo) => (
+          <span className="cm-item cm-dup" key={`dup-${logo.src}`} aria-hidden="true">
+            <img src={logo.src} alt="" loading="lazy" decoding="async" />
+          </span>
+        ))}
+      </div>
     </div>
-  </div>
-)
+  )
+}
 
 export default ClientMarquee

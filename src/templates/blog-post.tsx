@@ -1,8 +1,15 @@
 import React from "react"
-import { graphql, withPrefix, PageProps, HeadFC } from "gatsby"
+import { graphql, PageProps, HeadFC } from "gatsby"
 import { prepareArticleImages, ImageSizes } from "../utils/article-images"
 import Layout from "../components/Layout"
 import SEO from "../components/SEO"
+import type { PageContext } from "../locales/config"
+import { useLocalePath, useText } from "../locales/LocaleContext"
+import { formatText } from "../locales/config"
+import heText from "../locales/he/templates/blog-post.json"
+
+/* This page's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 interface BlogPostData {
   markdownRemark: {
@@ -25,6 +32,8 @@ const BlogPostTemplate: React.FC<PageProps<BlogPostData, Context>> = ({
   data,
   pageContext,
 }) => {
+  const t = useText(TEXT)
+  const lp = useLocalePath()
   const post = data.markdownRemark
 
   return (
@@ -32,7 +41,7 @@ const BlogPostTemplate: React.FC<PageProps<BlogPostData, Context>> = ({
       <article style={styles.article}>
         <div className="container" style={styles.container}>
           <div style={styles.breadcrumbs}>
-            <a href={withPrefix("/")}>ראשי</a> &gt; <a href={withPrefix("/blog/")}>מרכז הידע</a> &gt;{" "}
+            <a href={lp("/")}>{t.a}</a> &gt; <a href={lp("/blog/")}>{t.a2}</a> &gt;{" "}
             <span>{post.frontmatter.title}</span>
           </div>
 
@@ -44,7 +53,7 @@ const BlogPostTemplate: React.FC<PageProps<BlogPostData, Context>> = ({
               <span>·</span>
               <span>{post.frontmatter.date}</span>
               <span>·</span>
-              <span>{post.timeToRead} דקות קריאה</span>
+              <span>{formatText(t.readTime, { n: post.timeToRead })}</span>
             </div>
           </header>
 
@@ -66,8 +75,8 @@ const BlogPostTemplate: React.FC<PageProps<BlogPostData, Context>> = ({
 
 export default BlogPostTemplate
 
-export const Head: HeadFC<BlogPostData> = ({ data }) => (
-  <SEO
+export const Head: HeadFC<BlogPostData, PageContext> = ({ data, pageContext }) => (
+  <SEO locale={pageContext.locale} availableIn={[pageContext.locale]}
     title={data.markdownRemark.frontmatter.title}
     description={data.markdownRemark.frontmatter.excerpt}
     pathname={`/blog/${data.markdownRemark.frontmatter.slug}/`}

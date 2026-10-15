@@ -3,7 +3,9 @@
 import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, basename } from "node:path";
 
-const KB = join(process.cwd(), "content/kb");
+// Hebrew only: the widget's agent answers in Hebrew, so it is matched
+// against the Hebrew guides.
+const KB = join(process.cwd(), "content/kb/he");
 const out = [];
 
 // Strips the outer quotes AND un-escapes interior ones. One of the 98

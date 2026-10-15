@@ -31,3 +31,4 @@ test.html
 .env.production
 .env.*.local
 .env.*.bak
+.i18n-snapshots/

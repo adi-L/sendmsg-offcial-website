@@ -1,4 +1,9 @@
 import React from "react"
+import { useText } from "../locales/LocaleContext"
+import heText from "../locales/he/media-placeholder.json"
+
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 type Props = {
   label?: string
@@ -8,29 +13,33 @@ type Props = {
 
 /** Grey placeholder block. Swap with a real <video> or <img> when the asset is ready. */
 const MediaPlaceholder: React.FC<Props> = ({
-  label = "וידאו או תמונה יתווספו כאן",
+  label: labelProp,
   ratio = "16 / 9",
   kind = "video",
-}) => (
-  <div
-    className="media-placeholder"
-    style={{ aspectRatio: ratio }}
-    aria-label={label}
-  >
-    {kind === "video" ? (
-      <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10" />
-        <polygon points="10,8 16,12 10,16" />
-      </svg>
-    ) : (
-      <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="3" width="18" height="18" rx="2" />
-        <circle cx="8.5" cy="8.5" r="1.5" />
-        <polyline points="21,15 16,10 5,21" />
-      </svg>
-    )}
-    <span>{label}</span>
-  </div>
-)
+}) => {
+  const t = useText(TEXT)
+  const label = labelProp ?? t.defaultLabel
+  return (
+    <div
+      className="media-placeholder"
+      style={{ aspectRatio: ratio }}
+      aria-label={label}
+    >
+      {kind === "video" ? (
+        <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="10" />
+          <polygon points="10,8 16,12 10,16" />
+        </svg>
+      ) : (
+        <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2" />
+          <circle cx="8.5" cy="8.5" r="1.5" />
+          <polyline points="21,15 16,10 5,21" />
+        </svg>
+      )}
+      <span>{label}</span>
+    </div>
+  )
+}
 
 export default MediaPlaceholder

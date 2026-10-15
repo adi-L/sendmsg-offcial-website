@@ -1,5 +1,4 @@
 import React from "react"
-import { Link } from "gatsby"
 import type { HeadFC } from "gatsby"
 import Layout from "../components/Layout"
 import CTA from "../components/CTA"
@@ -7,6 +6,14 @@ import SEO from "../components/SEO"
 import { openSignup, PANEL_URL } from "../components/SignupDialog"
 import { TIERS } from "../components/Pricing"
 import "../styles/affiliate.css"
+import type { PageContext } from "../locales/config"
+import { useText } from "../locales/LocaleContext"
+import LocalizedLink from "../locales/LocalizedLink"
+import Fmt from "../locales/Fmt"
+import heText from "../locales/he/pages/affiliate.json"
+
+/* This page's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 /* Copy is the live /affiliate/ page's own.
 
@@ -37,205 +44,190 @@ const shekels = (n: number) =>
     maximumFractionDigits: 2,
   })
 
-/* What the 20% applies to */
-const earns = [
-  "דמי מנוי של חבילות הדיוור, בתשלום חודשי או שנתי",
-  "חבילות בנק מיילים",
-  "חבילות קורסים דיגיטליים",
-]
+/* earns: moved to src/locales/he/pages/affiliate.json as "earns". */
+const AffiliatePage: React.FC = () => {
+  const t = useText(TEXT)
+  return (
+    <Layout>
+      <div className="af">
+        <section className="af-hero">
+          <div className="container">
+            <h1>{t.h1}</h1>
+            <p className="af-hero-sub">
+              {t.heroSub}
+            </p>
+            <p className="af-hero-note">
+              {t.heroNote}
+            </p>
+            <a href={PANEL_URL} className="af-btn af-btn-accent" onClick={openSignup}>
+              {t.btn}
+            </a>
+          </div>
+        </section>
 
-const steps = [
-  "נרשמים למערכת שלח מסר.",
-  "לוחצים על אייקון הדולר בחלק העליון של ממשק שלח מסר.",
-  "פועלים לפי ההוראות ומעתיקים את קישור השותפים שלכם.",
-  "שולחים את הקישור ועוקבים אחרי ההרשמות והרווחים.",
-]
+        <section className="af-earns">
+          <div className="container">
+            <div className="af-earns-split">
+              <div className="af-head">
+                <h2>{t.h2}</h2>
+                <p>
+                  <Fmt text={t.p} vars={{ min: <span className="af-ltr">₪{he(PAYOUT_MIN)}</span> }} />
+                </p>
+              </div>
+              <ul className="af-earn-list">
+                {t.earns.map((e) => (
+                  <li key={e}>
+                    <span className="af-earn-t">{e}</span>
+                    <span className="af-earn-rate" aria-hidden="true">
+                      20%
+                    </span>
+                    <span className="af-sr">{t.sr}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
 
-const suits = [
-  "יועצים עסקיים",
-  "יועצי שיווק, בוני אתרים ומשווקים",
-  "מומחי דיגיטל ואוטומציות",
-  "משרדי פרסום ודיגיטל",
-  "בעלי עסקים שרוצים להמליץ ולהיות מתוגמלים",
-]
-
-const AffiliatePage: React.FC = () => (
-  <Layout>
-    <div className="af">
-      <section className="af-hero">
-        <div className="container">
-          <h1>תכנית שותפים</h1>
-          <p className="af-hero-sub">
-            אהבתם את המערכת ורוצים להמליץ עליה ללקוחות ולחברים? על כל לקוח
-            שיצטרף דרככם תקבלו 20% עמלה.
-          </p>
-          <p className="af-hero-note">
-            העמלות הן לכל החיים, כל עוד המופנה משלם על החבילות שצוינו.
-          </p>
-          <a href={PANEL_URL} className="af-btn af-btn-accent" onClick={openSignup}>
-            פתיחת חשבון והצטרפות לתכנית
-          </a>
-        </div>
-      </section>
-
-      <section className="af-earns">
-        <div className="container">
-          <div className="af-earns-split">
+        {/* The sum, shown rather than asserted. Every figure in it comes
+            from the same price list /pricing/ renders, so the two cannot
+            drift apart. */}
+        <section className="af-example">
+          <div className="container">
             <div className="af-head">
-              <h2>על מה מקבלים עמלה</h2>
+              <h2>{t.h22}</h2>
               <p>
-                התשלום מועבר בהעברה בנקאית, מרגע שהרווחים המצטברים מגיעים ל-
-                <span className="af-ltr">₪{he(PAYOUT_MIN)}</span> לפחות.
+                {t.p3}
               </p>
             </div>
-            <ul className="af-earn-list">
-              {earns.map((e) => (
-                <li key={e}>
-                  <span className="af-earn-t">{e}</span>
-                  <span className="af-earn-rate" aria-hidden="true">
-                    20%
-                  </span>
-                  <span className="af-sr">עמלה של 20 אחוז</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
 
-      {/* The sum, shown rather than asserted. Every figure in it comes
-          from the same price list /pricing/ renders, so the two cannot
-          drift apart. */}
-      <section className="af-example">
-        <div className="container">
-          <div className="af-head">
-            <h2>איך זה נראה במספרים</h2>
-            <p>
-              שני מופנים שנרשמו דרככם וסגרו חבילה שנתית, לפי החבילה שמתאימה
-              לכמות אנשי הקשר שלהם.
-            </p>
-          </div>
-
-          <table className="af-table">
-            <caption className="af-sr">
-              חישוב עמלת שותפים לדוגמה, בשקלים, לפני מע״מ
-            </caption>
-            <thead>
-              <tr>
-                <th scope="col">אנשי קשר אצל המופנה</th>
-                <th scope="col">החבילה המתאימה</th>
-                <th scope="col">תשלום לשנה</th>
-              </tr>
-            </thead>
-            <tbody>
-              {example.map((r) => (
-                <tr key={r.contacts}>
-                  <th scope="row">{he(r.contacts)}</th>
+            <table className="af-table">
+              <caption className="af-sr">
+                {t.sr2}
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">{t.th}</th>
+                  <th scope="col">{t.th2}</th>
+                  <th scope="col">{t.th3}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {example.map((r) => (
+                  <tr key={r.contacts}>
+                    <th scope="row">{he(r.contacts)}</th>
+                    <td>
+                      <Fmt
+                        text={t.tierCell}
+                        vars={{
+                          contacts: he(r.tier.contacts),
+                          price: <span className="af-ltr">₪{he(r.tier.year)}</span>,
+                        }}
+                      />
+                    </td>
+                    <td>
+                      <span className="af-ltr">₪{he(r.annual)}</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th scope="row" colSpan={2}>
+                    {t.th4}
+                  </th>
                   <td>
-                    {he(r.tier.contacts)} אנשי קשר,{" "}
-                    <span className="af-ltr">₪{he(r.tier.year)}</span> לחודש
-                  </td>
-                  <td>
-                    <span className="af-ltr">₪{he(r.annual)}</span>
+                    <span className="af-ltr">₪{he(exampleTotal)}</span>
                   </td>
                 </tr>
-              ))}
-            </tbody>
-            <tfoot>
-              <tr>
-                <th scope="row" colSpan={2}>
-                  סך התשלומים
-                </th>
-                <td>
-                  <span className="af-ltr">₪{he(exampleTotal)}</span>
-                </td>
-              </tr>
-              <tr className="af-table-total">
-                <th scope="row" colSpan={2}>
-                  העמלה שלכם, 20%
-                </th>
-                <td>
-                  <span className="af-ltr">₪{shekels(exampleCommission)}</span>
-                </td>
-              </tr>
-            </tfoot>
-          </table>
+                <tr className="af-table-total">
+                  <th scope="row" colSpan={2}>
+                    {t.th5}
+                  </th>
+                  <td>
+                    <span className="af-ltr">₪{shekels(exampleCommission)}</span>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
 
-          <p className="af-foot">
-            המחירים לפני מע״מ, לפי{" "}
-            <Link to="/pricing/" className="af-inline-link">
-              המחירון
-            </Link>
-            . בחיוב חודשי הסכומים שונים, והעמלה מחושבת מהתשלום בפועל.
-          </p>
-        </div>
-      </section>
-
-      <section className="af-start">
-        <div className="container">
-          <div className="af-head">
-            <h2>איך מתחילים</h2>
-            <p>
-              כשאתם מזהים לקוח או חבר שהמערכת תעזור לו, שולחים לו קישור הרשמה
-              דרככם ומקבלים את העמלה.
+            <p className="af-foot">
+              {t.foot}{" "}
+              <LocalizedLink to="/pricing/" className="af-inline-link">
+                {t.inlineLink}
+              </LocalizedLink>
+              {t.foot2}
             </p>
           </div>
-          <ol className="af-steps">
-            {steps.map((s, i) => (
-              <li key={s}>
-                <span className="af-step-n" aria-hidden="true">
-                  {i + 1}
-                </span>
-                <span className="af-step-t">{s}</span>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
+        </section>
 
-      <section className="af-suits">
-        <div className="container">
-          <div className="af-suits-split">
+        <section className="af-start">
+          <div className="container">
             <div className="af-head">
-              <h2>למי התכנית מתאימה</h2>
+              <h2>{t.h23}</h2>
+              <p>
+                {t.p4}
+              </p>
             </div>
-            <ul className="af-suit-list">
-              {suits.map((s) => (
-                <li key={s}>{s}</li>
+            <ol className="af-steps">
+              {t.steps.map((s, i) => (
+                <li key={s}>
+                  <span className="af-step-n" aria-hidden="true">
+                    {i + 1}
+                  </span>
+                  <span className="af-step-t">{s}</span>
+                </li>
               ))}
-            </ul>
+            </ol>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* The two rules that decide whether a commission is paid at all,
-          so they are stated plainly rather than left in small print. */}
-      <section className="af-notes">
-        <div className="container">
-          <div className="af-notes-in">
-            <h2>יש לשים לב</h2>
-            <p>
-              מופנה שלא נרשם דרך קישור השותפים שלכם לא נכנס למעקב, ולא ניתן
-              להחשיב אותו כמופנה שלכם בדיעבד.
-            </p>
-            <p>
-              לא תתאפשר קבלת עמלה עבור מופנה שנפתח על ידי אותו עסק מפנה.
-            </p>
-            <p className="af-notes-terms">תכנית השותפים בכפוף לתקנון.</p>
+        <section className="af-suits">
+          <div className="container">
+            <div className="af-suits-split">
+              <div className="af-head">
+                <h2>{t.h24}</h2>
+              </div>
+              <ul className="af-suit-list">
+                {t.suits.map((s) => (
+                  <li key={s}>{s}</li>
+                ))}
+              </ul>
+            </div>
           </div>
-        </div>
-      </section>
-    </div>
-    <CTA />
-  </Layout>
-)
+        </section>
+
+        {/* The two rules that decide whether a commission is paid at all,
+            so they are stated plainly rather than left in small print. */}
+        <section className="af-notes">
+          <div className="container">
+            <div className="af-notes-in">
+              <h2>{t.h25}</h2>
+              <p>
+                {t.p5}
+              </p>
+              <p>
+                {t.p6}
+              </p>
+              <p className="af-notes-terms">{t.notesTerms}</p>
+            </div>
+          </div>
+        </section>
+      </div>
+      <CTA />
+    </Layout>
+  )
+}
 
 export default AffiliatePage
 
-export const Head: HeadFC = () => (
-  <SEO
-    title="תכנית שותפים"
-    description="תכנית השותפים של שלח מסר: 20% עמלה לכל החיים על חבילות דיוור, בנק מיילים וקורסים דיגיטליים, עם משיכה מ-₪400 רווחים מצטברים."
-    pathname="/affiliate/"
-  />
-)
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
+  const t = TEXT[pageContext.locale]
+  return (
+    <SEO locale={pageContext.locale}
+      title={t.seo.title}
+      description={t.seo.description}
+      pathname="/affiliate/"
+    />
+  )
+}

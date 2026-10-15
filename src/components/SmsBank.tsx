@@ -1,6 +1,12 @@
 import React, { useState } from "react"
-import { Link } from "gatsby"
 import { openSignup, PANEL_URL } from "./SignupDialog"
+import { formatText } from "../locales/config"
+import LocalizedLink from "../locales/LocalizedLink"
+import { useText } from "../locales/LocaleContext"
+import heText from "../locales/he/sms-bank.json"
+
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 /* ── SMS bank prices ────────────────────────────────────────────
    Read straight off the live calculator at
@@ -45,22 +51,9 @@ const CUSTOM_STEP = QTY.length
 
 const he = (n: number) => n.toLocaleString("he-IL")
 
-/* The eleven extras the live page lists under "מתנות לחבילת מסרונים" */
-const gifts = [
-  "תמיכה מלאה VIP",
-  "דפי נחיתה ללא הגבלה",
-  "קישורים מקוצרים דינאמיים",
-  "מערכת ניהול לקוחות CRM",
-  "אפשרויות תיזמון מתקדמות",
-  "סדרת הודעות סמס",
-  "סטטיסטיקת הקלקות",
-  "חיבור ישיר למערכות סליקה",
-  "התממשקות ב-API",
-  "אוטומציות מתקדמות",
-  "שליחה בפולסים (במנות)",
-]
 
 const SmsBank: React.FC = () => {
+  const t = useText(TEXT)
   const [len, setLen] = useState<Len>(70)
   const [step, setStep] = useState(0)
 
@@ -72,14 +65,14 @@ const SmsBank: React.FC = () => {
     <div className="sb">
       <section className="sb-hero">
         <div className="container">
-          <h1>חבילות בנק SMS</h1>
+          <h1>{t.heroTitle}</h1>
           <p className="sb-hero-sub">
-            בחרו כמות תווים רצויה פר הודעה ואת החבילה המתאימה לכם ביותר
+            {t.heroSub}
           </p>
           <ul className="sb-terms">
-            <li>בתשלום חד פעמי</li>
-            <li>בלי מנוי חודשי</li>
-            <li>המחירים אינם כוללים מע״מ</li>
+            {t.terms.map((term) => (
+              <li key={term}>{term}</li>
+            ))}
           </ul>
         </div>
       </section>
@@ -93,7 +86,7 @@ const SmsBank: React.FC = () => {
           <div className="sb-console">
             <div className="sb-controls">
               <fieldset className="sb-field">
-                <legend>כמה תווים בהודעה?</legend>
+                <legend>{t.lengthQuestion}</legend>
                 <div className="sb-lens">
                   {LENGTHS.map((l) => (
                     <button
@@ -102,7 +95,7 @@ const SmsBank: React.FC = () => {
                       aria-pressed={len === l}
                       onClick={() => setLen(l)}
                     >
-                      {l} תווים
+                      {formatText(t.chars, { len: l })}
                     </button>
                   ))}
                 </div>
@@ -111,7 +104,7 @@ const SmsBank: React.FC = () => {
               {/* A native range input on purpose: keyboard, screen readers
                   and touch all work without rebuilding any of it. */}
               <div className="sb-sizer">
-                <label htmlFor="sb-qty">כמה הודעות אתם צריכים?</label>
+                <label htmlFor="sb-qty">{t.qtyQuestion}</label>
                 <output htmlFor="sb-qty" className="sb-sizer-value">
                   {isCustom ? "300,001 +" : he(QTY[step])}
                 </output>
@@ -124,7 +117,7 @@ const SmsBank: React.FC = () => {
                   value={step}
                   onChange={(e) => setStep(Number(e.target.value))}
                   aria-valuetext={
-                    isCustom ? "מעל 300,001 הודעות" : `${he(QTY[step])} הודעות`
+                    isCustom ? t.customValueText : formatText(t.qtyValueText, { qty: he(QTY[step]) })
                   }
                   style={
                     { "--fill": `${(step / CUSTOM_STEP) * 100}%` } as React.CSSProperties
@@ -150,46 +143,46 @@ const SmsBank: React.FC = () => {
             <div className="sb-quote" key={`${len}-${step}`}>
               {isCustom ? (
                 <>
-                  <h2 className="sb-quote-head">300,001 + הודעות</h2>
+                  <h2 className="sb-quote-head">{t.customHead}</h2>
                   <p className="sb-quote-lead">
-                    פנו עכשיו לצוות וקבלו הצעה אישית מותאמת לעסק שלכם.
+                    {t.customLead}
                   </p>
-                  <Link to="/contact/" className="sb-btn sb-btn-accent">
-                    ליצירת קשר להצעה
-                  </Link>
+                  <LocalizedLink to="/contact/" className="sb-btn sb-btn-accent">
+                    {t.contactForQuote}
+                  </LocalizedLink>
                 </>
               ) : (
                 <>
                   <h2 className="sb-quote-head">
-                    בנק של {he(qty as number)} הודעות
+                    {formatText(t.bankOf, { qty: he(qty as number) })}
                   </h2>
                   <p className="sb-price">
                     <s className="sb-price-was">
-                      <span className="sb-sr">מחיר מלא </span>
+                      <span className="sb-sr">{t.fullPrice}</span>
                       {he(list)} ₪
                     </s>
                     <span className="sb-price-now">
                       <span className="sb-price-cur" aria-hidden="true">₪</span>
                       <span className="sb-price-num">{he(net)}</span>
-                      <span className="sb-sr">שקלים</span>
+                      <span className="sb-sr">{t.shekels}</span>
                     </span>
                   </p>
                   <p className="sb-price-terms">
-                    + מע״מ, בתשלום חד פעמי<span aria-hidden="true">*</span>
+                    {t.priceTerms}<span aria-hidden="true">*</span>
                   </p>
                   <a href={PANEL_URL} className="sb-btn sb-btn-accent" onClick={openSignup}>
-                    לפתיחת חשבון
+                    {t.openAccount}
                   </a>
-                  <Link to="/contact/" className="sb-quote-alt">
-                    או בקשו חבילה מותאמת
-                  </Link>
+                  <LocalizedLink to="/contact/" className="sb-quote-alt">
+                    {t.askCustom}
+                  </LocalizedLink>
                 </>
               )}
             </div>
           </div>
 
           <p className="sb-foot">
-            * עד לסיום יתרת ההודעות או לאחר 12 חודשים מהרכישה האחרונה בחשבון
+            {t.foot}
           </p>
         </div>
       </section>
@@ -199,11 +192,11 @@ const SmsBank: React.FC = () => {
       <section className="sb-gifts">
         <div className="container">
           <div className="sb-head">
-            <h2>מתנות לחבילת מסרונים</h2>
-            <p>כלולות בכל בנק, בלי תוספת תשלום ובלי מנוי חודשי</p>
+            <h2>{t.giftsTitle}</h2>
+            <p>{t.giftsSubtitle}</p>
           </div>
           <ul className="sb-gift-list">
-            {gifts.map((g) => (
+            {t.gifts.map((g) => (
               <li key={g}>{g}</li>
             ))}
           </ul>
@@ -215,23 +208,22 @@ const SmsBank: React.FC = () => {
       <section className="sb-table-band">
         <div className="container">
           <div className="sb-head">
-            <h2>כל החבילות במבט אחד</h2>
+            <h2>{t.tableTitle}</h2>
             <p>
-              המחירים בשקלים, לפני מע״מ, בתשלום חד פעמי. בחרו תא כדי לראות אותו
-              במחשבון למעלה.
+              {t.tableSub}
             </p>
           </div>
 
           <table className="sb-table">
             <caption className="sb-sr">
-              מחירי בנק SMS לפי כמות הודעות ואורך ההודעה
+              {t.tableCaption}
             </caption>
             <thead>
               <tr>
-                <th scope="col">כמות הודעות</th>
+                <th scope="col">{t.tableQtyHead}</th>
                 {LENGTHS.map((l) => (
                   <th key={l} scope="col" data-len={l} data-active={len === l}>
-                    {l} תווים
+                    {formatText(t.chars, { len: l })}
                   </th>
                 ))}
               </tr>
@@ -251,7 +243,7 @@ const SmsBank: React.FC = () => {
                         }}
                       >
                         <span className="sb-sr">
-                          {he(q)} הודעות, {l} תווים,{" "}
+                          {formatText(t.cellLabel, { qty: he(q), len: l })}
                         </span>
                         {he(PRICES[l][i][1])} ₪
                       </button>
@@ -264,12 +256,12 @@ const SmsBank: React.FC = () => {
 
           <div className="sb-custom">
             <div>
-              <h2>צריך חבילה גדולה יותר?</h2>
-              <p>נשלח לכם הצעת מחיר לחבילה מותאמת עבורכם</p>
+              <h2>{t.biggerTitle}</h2>
+              <p>{t.biggerSub}</p>
             </div>
-            <Link to="/contact/" className="sb-btn sb-btn-outline">
-              ליצירת קשר להצעה
-            </Link>
+            <LocalizedLink to="/contact/" className="sb-btn sb-btn-outline">
+              {t.contactForQuote}
+            </LocalizedLink>
           </div>
         </div>
       </section>

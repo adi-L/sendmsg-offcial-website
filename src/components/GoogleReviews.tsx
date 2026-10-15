@@ -1,4 +1,9 @@
 import React from "react"
+import { useText } from "../locales/LocaleContext"
+import heText from "../locales/he/google-reviews.json"
+
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 const GOOGLE_ICON =
   "https://cdn.trustindex.io/assets/platform/Google/icon.svg"
@@ -7,87 +12,37 @@ const GOOGLE_LOGO =
 const STAR_ICON =
   "https://cdn.trustindex.io/assets/platform/Google/star/f.svg"
 
-const reviews = [
-  {
-    name: "נחמה קליין",
-    date: "2 יולי 2025",
-    avatar:
-      "https://lh3.googleusercontent.com/a/ACg8ocIEEou7gf3-8hDsX0uoATsQNtayzIwoqB-4nr42i8tdbsirI34=w40-h40-c-rp-mo-br100",
-    text: "היתה לי תקלה שלא קשורה לשלח מסר, וקבלתי שרות יוצא דופן, הם עזרו לי לפנות לספק ששם היתה הבעיה ולא עזבו אותי עד שהבעיה סודרה על הצד הטוב ביותר, תודה רבה!",
-  },
-  {
-    name: "אור בגים - נפש חיה ...",
-    date: "6 יולי 2025",
-    avatar:
-      "https://lh3.googleusercontent.com/a-/ALV-UjWxrP7rvdQ6tPQt7NYO2NslIPbolS3NGRmAHqcd2lb9ORqmuc4=w40-h40-c-rp-mo-br100",
-    text: "ענו לי מהר, באופן יעיל ופתרו לי את הבעיה.",
-  },
-  {
-    name: "מנחם Menachem ל...",
-    date: "23 יולי 2025",
-    avatar:
-      "https://lh3.googleusercontent.com/a/ACg8ocK88NyO0YFmepNHMnW7fhS-PlJVDL3ydGAN940E3LLuM3DgcQ=w40-h40-c-rp-mo-br100",
-    text: "מאוד ידידותי למשתמש כולל שירות לקוחות מצויין",
-  },
-  {
-    name: "איתן שניידר",
-    date: "28 יולי 2025",
-    avatar:
-      "https://lh3.googleusercontent.com/a/ACg8ocJuVkLC6qnpGMk3SuCuMdfjRRnWPhnCL8ld0T9dylXGm-y4wQ=w40-h40-c-rp-mo-br100",
-    text: "MARIA מצוות שלח-מסר, נתנה לי פתרון יעיל ומהיר, במקום היא קלטה את הבעיה ופתרונה!!!",
-  },
-  {
-    name: "Yaakov Herevon Onglass",
-    date: "29 יולי 2025",
-    avatar:
-      "https://lh3.googleusercontent.com/a-/ALV-UjWIAVaGZatAJ8LwfLp9kpVd5Q5lljXmdDiNxZoVn6-s1VbDt2B9=w40-h40-c-rp-mo-ba6-br100",
-    text: 'קיבלתי תשובה מהירה, מדויקת ומספקת. הדבר מוכיח על רמת מקצועיות גבוהה יחד עם תודעת שירות למתן חוויית לקוח טובה',
-  },
-  {
-    name: "Zohar Praiz Barel",
-    date: "6 אוגוסט 2025",
-    avatar:
-      "https://lh3.googleusercontent.com/a-/ALV-UjUSUH9_qDsiJu4jCKRR4Bh1xDKYGgKnC-jk0V7CFdNPEDHnY4_I=w40-h40-c-rp-mo-ba4-br100",
-    text: 'צוות התמיכה ב"שלח מסר" הוא אחד הצוותים הטובים ביותר בתחום. אני תמיד מקבלת מענה מהיר ומקצועי לשאלות ולבקשות שלי.',
-  },
-  {
-    name: "שמואל רוזנצויג",
-    date: "11 אוגוסט 2025",
-    avatar:
-      "https://lh3.googleusercontent.com/a/ACg8ocLeA6xInRP2KHIUPy3WVLoQvgvAuMRgdeAqzCEB789DIiUvgA=w40-h40-c-rp-mo-br100",
-    text: "מאיה מבינה עניין ורוצה לעזור\nתודה מאיה",
-  },
-]
 
-type Review = (typeof reviews)[number]
-
-const rowTop = reviews.slice(0, 4)
-const rowBottom = reviews.slice(4)
+/* The reviews are customers' own words, copied verbatim from Google. */
+type Review = { name: string; date: string; avatar: string; text: string }
 
 // Each row repeats its list 4 times; the keyframes travel -50%, so the
 // second half is an exact copy of the first and the loop is seamless.
 const REPEATS = 4
 
-const Stars: React.FC = () => (
-  <div style={styles.stars}>
-    {[1, 2, 3, 4, 5].map((i) => (
-      <img
-        key={i}
-        src={STAR_ICON}
-        alt={`star ${i}`}
-        width="17"
-        height="17"
-        loading="lazy"
-      />
-    ))}
-    <span
-      style={styles.verified}
-      title="Trustindex מוודא שהמקור המקורי של הסקירה הוא Google."
-    >
-      &#10003;
-    </span>
-  </div>
-)
+const Stars: React.FC = () => {
+  const t = useText(TEXT)
+  return (
+    <div style={styles.stars}>
+      {[1, 2, 3, 4, 5].map((i) => (
+        <img
+          key={i}
+          src={STAR_ICON}
+          alt={`star ${i}`}
+          width="17"
+          height="17"
+          loading="lazy"
+        />
+      ))}
+      <span
+        style={styles.verified}
+        title={t.verifiedTitle}
+      >
+        &#10003;
+      </span>
+    </div>
+  )
+}
 
 const ReviewCard: React.FC<{ review: Review }> = ({ review }) => (
   <div className="gr-card" style={styles.card}>
@@ -133,50 +88,55 @@ const MarqueeRow: React.FC<{ items: Review[]; reverse?: boolean }> = ({
   </div>
 )
 
-const GoogleReviews: React.FC = () => (
-  <section className="section" style={styles.section}>
-    <style>{marqueeCss}</style>
+const GoogleReviews: React.FC = () => {
+  const t = useText(TEXT)
+  const rowTop = t.reviews.slice(0, 4)
+  const rowBottom = t.reviews.slice(4)
+  return (
+    <section className="section" style={styles.section}>
+      <style>{marqueeCss}</style>
 
-    <div style={styles.ratingBlock}>
-      {/* <strong style={styles.ratingLabel}>מְעוּלֶה</strong> */}
-      <div style={styles.bigStars}>
-        {[1, 2, 3, 4, 5].map((i) => (
-          <img
-            key={i}
-            src={STAR_ICON}
-            alt={`star ${i}`}
-            width="28"
-            height="28"
-            loading="lazy"
-          />
-        ))}
+      <div style={styles.ratingBlock}>
+        {/* <strong style={styles.ratingLabel}>מְעוּלֶה</strong> */}
+        <div style={styles.bigStars}>
+          {[1, 2, 3, 4, 5].map((i) => (
+            <img
+              key={i}
+              src={STAR_ICON}
+              alt={`star ${i}`}
+              width="28"
+              height="28"
+              loading="lazy"
+            />
+          ))}
+        </div>
+        {/* <span style={styles.ratingCount}>
+          מבוסס על <strong>148 ביקורות</strong>
+        </span> */}
+        {/* <img
+          src={GOOGLE_LOGO}
+          alt="Google"
+          width="110"
+          height="35"
+          loading="lazy"
+          style={styles.googleLogo}
+        /> */}
       </div>
-      {/* <span style={styles.ratingCount}>
-        מבוסס על <strong>148 ביקורות</strong>
-      </span> */}
-      {/* <img
-        src={GOOGLE_LOGO}
-        alt="Google"
-        width="110"
-        height="35"
-        loading="lazy"
-        style={styles.googleLogo}
-      /> */}
-    </div>
 
-    <div style={styles.rows}>
-      <MarqueeRow items={rowTop} />
-      <MarqueeRow items={rowBottom} reverse />
-    </div>
+      <div style={styles.rows}>
+        <MarqueeRow items={rowTop} />
+        <MarqueeRow items={rowBottom} reverse />
+      </div>
 
-    <div style={styles.trustBadge}>
-      <span style={styles.trustText}>
-        מאומת על ידי <span style={styles.trustBrand}>Trustindex</span>{" "}
-        <span style={styles.trustInfo}>&#9432;</span>
-      </span>
-    </div>
-  </section>
-)
+      <div style={styles.trustBadge}>
+        <span style={styles.trustText}>
+          {t.verifiedBy} <span style={styles.trustBrand}>Trustindex</span>{" "}
+          <span style={styles.trustInfo}>&#9432;</span>
+        </span>
+      </div>
+    </section>
+  )
+}
 
 const marqueeCss = `
 .gr-marquee {

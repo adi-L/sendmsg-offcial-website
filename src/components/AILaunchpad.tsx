@@ -1,4 +1,10 @@
 import React, { useEffect, useRef, useState } from "react"
+import { formatText } from "../locales/config"
+import { useText } from "../locales/LocaleContext"
+import heText from "../locales/he/ai-launchpad.json"
+
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 const PANEL_URL = "https://panel.sendmsg.co.il/"
 
@@ -10,25 +16,20 @@ type Holiday = {
 const dayFormat = new Intl.DateTimeFormat("he-IL", { day: "numeric" })
 const monthFormat = new Intl.DateTimeFormat("he-IL", { month: "short" })
 
-const relativeLabel = (date: Date): string => {
+const relativeLabel = (
+  date: Date,
+  t: { today: string; tomorrow: string; inDays: string }
+): string => {
   const now = new Date()
   now.setHours(0, 0, 0, 0)
   const days = Math.round((date.getTime() - now.getTime()) / 86400000)
-  if (days <= 0) return "היום"
-  if (days === 1) return "מחר"
-  return `בעוד ${days} ימים`
+  if (days <= 0) return t.today
+  if (days === 1) return t.tomorrow
+  return formatText(t.inDays, { days })
 }
 
-// Example prompts that type themselves into the textarea, one after another
-const EXAMPLES = [
-  "ניוזלטר חודשי לחנות תכשיטים, עם מבצע לחג ועדכון על קולקציה חדשה",
-  "מייל השקה למסעדה חדשה, עם תפריט פתיחה והזמנה לערב היכרות",
-  "עדכון ללקוחות הסטודיו על שעות הפעילות בחופשת הקיץ",
-  "מבצע בלאק פריידי לחנות אונליין, עם קוד קופון ותאריך תפוגה",
-  "סיכום שנה לעמותה, עם הישגים, תודות וקריאה לתרומה",
-]
-
-const STATIC_PLACEHOLDER = `לדוגמה: ${EXAMPLES[0]}...`
+// The example prompts that type themselves into the textarea, one after
+// another, are `examples` in ai-launchpad.json.
 
 const TYPE_MS = 45
 const DELETE_MS = 22
@@ -37,13 +38,13 @@ const GAP_MS = 500
 
 // Types an example out, holds it, erases it, moves to the next one.
 // Runs only while `enabled` — we pause it the moment the user takes over.
-const useTypedExample = (enabled: boolean): string => {
+const useTypedExample = (enabled: boolean, examples: string[]): string => {
   const [text, setText] = useState("")
 
   useEffect(() => {
     if (!enabled) return
     if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
-      setText(EXAMPLES[0])
+      setText(examples[0])
       return
     }
 
@@ -53,7 +54,7 @@ const useTypedExample = (enabled: boolean): string => {
     let timer = 0
 
     const step = () => {
-      const current = EXAMPLES[phrase]
+      const current = examples[phrase]
       if (!erasing) {
         chars += 1
         setText(current.slice(0, chars))
@@ -69,7 +70,7 @@ const useTypedExample = (enabled: boolean): string => {
       setText(current.slice(0, chars))
       if (chars === 0) {
         erasing = false
-        phrase = (phrase + 1) % EXAMPLES.length
+        phrase = (phrase + 1) % examples.length
         timer = window.setTimeout(step, GAP_MS)
         return
       }
@@ -78,12 +79,13 @@ const useTypedExample = (enabled: boolean): string => {
 
     timer = window.setTimeout(step, GAP_MS)
     return () => window.clearTimeout(timer)
-  }, [enabled])
+  }, [enabled, examples])
 
   return text
 }
 
 const AILaunchpad: React.FC = () => {
+  const t = useText(TEXT)
   const [prompt, setPrompt] = useState("")
   const [holidays, setHolidays] = useState<Holiday[]>([])
   const [selectedHoliday, setSelectedHoliday] = useState<Holiday | null>(null)
@@ -94,7 +96,7 @@ const AILaunchpad: React.FC = () => {
 
   // the animated placeholder stands down once the box is focused or has text
   const typing = !focused && prompt === ""
-  const typedExample = useTypedExample(typing)
+  const typedExample = useTypedExample(typing, t.examples)
 
   useEffect(() => {
     // Jewish holidays (Israel schedule) from Hebcal; panel stays hidden if unavailable
@@ -179,10 +181,9 @@ const AILaunchpad: React.FC = () => {
   return (
     <section className="section launchpad-section dot-grid">
       <div className="container">
-        <h2 className="section-title">צרו ניוזלטר עם AI, ממשפט אחד</h2>
+        <h2 className="section-title">{t.title}</h2>
         <p className="section-subtitle">
-          תארו מה תרצו לשלוח, וה-AI של שלח מסר יכתוב, יעצב ויכין טיוטה
-          מוכנה לשליחה בתוך פחות מ-2 דקות.
+          {t.subtitle}
         </p>
 
         <div className="launchpad-main">
@@ -195,11 +196,11 @@ const AILaunchpad: React.FC = () => {
               onFocus={() => setFocused(true)}
               onBlur={() => setFocused(false)}
               rows={3}
-              aria-label="תיאור הניוזלטר שתרצו ליצור"
+              aria-label={t.inputLabel}
               placeholder={
                 typing && typedExample
-                  ? `לדוגמה: ${typedExample}\u258F`
-                  : STATIC_PLACEHOLDER
+                  ? formatText(t.placeholder, { text: `${typedExample}\u258F` })
+                  : formatText(t.placeholder, { text: `${t.examples[0]}...` })
               }
             />
             <div className="launchpad-actions">
@@ -218,13 +219,13 @@ const AILaunchpad: React.FC = () => {
                       <line x1="8" y1="2" x2="8" y2="6" />
                       <line x1="3" y1="10" x2="21" y2="10" />
                     </svg>
-                    {selectedHoliday ? selectedHoliday.name : "ניוזלטר לחג"}
+                    {selectedHoliday ? selectedHoliday.name : t.holidayToggle}
                     <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <polyline points="6 9 12 15 18 9" />
                     </svg>
                   </button>
                   {menuOpen && (
-                    <ul className="launchpad-holiday-dropdown" role="listbox" aria-label="החגים הקרובים">
+                    <ul className="launchpad-holiday-dropdown" role="listbox" aria-label={t.holidaysLabel}>
                       {selectedHoliday && (
                         <li>
                           <button
@@ -232,7 +233,7 @@ const AILaunchpad: React.FC = () => {
                             className="launchpad-holiday launchpad-holiday-clear"
                             onClick={() => pickHoliday(null)}
                           >
-                            ללא חג
+                            {t.noHoliday}
                           </button>
                         </li>
                       )}
@@ -252,7 +253,7 @@ const AILaunchpad: React.FC = () => {
                             <span className="launchpad-holiday-info">
                               <span className="launchpad-holiday-name">{h.name}</span>
                               <span className="launchpad-holiday-when">
-                                {relativeLabel(h.date)}
+                                {relativeLabel(h.date, t)}
                               </span>
                             </span>
                           </button>
@@ -266,8 +267,8 @@ const AILaunchpad: React.FC = () => {
                 type="button"
                 className="launchpad-btn"
                 onClick={handleLaunch}
-                aria-label="יצירה עם AI"
-                title="יצירה עם AI"
+                aria-label={t.launch}
+                title={t.launch}
               >
                 <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M7 17L17 7" />

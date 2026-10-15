@@ -1,13 +1,17 @@
 import React, { useState, useEffect, useRef } from "react"
-import { withPrefix } from "gatsby"
 import { useLocation } from "@reach/router"
 import logo from "../images/logo.png"
 import { openSignup } from "./SignupDialog"
+import { useLocalePath, useText } from "../locales/LocaleContext"
 
 import megaServices from "../images/blog/mailing-system.webp"
 import megaPricing from "../images/illustrations/sms-bank.svg"
 import megaSupport from "../images/illustrations/collab.svg"
 import megaKnowledge from "../images/blog/digital-course-guide.webp"
+import heText from "../locales/he/header.json"
+
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 const PANEL_URL = "https://panel.sendmsg.co.il/"
 
@@ -85,7 +89,7 @@ const Icon: React.FC<{ name: string }> = ({ name }) => (
 )
 
 type MegaItem = { label: string; href: string; icon: string; desc: string }
-type MegaMedia = { image: string; alt: string; caption: string; ctaLabel: string; ctaHref: string; contain?: boolean }
+type MegaMedia = { alt: string; caption: string; ctaLabel: string; ctaHref: string; contain?: boolean }
 type NavItem = {
   label: string
   href: string
@@ -93,80 +97,14 @@ type NavItem = {
   media?: MegaMedia
 }
 
-const navItems: NavItem[] = [
-  { label: "אודות", href: "/about/" },
-  {
-    label: "מחירון",
-    href: "/pricing/",
-    items: [
-      { label: "חבילות דיוור", href: "/pricing/", icon: "package", desc: "כל המסלולים, מהחבילה החינמית ועד הבלתי מוגבלת." },
-      { label: "בנק סמסים", href: "/sms-bank/", icon: "messageSquare", desc: "רוכשים סמסים מראש ומשתמשים בקצב שלכם." },
-      { label: "בנק שליחות", href: "/email-bank/", icon: "send", desc: "בנק דיוורים ללא מנוי חודשי." },
-      { label: "מספר וירטואלי", href: "/virtual-number/", icon: "hash", desc: "מספר ייעודי לשליחה וקבלה של הודעות." },
-    ],
-    media: {
-      image: megaPricing,
-      alt: "חבילות ומסלולים",
-      caption: "מתחילים בחינם, ומשדרגים רק כשהעסק גדל.",
-      ctaLabel: "למחירון המלא ←",
-      ctaHref: "/pricing/",
-      contain: true,
-    },
-  },
-  {
-    label: "שירותים",
-    href: "/services/",
-    items: [
-      { label: "ניוזלטרים וקמפיינים", href: "/newsletters/", icon: "mail", desc: "מעצבים ושולחים קמפיינים בתוך דקות." },
-      { label: "דפי נחיתה", href: "/landing-pages/", icon: "layout", desc: "דף נחיתה מעוצב, בלי מעצב ובלי מתכנת." },
-      { label: "קורסים דיגיטליים", href: "/digital-courses/", icon: "graduation", desc: "מעלים קורס, גובים תשלום, הכל במקום אחד." },
-      { label: "מערכת סמסים (SMS)", href: "/sms/", icon: "messageCircle", desc: "הודעות אישיות וקמפיינים המוניים." },
-      { label: "ניהול מועדון לקוחות (CRM)", href: "/crm/", icon: "users", desc: "כל הלקוחות והפילוחים במקום אחד." },
-      { label: "פגישות ושיתופי פעולה", href: "/meetings/", icon: "calendar", desc: "תיאום פגישות בלי פינג פונג של הודעות." },
-      { label: "דומיין פרטי", href: "/domain/", icon: "globe", desc: "כתובת משלכם לדפים ולדיוורים." },
-    ],
-    media: {
-      image: megaServices,
-      alt: "מערכת הדיוור של שלח מסר",
-      caption: "כל כלי השיווק, במנוי אחד.",
-      ctaLabel: "לכל השירותים ←",
-      ctaHref: "/services/",
-    },
-  },
-  {
-    label: "תמיכה ושירות",
-    href: "/support/",
-    items: [
-      { label: "צרו קשר", href: "/contact/", icon: "phone", desc: "טלפון, WhatsApp או טופס, איך שנוח לכם." },
-      { label: "תכנית שותפים", href: "/affiliate/", icon: "share", desc: "ממליצים על שלח מסר ומרוויחים." },
-      { label: "התממשקות API", href: "/api/", icon: "code", desc: "מחברים את המערכת לכל כלי אחר." },
-    ],
-    media: {
-      image: megaSupport,
-      alt: "צוות התמיכה",
-      caption: "בני אדם עונים לכם, בעברית.",
-      ctaLabel: "לצרו קשר ←",
-      ctaHref: "/contact/",
-      contain: true,
-    },
-  },
-  {
-    label: "מרכז הידע",
-    href: "/blog/",
-    items: [
-      { label: "מדריכים", href: "/kb/", icon: "book", desc: "צעד אחר צעד, איך עושים הכל במערכת." },
-      { label: "מאמרים מקצועיים", href: "/blog/", icon: "fileText", desc: "טיפים וכלים לשיווק חכם יותר." },
-    ],
-    media: {
-      image: megaKnowledge,
-      alt: "מרכז הידע של שלח מסר",
-      caption: "ידע שעוזר לשווק טוב יותר.",
-      ctaLabel: "לכל המאמרים ←",
-      ctaHref: "/blog/",
-    },
-  },
-  { label: "שומר שבת", href: "/shomer-shabbat/" },
-]
+/* The mega-menu pictures are imported assets, so they can't live in the
+   JSON with the text; they're matched to their section by its href. */
+const MEGA_IMAGES: Record<string, string> = {
+  "/pricing/": megaPricing,
+  "/services/": megaServices,
+  "/support/": megaSupport,
+  "/blog/": megaKnowledge,
+}
 
 // Trailing slash keeps section matching honest: "/about/" must not light up
 // on "/about-us/"
@@ -194,6 +132,9 @@ const Caret: React.FC<{ open: boolean }> = ({ open }) => (
 )
 
 const Header: React.FC = () => {
+  const t = useText(TEXT)
+  const lp = useLocalePath()
+  const navItems = t.nav as NavItem[]
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [openMega, setOpenMega] = useState<string | null>(null)
@@ -227,11 +168,11 @@ const Header: React.FC = () => {
 
   const { pathname } = useLocation()
   const currentPath = withTrailingSlash(pathname)
-  const homePath = withTrailingSlash(withPrefix("/"))
+  const homePath = withTrailingSlash(lp("/"))
 
   const matchesPath = (href: string) => {
     if (!href.startsWith("/")) return false
-    const target = withTrailingSlash(withPrefix(href))
+    const target = withTrailingSlash(lp(href))
     // every path starts with home, so it only counts as an exact match
     return target === homePath
       ? currentPath === target
@@ -239,7 +180,7 @@ const Header: React.FC = () => {
   }
 
   // a section also counts as current when we are on one of its mega items,
-  // e.g. /contact/ lights up "תמיכה ושירות"
+  // e.g. /contact/ lights up the support section
   const isCurrent = (item: NavItem) =>
     matchesPath(item.href) || (item.items?.some((sub) => matchesPath(sub.href)) ?? false)
 
@@ -247,19 +188,19 @@ const Header: React.FC = () => {
     <>
       <div className="site-topbar" style={styles.topBar}>
         <div className="container" style={styles.topBarInner}>
-          <a href="tel:077-4600600" className="site-topbar-link" style={styles.topBarLink}>
-            077-4600600 ☎
+          <a href={`tel:${t.phone}`} className="site-topbar-link" style={styles.topBarLink}>
+            {t.phone} ☎
           </a>
-          <span className="site-topbar-note">ספק מורשה מס׳ הגנה: 11011707</span>
+          <span className="site-topbar-note">{t.licence}</span>
         </div>
       </div>
       <header ref={headerRef} className={`site-header${scrolled ? " site-header-scrolled" : ""}`}>
         <div className="container site-header-inner">
-          <a href={withPrefix("/")} className="site-logo">
-            <img src={logo} alt="שלח מסר - Sendmsg" style={styles.logoImg} />
+          <a href={lp("/")} className="site-logo">
+            <img src={logo} alt={t.logoAlt} style={styles.logoImg} />
           </a>
 
-          <nav className="site-nav" aria-label="תפריט ראשי">
+          <nav className="site-nav" aria-label={t.navLabel}>
             {navItems.map((item) =>
               item.items ? (
                 <button
@@ -278,7 +219,7 @@ const Header: React.FC = () => {
               ) : (
                 <a
                   key={item.label}
-                  href={withPrefix(item.href)}
+                  href={lp(item.href)}
                   className={`nav-link${isCurrent(item) ? " nav-link-current" : ""}`}
                   aria-current={isCurrent(item) ? "page" : undefined}
                 >
@@ -290,17 +231,17 @@ const Header: React.FC = () => {
 
           <div className="header-actions">
             <a href={PANEL_URL} className="header-login">
-              כניסה
+              {t.login}
             </a>
             <a href={PANEL_URL} className="primary-btn" style={styles.trialBtn} onClick={openSignup}>
-              ניסיון חינם
+              {t.freeTrial}
             </a>
           </div>
 
           <button
             className="header-burger"
             onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="תפריט"
+            aria-label={t.menuLabel}
             aria-expanded={menuOpen}
           >
             <span style={{ ...styles.burgerLine, ...(menuOpen ? styles.burgerLine1Open : {}) }} />
@@ -314,7 +255,7 @@ const Header: React.FC = () => {
             <div className="container mega-inner">
               <div className="mega-items">
                 {activeItem.items.map((sub) => (
-                  <a key={sub.href + sub.label} href={withPrefix(sub.href)} className="mega-item" onClick={() => setOpenMega(null)}>
+                  <a key={sub.href + sub.label} href={lp(sub.href)} className="mega-item" onClick={() => setOpenMega(null)}>
                     <span className="mega-item-icon">
                       <Icon name={sub.icon} />
                     </span>
@@ -327,9 +268,9 @@ const Header: React.FC = () => {
               </div>
               {activeItem.media && (
                 <div className={`mega-media${activeItem.media.contain ? " mega-media-contain" : ""}`}>
-                  <img src={activeItem.media.image} alt={activeItem.media.alt} loading="lazy" />
+                  <img src={MEGA_IMAGES[activeItem.href]} alt={activeItem.media.alt} loading="lazy" />
                   <p>{activeItem.media.caption}</p>
-                  <a href={withPrefix(activeItem.media.ctaHref)} onClick={() => setOpenMega(null)}>
+                  <a href={lp(activeItem.media.ctaHref)} onClick={() => setOpenMega(null)}>
                     {activeItem.media.ctaLabel}
                   </a>
                 </div>
@@ -343,7 +284,7 @@ const Header: React.FC = () => {
             {navItems.map((item) => (
               <React.Fragment key={item.label}>
                 <a
-                  href={withPrefix(item.href)}
+                  href={lp(item.href)}
                   className={`mobile-nav-link${isCurrent(item) ? " mobile-nav-link-current" : ""}`}
                   aria-current={isCurrent(item) ? "page" : undefined}
                 >
@@ -352,7 +293,7 @@ const Header: React.FC = () => {
                 {item.items?.map((sub) => (
                   <a
                     key={sub.href + sub.label}
-                    href={withPrefix(sub.href)}
+                    href={lp(sub.href)}
                     className={`mobile-sub-link${
                       matchesPath(sub.href) ? " mobile-sub-link-current" : ""
                     }`}
@@ -364,9 +305,9 @@ const Header: React.FC = () => {
               </React.Fragment>
             ))}
             <div style={styles.mobileActions}>
-              <a href={PANEL_URL} className="header-login">כניסה</a>
+              <a href={PANEL_URL} className="header-login">{t.login}</a>
               <a href={PANEL_URL} className="primary-btn" style={{ ...styles.trialBtn, width: "100%" }} onClick={openSignup}>
-                ניסיון חינם
+                {t.freeTrial}
               </a>
             </div>
           </div>

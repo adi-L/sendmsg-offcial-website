@@ -1,5 +1,4 @@
 import React, { useState } from "react"
-import { Link } from "gatsby"
 import type { HeadFC } from "gatsby"
 import Layout from "../components/Layout"
 import CTA from "../components/CTA"
@@ -12,6 +11,15 @@ import {
   useSupportStatus,
 } from "../data/support-hours"
 import "../styles/support.css"
+import type { PageContext } from "../locales/config"
+import { useText } from "../locales/LocaleContext"
+import Rich from "../locales/Rich"
+import LocalizedLink from "../locales/LocalizedLink"
+import heText from "../locales/he/pages/support.json"
+
+/* This page's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
+type PageText = typeof heText
 
 /* ── /support/ ──────────────────────────────────────────────────
    Copy is the live /support/ page's own.
@@ -96,43 +104,37 @@ type Faq = {
   body: React.ReactNode
 }
 
-const FAQS: Faq[] = [
+const FAQS = (t: PageText): Faq[] => [
   {
     id: "lists",
-    q: "האם אתם מספקים את רשימת הלקוחות?",
+    q: t.faqs[0].q,
     body: (
       <>
         <p>
-          לא, וזה גם לא חוקי. את הלקוחות שלכם אתם צריכים להביא בעצמכם, והם
-          צריכים לתת הסכמה לכך שתדוורו אליהם.
+          {t.p}
         </p>
         <p>
-          אבל אל דאגה: בנינו עבורכם מערכת שיווק מתקדמת ומקיפה שתאפשר לכם להשיג
-          לידים איכותיים ולתחזק מועדון לקוחות אקסקלוסיבי.
+          {t.p2}
         </p>
       </>
     ),
   },
   {
     id: "grow",
-    q: "איך אני יוצר רשימה ואיך אוכל להגדיל את הרשימה?",
+    q: t.faqs[1].q,
     body: (
       <>
         <p>
-          רשימת תפוצה היא למעשה רשימת לקוחות אליהם ניתן להעביר מסרים באמצעות
-          מערכת דיוור אלקטרוני. קיימות מספר דרכים להגדיל את רשימת התפוצה שלכם,
-          והנה כמה טיפים בנושא:
+          {t.p3}
         </p>
         <ul className="sp-a-list">
           <li>
-            היחשפו כמה שיותר ברשתות החברתיות, ועודדו לקוחות להצטרף לרשימה שלכם
-            דרך הפלטפורמות הללו.
+            {t.li}
           </li>
-          <li>יצירת דפי נחיתה ושיווק שלהם ללקוחות פוטנציאליים.</li>
-          <li>שימוש באנשי מקצוע כדוגמת כותבים, מקדמי אתרים וכדומה.</li>
+          <li>{t.li2}</li>
+          <li>{t.li3}</li>
           <li>
-            יצירת הצעה מפתה של תמורה ללקוח, כמו קופון מיוחד או הנחה בהרשמה
-            לרשימת התפוצה.
+            {t.li4}
           </li>
         </ul>
       </>
@@ -140,51 +142,42 @@ const FAQS: Faq[] = [
   },
   {
     id: "shabbat",
-    q: "האם המערכות כשרות גם עבור המגזר החרדי?",
+    q: t.faqs[2].q,
     body: (
       <>
         <p>
-          בהחלט. קיימת אצלנו האפשרות לא לשלוח אימיילים בשבתות וחגים, וניתן
-          לחסום את האתר ואת דף הנחיתה בימים אלה.
+          {t.p4}
         </p>
         <p>
-          גם במערכת הקורסים ניתן להגדיר שהיא לא תיפתח בשבתות וחגים, כך שניתן
-          יהיה ללמוד בה רק במהלך השבוע.
+          {t.p5}
         </p>
         <p className="sp-a-more">
-          <Link to="/shomer-shabbat/">
-            לפרטים על ההגדרות לשומרי שבת
+          <LocalizedLink to="/shomer-shabbat/">
+            {t.aMore}
             <span aria-hidden="true">
               <GoIcon size={18} />
             </span>
-          </Link>
+          </LocalizedLink>
         </p>
       </>
     ),
   },
   {
     id: "why",
-    q: "יש הרבה מערכות בשוק, למה דווקא המערכת של שלח מסר?",
+    q: t.faqs[3].q,
     body: (
       <>
         <p>
-          נכון, יש הרבה מערכות בשוק. אבל אצלנו בשלח מסר דאגנו לשדרג את המערכות,
-          להפוך אותן למתקדמות ביותר בשוק, ולספק את הכל תחת קורת גג אחת וברמה
-          הגבוהה ביותר.
+          {t.p6}
         </p>
         <p>
-          במערכת הקורסים שלנו יש כלים ואפשרויות שלא תמצאו במערכות אחרות, כמו
-          יצירת תפריט עליון, קישור לקבוצת פייסבוק ויצירת מערך וובינרים.
+          {t.p7}
         </p>
         <p>
-          בנוסף, מערכת ה-<span className="sp-ltr">SMS</span> שלנו היא
-          מהמתקדמות ביותר, ומאפשרת ליצור הודעות ארוכות עם תוכן ומתן ערך אישי
-          ללקוחות. אצלנו תמצאו סטטיסטיקות חכמות ומובילות, כולל מפות חום, וכך
-          תוכלו לשפר את רמת הביצוע שלכם.
+          <Rich text={t.p8} ltrClass="sp-ltr" />
         </p>
         <p>
-          ובסופו של דבר, האינטגרציה שלנו היא ברמה הגבוהה ביותר. הכל נעשה במערכת
-          אחת שמייצרת עבורכם מערך שיווק מקיף ומקצועי, וחוסכת המון זמן וכסף.
+          {t.p10}
         </p>
       </>
     ),
@@ -192,7 +185,8 @@ const FAQS: Faq[] = [
 ]
 
 const SupportPage: React.FC = () => {
-  const [openId, setOpenId] = useState<string | null>(FAQS[0].id)
+  const t = useText(TEXT)
+  const [openId, setOpenId] = useState<string | null>(FAQS(t)[0].id)
   const status = useSupportStatus()
 
   return (
@@ -202,10 +196,9 @@ const SupportPage: React.FC = () => {
           <div className="container">
             <div className="sp-hero-grid">
               <div>
-                <h1>הצוות שלנו כאן בשבילכם</h1>
+                <h1>{t.h1}</h1>
                 <p className="sp-hero-sub">
-                  רוב השאלות שמגיעות לתמיכה כבר נענו כאן למטה. מה שלא, הנציגים
-                  עונים בטלפון.
+                  {t.heroSub}
                 </p>
               </div>
 
@@ -214,10 +207,10 @@ const SupportPage: React.FC = () => {
                   question it can answer for a visitor in another
                   timezone: are they open right now. */}
               <div className="sp-hours">
-                <p className="sp-hours-label">זמני תמיכה</p>
-                <p className="sp-hours-days">ימי ראשון עד חמישי</p>
+                <p className="sp-hours-label">{t.hoursLabel}</p>
+                <p className="sp-hours-days">{t.hoursDays}</p>
                 <p className="sp-hours-time">
-                  <span className="sp-ltr">9:00–17:00</span>
+                  <span className="sp-ltr">{t.hoursTime}</span>
                 </p>
                 {status && (
                   <p
@@ -225,7 +218,7 @@ const SupportPage: React.FC = () => {
                     data-open={status.open}
                   >
                     <span className="sp-dot" aria-hidden="true" />
-                    {status.open ? "פתוח עכשיו" : "סגור עכשיו"}
+                    {status.open ? t.openNow : t.closedNow}
                     <span className="sp-hours-note">{status.note}</span>
                   </p>
                 )}
@@ -243,11 +236,11 @@ const SupportPage: React.FC = () => {
         <section className="sp-faq">
           <div className="container">
             <div className="sp-head">
-              <h2>שאלות נפוצות</h2>
+              <h2>{t.h2}</h2>
             </div>
 
             <div className="sp-qs">
-              {FAQS.map((f) => {
+              {FAQS(t).map((f) => {
                 const isOpen = openId === f.id
                 return (
                   <div className="sp-q" key={f.id} data-open={isOpen}>
@@ -289,12 +282,9 @@ const SupportPage: React.FC = () => {
           <div className="container">
             <div className="sp-ways-split">
               <div className="sp-head">
-                <h2>לא מצאתם? דברו איתנו</h2>
+                <h2>{t.h22}</h2>
                 <p>
-                  הצוות שעונה בטלפון הוא אותו צוות שעונה במייל ובוואטסאפ, בימי
-                  ראשון עד חמישי בין <span className="sp-ltr">9:00</span> ל-
-                  <span className="sp-ltr">17:00</span>. מחוץ לשעות האלה, השאירו
-                  בקשה לחזרה.
+                  <Rich text={t.p11} ltrClass="sp-ltr" />
                 </p>
               </div>
 
@@ -307,7 +297,7 @@ const SupportPage: React.FC = () => {
                     <span className="sp-way-main">
                       <span className="sp-way-t sp-ltr">{SUPPORT_PHONE}</span>
                       <span className="sp-way-d">
-                        הכי מהר, בזמן שעות הפעילות.
+                        {t.wayD}
                       </span>
                     </span>
                     <span className="sp-way-go" aria-hidden="true">
@@ -323,7 +313,7 @@ const SupportPage: React.FC = () => {
                     <span className="sp-way-main">
                       <span className="sp-way-t sp-ltr">{SUPPORT_EMAIL}</span>
                       <span className="sp-way-d">
-                        כשצריך לצרף צילום מסך או קובץ. נשתדל לענות בהקדם.
+                        {t.wayD2}
                       </span>
                     </span>
                     <span className="sp-way-go" aria-hidden="true">
@@ -339,7 +329,7 @@ const SupportPage: React.FC = () => {
                     <span className="sp-way-main">
                       <span className="sp-way-t sp-ltr">{WHATSAPP_NUMBER}</span>
                       <span className="sp-way-d">
-                        וואטסאפ, לשאלה קצרה שאפשר לכתוב בשורה.
+                        {t.wayD3}
                       </span>
                     </span>
                     <span className="sp-way-go" aria-hidden="true">
@@ -348,21 +338,20 @@ const SupportPage: React.FC = () => {
                   </a>
                 </li>
                 <li>
-                  <Link to="/contact/">
+                  <LocalizedLink to="/contact/">
                     <span className="sp-way-ico" aria-hidden="true">
                       <FormIcon />
                     </span>
                     <span className="sp-way-main">
-                      <span className="sp-way-t">בקשה לחזרה טלפונית</span>
+                      <span className="sp-way-t">{t.wayT}</span>
                       <span className="sp-way-d">
-                        מחוץ לשעות הפעילות. נחזור אליכם תוך 24 שעות, בחלון
-                        שתבחרו.
+                        {t.wayD4}
                       </span>
                     </span>
                     <span className="sp-way-go" aria-hidden="true">
                       <GoIcon />
                     </span>
-                  </Link>
+                  </LocalizedLink>
                 </li>
               </ul>
             </div>
@@ -376,10 +365,13 @@ const SupportPage: React.FC = () => {
 
 export default SupportPage
 
-export const Head: HeadFC = () => (
-  <SEO
-    title="תמיכה ושירות"
-    description="התמיכה של שלח מסר: ראשון עד חמישי 9:00 עד 17:00, טלפון 077-4600911, מייל ווואטסאפ, ותשובות לשאלות הנפוצות על רשימות תפוצה, כשרות לשומרי שבת ומה המערכת כוללת."
-    pathname="/support/"
-  />
-)
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
+  const t = TEXT[pageContext.locale]
+  return (
+    <SEO locale={pageContext.locale}
+      title={t.seo.title}
+      description={t.seo.description}
+      pathname="/support/"
+    />
+  )
+}

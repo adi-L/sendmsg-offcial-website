@@ -2,6 +2,9 @@
   "name": "sendmsg-website",
   "version": "1.0.0",
   "description": "\u05e9\u05dc\u05d7 \u05de\u05e1\u05e8 - \u05de\u05e2\u05e8\u05db\u05ea \u05d3\u05d9\u05d5\u05d5\u05e8 \u05d0\u05dc\u05e7\u05d8\u05e8\u05d5\u05e0\u05d9",
+  "engines": {
+    "node": ">=22.18"
+  },
   "scripts": {
     "develop": "gatsby develop",
     "dev": "gatsby develop",
@@ -11,7 +14,8 @@
     "clean": "gatsby clean",
     "typecheck": "tsc --noEmit",
     "check:api": "node scripts/check-api-coverage.mjs",
-    "verify": "npm run typecheck && npm run check:api"
+    "verify": "npm run typecheck && npm test && npm run check:api",
+    "test": "node --test \"tests/*.test.mjs\""
   },
   "keywords": [
     "sendmsg",
@@ -20,7 +24,6 @@
   ],
   "author": "Sendmsg",
   "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
     "gatsby": "^5.16.1",
     "gatsby-plugin-image": "^3.16.0",

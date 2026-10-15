@@ -1,52 +1,59 @@
 import React from "react"
 
 import isoCertificate from "../images/iso-27001-certificate.png"
+import { useText } from "../locales/LocaleContext"
+import heText from "../locales/he/iso-certification.json"
 
-const ISOCertification: React.FC = () => (
-  <section className="section" style={styles.section}>
-    <div className="container" style={styles.container}>
-      <div style={styles.textCol}>
-        <div style={styles.badge}>
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            aria-hidden="true"
-          >
-            <path
-              d="M12 2L4 5.5V11c0 5 3.4 9.4 8 10.5 4.6-1.1 8-5.5 8-10.5V5.5L12 2z"
-              fill="var(--primary-blue)"
-            />
-            <path
-              d="M9 12l2 2 4-4"
-              stroke="#fff"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-          <span>אבטחת מידע</span>
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
+
+const ISOCertification: React.FC = () => {
+  const t = useText(TEXT)
+  return (
+    <section className="section" style={styles.section}>
+      <div className="container" style={styles.container}>
+        <div style={styles.textCol}>
+          <div style={styles.badge}>
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M12 2L4 5.5V11c0 5 3.4 9.4 8 10.5 4.6-1.1 8-5.5 8-10.5V5.5L12 2z"
+                fill="var(--primary-blue)"
+              />
+              <path
+                d="M9 12l2 2 4-4"
+                stroke="#fff"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            <span>{t.badge}</span>
+          </div>
+          <h2 style={styles.heading}>ISO 27001</h2>
+          <p style={styles.subtitle}>{t.subtitle}</p>
+          <p style={styles.description}>
+            {t.description}
+          </p>
         </div>
-        <h2 style={styles.heading}>ISO 27001</h2>
-        <p style={styles.subtitle}>עומדים בתקן הבינלאומי לאבטחת מידע</p>
-        <p style={styles.description}>
-          המערכת שלנו מוסמכת לתקן ISO/IEC 27001:2022 על ידי מכון התקנים
-          הישראלי. המידע והנתונים שלכם מנוהלים לפי הסטנדרט המחמיר בעולם.
-        </p>
-      </div>
 
-      <div style={styles.certCol}>
-        <img
-          src={isoCertificate}
-          alt="תעודת הסמכה ISO/IEC 27001:2022 ממכון התקנים הישראלי"
-          style={styles.certImg}
-          loading="lazy"
-        />
+        <div style={styles.certCol}>
+          <img
+            src={isoCertificate}
+            alt={t.certAlt}
+            style={styles.certImg}
+            loading="lazy"
+          />
+        </div>
       </div>
-    </div>
-  </section>
-)
+    </section>
+  )
+}
 
 const styles: Record<string, React.CSSProperties> = {
   section: {

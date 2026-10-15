@@ -8,9 +8,11 @@
    `&e-page-a4248b1=<n>` gives the real set: 98 guides, 232 category
    assignments, because a guide usually sits in several categories.
 
-   The guides themselves still live on sendmsg.co.il, at root-level
-   Hebrew slugs (not under /kb/), so every row here links out. When
-   the guides are migrated into the repo, only `url` changes.
+   This is input for scripts/import-kb.py only: it says which guides to
+   fetch, their categories and their position (written as `order` in
+   each guide's frontmatter). The site's /kb/ index no longer reads it;
+   it is built from the markdown in content/kb/<lang>/, so a guide's
+   title, categories and order are edited there.
 
    Re-crawl rather than edit by hand when the live index changes. */
 

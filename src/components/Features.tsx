@@ -1,53 +1,33 @@
 import React from "react"
+import Rich from "../locales/Rich"
+import { useText } from "../locales/LocaleContext"
+import heText from "../locales/he/features.json"
 
-const features = [
-  {
-    title: "אחוזי פתיחה, הקלקות ומטרות",
-    desc: "כמה לקוחות פתחו את האימייל שלך, האם הם הקליקו על הקישור שהטמעת בו והאם זה הוביל למכירה.",
-  },
-  {
-    title: "שעות שיא למשלוח אימייל",
-    desc: "המערכת שלנו תעזור לך להבין באיזה יום ושעה נשיג את אחוזי הפתיחה והלידים הגבוהים ביותר.",
-  },
-  {
-    title: "התראות על הצטרפות",
-    desc: "נקבל התראות על הצטרפות של לקוחות כך שנוכל לעקוב או ליצור קשר עם ליד חם שהתעניין בשירות שלך.",
-  },
-  {
-    title: "מפות חום",
-    desc: 'ניתן "לעקוב" אחר הלקוחות, לראות איזה קישורים הכי נצפים ואיפה הם התעכבו כדי לשפר ולהשתפר.',
-  },
-  {
-    title: "קישורים מועדפים",
-    desc: "נעקוב אחר הקלקות על קישורים שכל נמען לחץ במייל או במסרון וליצור קשר להצעה חמה.",
-  },
-  {
-    title: "שתף את זה הלאה",
-    desc: "נוכל לדעת איזה ניוזלטרים הועברו הלאה וללמוד על הוויראליות של הדיוורים שלכם.",
-  },
-]
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
-const Features: React.FC = () => (
-  <section className="section dot-grid">
-    <div className="container">
-      <h2 style={styles.heading}>
-        המיילים שלך מנותחים באמצעות
-        <br />
-        מערכת סטטיסטיקה מתקדמת!
-      </h2>
-      <div style={styles.divider} />
+const Features: React.FC = () => {
+  const t = useText(TEXT)
+  return (
+    <section className="section dot-grid">
+      <div className="container">
+        <h2 style={styles.heading}>
+          <Rich text={t.heading} />
+        </h2>
+        <div style={styles.divider} />
 
-      <div className="features-grid">
-        {features.map((f) => (
-          <div key={f.title} style={styles.card}>
-            <h3 style={styles.cardTitle}>{f.title}</h3>
-            <p style={styles.cardDesc}>{f.desc}</p>
-          </div>
-        ))}
+        <div className="features-grid">
+          {t.features.map((f) => (
+            <div key={f.title} style={styles.card}>
+              <h3 style={styles.cardTitle}>{f.title}</h3>
+              <p style={styles.cardDesc}>{f.desc}</p>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
-  </section>
-)
+    </section>
+  )
+}
 
 const styles: Record<string, React.CSSProperties> = {
   heading: {

@@ -1,12 +1,11 @@
 import React from "react"
-import { Link } from "gatsby"
 import { openSignup, PANEL_URL } from "./SignupDialog"
+import LocalizedLink from "../locales/LocalizedLink"
+import { useText } from "../locales/LocaleContext"
+import heText from "../locales/he/free-plan.json"
 
-const items = [
-  "250 אנשי קשר",
-  "2,000 דיוורים בכל חודש",
-  "5 דפי נחיתה מעוצבים",
-]
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 const Check: React.FC = () => (
   <span style={styles.checkWrap} aria-hidden="true">
@@ -22,37 +21,40 @@ const Check: React.FC = () => (
   </span>
 )
 
-const FreePlan: React.FC = () => (
-  <section className="section" style={styles.section}>
-    <div className="container" style={styles.container}>
-      <h2 className="section-title">מה מקבלים בחבילה החינמית?</h2>
-      <p className="section-subtitle">
-        כל מה שצריך כדי להתחיל, ומשדרגים רק כשהעסק גדל.
-      </p>
+const FreePlan: React.FC = () => {
+  const t = useText(TEXT)
+  return (
+    <section className="section" style={styles.section}>
+      <div className="container" style={styles.container}>
+        <h2 className="section-title">{t.title}</h2>
+        <p className="section-subtitle">
+          {t.subtitle}
+        </p>
 
-      <div style={styles.itemsRow}>
-        {items.map((item) => (
-          <span key={item} style={styles.item}>
-            <Check />
-            {item}
-          </span>
-        ))}
+        <div style={styles.itemsRow}>
+          {t.items.map((item) => (
+            <span key={item} style={styles.item}>
+              <Check />
+              {item}
+            </span>
+          ))}
+        </div>
+
+        <p style={styles.extra}>{t.extra}</p>
+
+        <a href={PANEL_URL} className="primary-btn" style={styles.btn} onClick={openSignup}>
+          {t.button}
+        </a>
+
+        <div>
+          <LocalizedLink to="/pricing" style={styles.link}>
+            {t.compare}
+          </LocalizedLink>
+        </div>
       </div>
-
-      <p style={styles.extra}>וגם: קורס דיגיטלי ראשון במתנה</p>
-
-      <a href={PANEL_URL} className="primary-btn" style={styles.btn} onClick={openSignup}>
-        פתיחת חשבון חינם
-      </a>
-
-      <div>
-        <Link to="/pricing" style={styles.link}>
-          להשוואה בין כל החבילות ←
-        </Link>
-      </div>
-    </div>
-  </section>
-)
+    </section>
+  )
+}
 
 const styles: Record<string, React.CSSProperties> = {
   section: {

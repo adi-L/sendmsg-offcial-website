@@ -1,13 +1,17 @@
 import React, { useEffect, useRef, useState } from "react"
-import { withPrefix } from "gatsby"
 import { openSignup } from "./SignupDialog"
 import alexAvatar from "../images/alex-avatar.png"
 import { useChat } from "./ai/useChat"
 import { renderRtlText } from "./ai/renderRtl"
+import { useLocalePath, useText } from "../locales/LocaleContext"
+import Rich from "../locales/Rich"
+import heText from "../locales/he/ai-assistant.json"
+
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 const PANEL_URL = "https://panel.sendmsg.co.il/"
-const WHATSAPP_URL =
-  "https://api.whatsapp.com/send?phone=972559377588&text=היי, אולי תוכלו לסייע לי?"
+const WHATSAPP_URL = "https://api.whatsapp.com/send?phone=972559377588&text="
 const BUBBLE_KEY = "sendmsg-assistant-bubble-dismissed"
 
 // The agent appends this on its own line when the visitor has shown real
@@ -27,32 +31,38 @@ const BUBBLE_TO = 2100
 // panel must look exactly like today's site, not like something broken.
 const FallbackActions: React.FC<{ onPanelLinkClick: (e: React.MouseEvent) => void }> = ({
   onPanelLinkClick,
-}) => (
-  <div className="ai-panel-actions">
-    <a href={withPrefix("/contact")} className="ai-panel-action">
-      מעבר ממערכת אחרת, בחינם
-    </a>
-    <a href={PANEL_URL} className="ai-panel-action" onClick={onPanelLinkClick}>
-      פתיחת חשבון חינם
-    </a>
-    <a href={withPrefix("/contact")} className="ai-panel-action">
-      יש לי שאלה אחרת
-    </a>
-    <a
-      href={WHATSAPP_URL}
-      className="ai-panel-action ai-panel-action-whatsapp"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
-        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-      </svg>
-      לשיחה ב-WhatsApp
-    </a>
-  </div>
-)
+}) => {
+  const t = useText(TEXT)
+  const lp = useLocalePath()
+  return (
+    <div className="ai-panel-actions">
+      <a href={lp("/contact")} className="ai-panel-action">
+        {t.actionSwitch}
+      </a>
+      <a href={PANEL_URL} className="ai-panel-action" onClick={onPanelLinkClick}>
+        {t.actionSignup}
+      </a>
+      <a href={lp("/contact")} className="ai-panel-action">
+        {t.actionOther}
+      </a>
+      <a
+        href={WHATSAPP_URL + t.whatsappText}
+        className="ai-panel-action ai-panel-action-whatsapp"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+        </svg>
+        {t.actionWhatsapp}
+      </a>
+    </div>
+  )
+}
 
 const AIAssistant: React.FC = () => {
+  const t = useText(TEXT)
+  const lp = useLocalePath()
   const [inRange, setInRange] = useState(false)
   const [bubbleDismissed, setBubbleDismissed] = useState(true)
   const [open, setOpen] = useState(false)
@@ -164,7 +174,7 @@ const AIAssistant: React.FC = () => {
             type="button"
             className="ai-bubble-close"
             onClick={dismissBubble}
-            aria-label="סגירת ההצעה"
+            aria-label={t.bubbleClose}
           >
             <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round">
               <line x1="18" y1="6" x2="6" y2="18" />
@@ -172,11 +182,10 @@ const AIAssistant: React.FC = () => {
             </svg>
           </button>
           <p className="ai-bubble-text">
-            <strong>שירות חדש!</strong> יש לך חשבון במערכת אחרת? הצוות שלנו
-            יסייע בכל המעבר ללא תוספת עלות של החבילה השנתית*
+            <Rich text={t.bubbleText} />
           </p>
-          <a href={withPrefix("/contact")} className="ai-bubble-link" onClick={dismissBubble}>
-            לפרטים
+          <a href={lp("/contact")} className="ai-bubble-link" onClick={dismissBubble}>
+            {t.bubbleLink}
           </a>
         </div>
       )}
@@ -192,12 +201,12 @@ const AIAssistant: React.FC = () => {
             <span className="ai-panel-avatar">
               <img src={alexAvatar} alt="" />
             </span>
-            <span className="ai-panel-title">שי, העוזר של שלח מסר</span>
+            <span className="ai-panel-title">{t.panelTitle}</span>
             <button
               type="button"
               className="ai-panel-close"
               onClick={closePanel}
-              aria-label="סגירת החלון"
+              aria-label={t.panelClose}
             >
               <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
                 <line x1="18" y1="6" x2="6" y2="18" />
@@ -214,7 +223,7 @@ const AIAssistant: React.FC = () => {
           {showFallback && (
             <>
               <p className="ai-panel-message">
-                היי! אני שי, העוזר החכם של שלח מסר. במה אפשר לעזור לך היום?
+                {t.fallbackMessage}
               </p>
               <FallbackActions onPanelLinkClick={handlePanelLinkClick} />
             </>
@@ -222,14 +231,14 @@ const AIAssistant: React.FC = () => {
 
           {phase === "starting" && (
             <p className="ai-panel-message" role="status">
-              מתחבר/ת לשי…
+              {t.connecting}
             </p>
           )}
 
           {showChat && (
             <div className="ai-chat">
               <p className="ai-chat-notice">
-                שי הוא עוזר מבוסס AI, והתשובות שלו הן הכוונה בלבד ואינן התחייבות מחייבת.
+                {t.disclaimer}
               </p>
               <div
                 className="ai-chat-log"
@@ -258,7 +267,7 @@ const AIAssistant: React.FC = () => {
                           className="ai-chat-cta"
                           onClick={handlePanelLinkClick}
                         >
-                          פתיחת חשבון חינם
+                          {t.chatSignup}
                         </a>
                       )}
                     </div>
@@ -284,7 +293,7 @@ const AIAssistant: React.FC = () => {
               <div className="ai-chat-input">
                 <textarea
                   className="ai-chat-textarea"
-                  aria-label="כתוב/כתבי הודעה לשי"
+                  aria-label={t.inputLabel}
                   value={draft}
                   onChange={(e) => setDraft(e.target.value)}
                   onKeyDown={handleTextareaKeyDown}
@@ -296,7 +305,7 @@ const AIAssistant: React.FC = () => {
                   className="ai-chat-send"
                   onClick={handleSend}
                   disabled={phase === "thinking" || !draft.trim()}
-                  aria-label="שליחת הודעה"
+                  aria-label={t.sendLabel}
                 >
                   <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="12" y1="19" x2="12" y2="5" />
@@ -314,7 +323,7 @@ const AIAssistant: React.FC = () => {
         type="button"
         className="ai-avatar"
         onClick={handleAvatarClick}
-        aria-label="פתיחת צ'אט עם שי, העוזר החכם של שלח מסר"
+        aria-label={t.openLabel}
         aria-expanded={open}
       >
         <img src={alexAvatar} alt="" />

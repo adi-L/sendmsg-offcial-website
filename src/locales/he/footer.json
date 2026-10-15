@@ -1,0 +1,93 @@
+{
+  "servicesTitle": "שירותים",
+  "services": [
+    {
+      "label": "ניוזלטרים",
+      "href": "/newsletters/"
+    },
+    {
+      "label": "SMS",
+      "href": "/sms/"
+    },
+    {
+      "label": "דפי נחיתה",
+      "href": "/landing-pages/"
+    },
+    {
+      "label": "קורסים דיגיטליים",
+      "href": "/digital-courses/"
+    },
+    {
+      "label": "CRM",
+      "href": "/crm/"
+    },
+    {
+      "label": "פגישות",
+      "href": "/meetings/"
+    },
+    {
+      "label": "AI דיוור",
+      "href": "https://ai.sendmsg.co.il/"
+    },
+    {
+      "label": "Creaditor",
+      "href": "/creaditor/"
+    }
+  ],
+  "supportTitle": "תמיכה ומשאבים",
+  "support": [
+    {
+      "label": "צרו קשר",
+      "href": "/contact/"
+    },
+    {
+      "label": "מרכז הידע",
+      "href": "/blog/"
+    },
+    {
+      "label": "דרושים",
+      "href": "/jobs/"
+    },
+    {
+      "label": "שותפים",
+      "href": "/affiliate/"
+    },
+    {
+      "label": "API",
+      "href": "/api/"
+    },
+    {
+      "label": "נגישות",
+      "href": "/accessibility/"
+    },
+    {
+      "label": "תנאי שימוש",
+      "href": "/terms/"
+    }
+  ],
+  "companyTitle": "על החברה",
+  "company": [
+    {
+      "label": "אודות",
+      "href": "/about/"
+    },
+    {
+      "label": "מחירון",
+      "href": "/pricing/"
+    },
+    {
+      "label": "שומר שבת",
+      "href": "/shomer-shabbat/"
+    },
+    {
+      "label": "מדיניות פרטיות",
+      "href": "/privacy/"
+    }
+  ],
+  "contactTitle": "צרו קשר",
+  "phone": "077-4600600",
+  "hours": "א׳-ה׳ 9:00-17:00",
+  "whatsappHref": "https://api.whatsapp.com/send?phone=972559377588",
+  "logoAlt": "שלח מסר",
+  "copyright": "Copyright {year}, כל הזכויות שמורות. Design by Adi L."
+}

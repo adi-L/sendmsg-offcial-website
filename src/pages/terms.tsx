@@ -6,6 +6,13 @@ import SEO from "../components/SEO"
 import { TERMS } from "../data/terms"
 import { SUPPORT_PHONE } from "../data/support-hours"
 import "../styles/legal.css"
+import type { PageContext } from "../locales/config"
+import { useText } from "../locales/LocaleContext"
+import Rich from "../locales/Rich"
+import heText from "../locales/he/pages/terms.json"
+
+/* This page's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 /* ── /terms/ ────────────────────────────────────────────────────
    The agreement, rendered from src/data/terms.ts, which holds the
@@ -18,124 +25,126 @@ import "../styles/legal.css"
 
 const AFFILIATE_EMAIL = "sales@comstar.co.il"
 
-const TermsPage: React.FC = () => (
-  <Layout>
-    <div className="lg">
-      <section className="lg-hero">
-        <div className="container">
-          <h1>תקנון מערכת שלח מסר</h1>
-          <p className="lg-hero-sub">
-            תנאי השימוש במערכת ובשירותים הנלווים לה, החלים על כל לקוח ומשתמש.
-          </p>
-          <p className="lg-hero-meta">
-            הספק הוא קומסטאר מערכות בע״מ, ח.פ.{" "}
-            <span className="lg-ltr">514979525</span>. ההתקשרות בין הלקוחות
-            לספק היא על בסיס עסקי, ולכן חוק הגנת הצרכן התשמ״א-1981 אינו חל
-            עליה.
-          </p>
-        </div>
-      </section>
+const TermsPage: React.FC = () => {
+  const t = useText(TEXT)
+  return (
+    <Layout>
+      <div className="lg">
+        <section className="lg-hero">
+          <div className="container">
+            <h1>{t.h1}</h1>
+            <p className="lg-hero-sub">
+              {t.heroSub}
+            </p>
+            <p className="lg-hero-meta">
+              <Rich text={t.heroMeta} ltrClass="lg-ltr" />
+            </p>
+          </div>
+        </section>
 
-      <section className="lg-doc">
-        <div className="container">
-          <div className="lg-grid">
-            <nav
-              className="lg-toc"
-              aria-label="תוכן עניינים"
-              data-scroll={TERMS.length > 8}
-              data-count="true"
-            >
-              <h2>תוכן עניינים</h2>
-              <ol>
+        <section className="lg-doc">
+          <div className="container">
+            <div className="lg-grid">
+              <nav
+                className="lg-toc"
+                aria-label={t.ariaLabel}
+                data-scroll={TERMS.length > 8}
+                data-count="true"
+              >
+                <h2>{t.h2}</h2>
+                <ol>
+                  {TERMS.map((s) => (
+                    <li key={s.id}>
+                      <a href={`#${s.id}`}>{s.heading}</a>
+                    </li>
+                  ))}
+                </ol>
+              </nav>
+
+              <div>
                 {TERMS.map((s) => (
-                  <li key={s.id}>
-                    <a href={`#${s.id}`}>{s.heading}</a>
-                  </li>
+                  <section className="lg-sec" id={s.id} key={s.id}>
+                    <h2>{s.heading}</h2>
+                    {s.blocks.map((b, i) =>
+                      b.kind === "dl" ? (
+                        <dl className="lg-dl" key={i}>
+                          {b.items.map((it) => (
+                            <div key={it.t}>
+                              <dt>{it.t}</dt>
+                              <dd>{it.d}</dd>
+                            </div>
+                          ))}
+                        </dl>
+                      ) : (
+                        <p key={i}>{b.text}</p>
+                      )
+                    )}
+                  </section>
                 ))}
-              </ol>
-            </nav>
-
-            <div>
-              {TERMS.map((s) => (
-                <section className="lg-sec" id={s.id} key={s.id}>
-                  <h2>{s.heading}</h2>
-                  {s.blocks.map((b, i) =>
-                    b.kind === "dl" ? (
-                      <dl className="lg-dl" key={i}>
-                        {b.items.map((it) => (
-                          <div key={it.t}>
-                            <dt>{it.t}</dt>
-                            <dd>{it.d}</dd>
-                          </div>
-                        ))}
-                      </dl>
-                    ) : (
-                      <p key={i}>{b.text}</p>
-                    )
-                  )}
-                </section>
-              ))}
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="lg-contact">
-        <div className="container">
-          <div className="lg-contact-in">
-            <h2>שאלות על התקנון</h2>
-            <p>
-              לשאלות על תנאי השימוש, לבקשות תגמול בתכנית השותפים ולפניות בנושא
-              גישה לחשבון, אפשר לפנות אלינו באחת מהדרכים האלה.
-            </p>
-            <ul className="lg-contact-rows">
-              <li>
-                <a href={`tel:${SUPPORT_PHONE.replace(/-/g, "")}`}>
-                  <span className="lg-contact-t">טלפון</span>
-                  <span className="lg-contact-v lg-ltr">{SUPPORT_PHONE}</span>
-                </a>
-              </li>
-              <li>
-                <a href={`mailto:${AFFILIATE_EMAIL}`}>
-                  <span className="lg-contact-t">מייל</span>
-                  <span className="lg-contact-v lg-ltr">{AFFILIATE_EMAIL}</span>
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://api.whatsapp.com/send?phone=972559377588"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <span className="lg-contact-t">וואטסאפ</span>
-                  <span className="lg-contact-v lg-ltr">055-9377588</span>
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://sendmsg.co.il/privacy"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <span className="lg-contact-t">פרטיות</span>
-                  <span className="lg-contact-v">מסמך מדיניות הפרטיות המלא</span>
-                </a>
-              </li>
-            </ul>
+        <section className="lg-contact">
+          <div className="container">
+            <div className="lg-contact-in">
+              <h2>{t.h22}</h2>
+              <p>
+                {t.p}
+              </p>
+              <ul className="lg-contact-rows">
+                <li>
+                  <a href={`tel:${SUPPORT_PHONE.replace(/-/g, "")}`}>
+                    <span className="lg-contact-t">{t.contactT}</span>
+                    <span className="lg-contact-v lg-ltr">{SUPPORT_PHONE}</span>
+                  </a>
+                </li>
+                <li>
+                  <a href={`mailto:${AFFILIATE_EMAIL}`}>
+                    <span className="lg-contact-t">{t.contactT2}</span>
+                    <span className="lg-contact-v lg-ltr">{AFFILIATE_EMAIL}</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://api.whatsapp.com/send?phone=972559377588"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span className="lg-contact-t">{t.contactT3}</span>
+                    <span className="lg-contact-v lg-ltr">055-9377588</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://sendmsg.co.il/privacy"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span className="lg-contact-t">{t.contactT4}</span>
+                    <span className="lg-contact-v">{t.contactV}</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
-        </div>
-      </section>
-    </div>
-    <CTA />
-  </Layout>
-)
+        </section>
+      </div>
+      <CTA />
+    </Layout>
+  )
+}
 
 export default TermsPage
 
-export const Head: HeadFC = () => (
-  <SEO
-    title="תקנון"
-    description="תקנון מערכת שלח מסר: תנאי השימוש, זכויות יוצרים, מדיניות תשלום וביטולים, דואר זבל, תכנית שותפים, מספרים וירטואליים ודומיינים."
-    pathname="/terms/"
-  />
-)
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
+  const t = TEXT[pageContext.locale]
+  return (
+    <SEO locale={pageContext.locale}
+      title={t.seo.title}
+      description={t.seo.description}
+      pathname="/terms/"
+    />
+  )
+}

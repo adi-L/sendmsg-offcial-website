@@ -3,8 +3,8 @@
 Import content from the live sendmsg.co.il WordPress site.
 
 Two collections, same extraction:
-  guides   -> content/kb/    + static/kb-images/     (--all, --slug, --limit)
-  articles -> content/blog/  + static/blog-images/   (--articles)
+  guides   -> content/kb/he/    + static/kb-images/     (--all, --slug, --limit)
+  articles -> content/blog/he/  + static/blog-images/   (--articles)
 
 The guides are WordPress/Elementor pages. Everything this script keeps comes
 out of the one content container between the H1 and the "יש לך שאלה נוספת?"
@@ -37,10 +37,10 @@ import urllib.parse
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 KB_DATA = os.path.join(ROOT, "src", "data", "kb.ts")
-OUT_MD = os.path.join(ROOT, "content", "kb")
+OUT_MD = os.path.join(ROOT, "content", "kb", "he")
 OUT_IMG = os.path.join(ROOT, "static", "kb-images")
 
-BLOG_MD = os.path.join(ROOT, "content", "blog")
+BLOG_MD = os.path.join(ROOT, "content", "blog", "he")
 BLOG_IMG = os.path.join(ROOT, "static", "blog-images")
 BLOG_CATEGORY = "מאמרים מקצועיים"
 
@@ -82,6 +82,8 @@ def read_catalogue():
             "title": m.group(1).replace('\\"', '"'),
             "url": m.group(2),
             "cats": [cats[i] for i in ids if i in cats],
+            # position in the live index; /kb/ lists guides in this order
+            "order": len(arts) + 1,
         })
     return arts
 
@@ -600,6 +602,7 @@ def import_one(art, verbose=True):
         "---",
         f"title: {yaml_quote(art['title'])}",
         f"slug: {yaml_quote(slug)}",
+        f"order: {art['order']}",
         f"source: {yaml_quote(art['url'])}",
         "categories:",
     ]
@@ -814,7 +817,7 @@ def relink_all(verbose=True):
 # The professional articles are the same WordPress pages as the guides,
 # so they extract identically. They differ only in where they land and
 # in carrying a date and a category, which the blog sorts and filters
-# on. The three hand-written posts already in content/blog are matched
+# on. The three hand-written posts already in content/blog/he are matched
 # by title and left alone rather than overwritten by the live version.
 
 def take_date(page: str) -> str:
@@ -948,12 +951,12 @@ def main():
     ap.add_argument("--all", action="store_true")
     ap.add_argument("--limit", type=int)
     ap.add_argument("--articles", metavar="JSON",
-                    help="import professional articles into content/blog from a "
+                    help="import professional articles into content/blog/he from a "
                          "JSON list of {url, title}")
     ap.add_argument("--excerpts", action="store_true",
                     help="only backfill excerpts, do not fetch")
     ap.add_argument("--relink", action="store_true",
-                    help="only rewrite links in content/kb, do not fetch")
+                    help="only rewrite links in content/kb/he, do not fetch")
     ap.add_argument("--optimise", "--optimize", action="store_true",
                     dest="optimise",
                     help="re-encode the already-imported images as WebP and "

@@ -19,34 +19,43 @@ import CTA from "../components/CTA"
 import AIAssistant from "../components/AIAssistant"
 import InlineCTA from "../components/InlineCTA"
 import SEO from "../components/SEO"
+import type { PageContext } from "../locales/config"
+import { useText } from "../locales/LocaleContext"
+import heText from "../locales/he/pages/index.json"
 
-const IndexPage: React.FC = () => (
-  <Layout>
-    <Hero />
-    <AILaunchpad />
-    <AITransform />
-    <AdSpot />
-    <Showcase />
-    <InlineCTA
-      title="רוצים לראות איך זה עובד אצלכם בעסק?"
-      note="בלי כרטיס אשראי, בלי התחייבות"
-      variant="dark"
-    />
-    <Features />
-    <Audience />
-    <FreePlan />
-    <GoogleReviews />
-    <SocialProof />
-    <InlineCTA title="אלפי עסקים כבר שולחים עם שלח מסר. מצטרפים?" />
-    <ISOCertification />
-    <GlobalReach />
-    <FAQ />
-    <MissionQuote />
-    <CTA />
-    <AIAssistant />
-  </Layout>
-)
+/* This page's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
+
+const IndexPage: React.FC = () => {
+  const t = useText(TEXT)
+  return (
+    <Layout>
+      <Hero />
+      <AILaunchpad />
+      <AITransform />
+      <AdSpot />
+      <Showcase />
+      <InlineCTA
+        title={t.ctaDemoTitle}
+        note={t.ctaDemoNote}
+        variant="dark"
+      />
+      <Features />
+      <Audience />
+      <FreePlan />
+      <GoogleReviews />
+      <SocialProof />
+      <InlineCTA title={t.ctaJoinTitle} />
+      <ISOCertification />
+      <GlobalReach />
+      <FAQ />
+      <MissionQuote />
+      <CTA />
+      <AIAssistant />
+    </Layout>
+  )
+}
 
 export default IndexPage
 
-export const Head: HeadFC = () => <SEO />
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => <SEO locale={pageContext.locale} pathname="/" />
