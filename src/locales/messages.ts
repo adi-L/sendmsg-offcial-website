@@ -4,9 +4,17 @@
    Keep the imports and the `he` keys alphabetical. */
 import type { Locale } from "./config"
 import heCommon from "./he/common.json"
+import heFooter from "./he/footer.json"
+import heHeader from "./he/header.json"
+import heLayout from "./he/layout.json"
+import hePromoPopup from "./he/promo-popup.json"
 
 const he = {
   common: heCommon,
+  footer: heFooter,
+  header: heHeader,
+  layout: heLayout,
+  "promo-popup": hePromoPopup,
 }
 
 export type Messages = typeof he
