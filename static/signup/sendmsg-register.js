@@ -1061,7 +1061,7 @@
 
               ${R({id:"reg-fullname",field:"fullname",label:t.fullnameLabel,type:"text",placeholder:t.fullnamePlaceholder,value:this.fullname,autocomplete:"name",onInput:o=>{this.fullname=o,this._nameStarsFired=!1},onBlurNative:()=>this._trySpawnNameStars(),onKeydown:o=>{o.key===" "&&this._trySpawnNameStars()}},...e)}
 
-              ${R({id:"reg-email",field:"email",label:t.emailLabel,type:"email",placeholder:t.emailPlaceholder,value:this.email,autocomplete:"email",onInput:o=>{this.email=o,this.updateEmailSuggestions(o)},onKeydown:o=>this._handleEmailKeydown(o),onBlurNative:()=>{setTimeout(()=>{this.emailSuggestions=[]},150)},emailSuggestions:this.emailSuggestions,emailSuggestionIndex:this.emailSuggestionIndex,onEmailSuggestionClick:o=>this.acceptEmailSuggestion(o)},...e)}
+              ${R({id:"reg-email",field:"email",label:t.emailLabel,type:"email",placeholder:t.emailPlaceholder,value:this.email,autocomplete:"username",onInput:o=>{this.email=o,this.updateEmailSuggestions(o)},onKeydown:o=>this._handleEmailKeydown(o),onBlurNative:()=>{setTimeout(()=>{this.emailSuggestions=[]},150)},emailSuggestions:this.emailSuggestions,emailSuggestionIndex:this.emailSuggestionIndex,onEmailSuggestionClick:o=>this.acceptEmailSuggestion(o)},...e)}
 
               ${R({id:"reg-phone",field:"phone",label:t.phoneLabel,type:"tel",placeholder:t.phonePlaceholder,value:this.phone,autocomplete:"tel",onInput:o=>{this.phone=o}},...e)}
 
