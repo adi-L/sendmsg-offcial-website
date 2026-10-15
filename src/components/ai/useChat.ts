@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState } from "react"
 import { loadTurnstile, getToken } from "./turnstile"
+import { useT } from "../../locales/LocaleContext"
 
 const BASE = process.env.GATSBY_AGENT_URL ?? ""
 const SITE_KEY = process.env.GATSBY_TURNSTILE_SITE_KEY ?? ""
@@ -16,9 +17,6 @@ const CHALLENGE_TIMEOUT_MS = 12_000
 export type Phase = "idle" | "starting" | "ready" | "thinking" | "degraded"
 export type Msg = { role: "user" | "assistant"; text: string }
 
-// Kept in sync with the line in knowledge/00-identity.md that tells the agent
-// how the conversation opened. Change one, change the other.
-const GREETING = "היי, אני שי. איך קוראים לך?"
 
 const post = async (path: string, body: unknown): Promise<Response> =>
   fetch(`${BASE}${path}`, {
@@ -48,6 +46,10 @@ const withTimeout = <T,>(p: Promise<T>, ms: number): Promise<T> =>
   })
 
 export function useChat() {
+  /* t.greeting is kept in sync with the line in knowledge/00-identity.md
+     that tells the agent how the conversation opened. Change one, change
+     the other. */
+  const t = useT("ai-assistant")
   const [phase, setPhase] = useState<Phase>("idle")
   const [messages, setMessages] = useState<Msg[]>([])
   // Transient, inline notice for a condition that must NOT degrade the
@@ -90,12 +92,12 @@ export function useChat() {
       // prompt that the UI already opened this way, otherwise a visitor whose
       // first reply is just a name would be answering a question the agent has
       // no record of asking.
-      setMessages((m) => (m.length ? m : [{ role: "assistant", text: GREETING }]))
+      setMessages((m) => (m.length ? m : [{ role: "assistant", text: t.greeting }]))
       setPhase("ready")
     } catch {
       setPhase("degraded")
     }
-  }, [])
+  }, [t.greeting])
 
   const send = useCallback(async (text: string): Promise<void> => {
     if (!token.current) {
@@ -115,7 +117,7 @@ export function useChat() {
         // throttle -- transient by nature -- so keep the panel exactly as
         // it was and let the visitor just try again.
         if (json.reason === "too_fast") {
-          setNotice("רגע אחד…")
+          setNotice(t.tooFast)
           setPhase("ready")
           return
         }
@@ -131,7 +133,7 @@ export function useChat() {
     } catch {
       setPhase("degraded")
     }
-  }, [])
+  }, [t.tooFast])
 
   const trackConversion = useCallback((event: "panel_click" | "signup_click"): void => {
     // Accepted blind spot: without a session token (e.g. /session itself

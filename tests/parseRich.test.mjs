@@ -1,6 +1,6 @@
 import { test } from "node:test"
 import assert from "node:assert/strict"
-import { parseRich } from "../src/locales/rich.ts"
+import { parseRich } from "../src/locales/parseRich.ts"
 
 test("plain text is one text node", () => {
   assert.deepEqual(parseRich("שלום"), [{ type: "text", value: "שלום" }])

@@ -1,5 +1,5 @@
 import React from "react"
-import { parseRich, RichNode } from "./rich"
+import { parseRich, RichNode } from "./parseRich"
 import LocalizedLink from "./LocalizedLink"
 
 const render = (nodes: RichNode[]): React.ReactNode[] =>
