@@ -21,22 +21,11 @@ import mariaKal from "../images/team/maria.webp"
 import yifatHalevi from "../images/team/yifat.webp"
 import orSkahi from "../images/team/or.webp"
 import type { PageContext } from "../locales/config"
+import { useT } from "../locales/LocaleContext"
+import { getT } from "../locales/messages"
+import type { Messages } from "../locales/messages"
 
-/* Outcomes first, tooling second: that is the order the reader cares about.
-   What changes for my business, then how.
-
-   The order is the argument, not a list: you gather an audience before you
-   can keep in touch with it, you keep in touch before a lead converts, a
-   customer has to exist before they can refer one, and growth is what the
-   four before it add up to. That is why these are numbered. */
-const outcomes = [
-  "לבנות קהילה",
-  "לשמור על קשר רציף עם לקוחות",
-  "להפוך לידים ללקוחות",
-  "להפוך לקוחות לשגרירים",
-  "לגדול בצורה מסודרת וחכמה",
-]
-
+/* outcomes: moved to src/locales/he/pages/about.json as "outcomes". */
 /* The platform's seven modules. Icons are the site's own set, lifted
    from the home page hero: 24-grid, 1.8 stroke, round caps. Nothing
    here invents a second icon language. */
@@ -57,9 +46,9 @@ const icon = (paths: React.ReactNode) => (
   </svg>
 )
 
-const tools = [
+const tools = (t: Messages["pages/about"]) => [
   {
-    label: "דיוור אלקטרוני מקצועי",
+    label: t.tools[0].label,
     icon: icon(
       <>
         <rect x="2" y="4" width="20" height="16" rx="2" />
@@ -68,13 +57,13 @@ const tools = [
     ),
   },
   {
-    label: "מערכת SMS חכמה",
+    label: t.tools[1].label,
     icon: icon(
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
     ),
   },
   {
-    label: "דפי נחיתה מעוצבים",
+    label: t.tools[2].label,
     icon: icon(
       <>
         <rect x="2" y="3" width="20" height="14" rx="2" />
@@ -84,7 +73,7 @@ const tools = [
     ),
   },
   {
-    label: "CRM מתקדם",
+    label: t.tools[3].label,
     icon: icon(
       <>
         <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -95,7 +84,7 @@ const tools = [
     ),
   },
   {
-    label: "אוטומציות שיווק",
+    label: t.tools[4].label,
     icon: icon(
       <>
         <circle cx="18" cy="5" r="3" />
@@ -107,7 +96,7 @@ const tools = [
     ),
   },
   {
-    label: "מערכת קורסים דיגיטליים",
+    label: t.tools[5].label,
     icon: icon(
       <>
         <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
@@ -116,7 +105,7 @@ const tools = [
     ),
   },
   {
-    label: "חיבור לדומיין האישי שלכם",
+    label: t.tools[6].label,
     icon: icon(
       <>
         <circle cx="12" cy="12" r="10" />
@@ -127,147 +116,54 @@ const tools = [
   },
 ]
 
-const story = [
-  {
-    year: "2004",
-    text: "בשנת 2004 חברת קומסטאר פיתחה אתרים לעסקים. עם הזמן, החלו להתרבות הבקשות של בעלי העסקים לניהול הלקוחות ושליחת ניוזלטרים.",
-  },
-  {
-    year: "2009",
-    text: "אז ב-2009 יצרנו את שלח מסר: פלטפורמה שמרכזת את כל כלי השיווק במקום אחד ומאפשרת לכל עסק לנהל קשר אמיתי ומתמשך עם הלקוחות שלו.",
-  },
-]
-
-/* The "why" closes the section rather than taking a third year slot: it is
-   present tense, and its short declarative lines are the best-written copy on
-   the site. They keep their own line breaks, because that cadence is the
-   writing. */
-const why = {
-  lead: "כי עסקים בישראל צריכים מערכת שיווק אחת, פשוטה, חכמה ומקצועית – שתעבוד בשבילם ולא להפך.",
-  lines: [
-    "מערכת שמדברת בעברית.",
-    "שמבינה את השוק הישראלי.",
-    "שנותנת מענה אמיתי לעסקים בכל סדר גודל: מעסקים קטנים ובינוניים ועד ארגונים וחברות גדולות.",
-  ],
-}
-
-/* The first entry leads the section and the other five follow it as a
-   ruled list. A six-up grid claimed all six weigh the same, which is
-   not what the company says about itself: simplicity is the founding
-   principle and the rest are how it is kept. Order is the claim. */
-const values = [
-  {
-    title: "פשטות לפני הכל",
-    desc: "אנחנו מאמינים שטכנולוגיה צריכה להיות נגישה. גם אם אתם לא אנשים טכניים, תוכלו להשתמש במערכת בקלות.",
-    icon: "simple",
-  },
-  {
-    title: "אנושיות",
-    desc: "מאחורי המערכת עומדים אנשים אמיתיים. צוות תמיכה שמקשיב, עוזר ומלווה.",
-    icon: "human",
-  },
-  {
-    title: "מקצועיות",
-    desc: "אנחנו מפתחים ומשדרגים כל הזמן, כדי שתהיה לכם מערכת יציבה, מאובטחת ומתקדמת.",
-    icon: "pro",
-  },
-  {
-    title: "התאמה לשוק הישראלי",
-    desc: "אפשרויות התאמה לשומרי שבת וחג, עבודה לפי החוק הישראלי, ממשק בעברית והתאמה לצרכים המקומיים.",
-    icon: "israel",
-  },
-  {
-    title: "אחריות",
-    desc: "המערכת עומדת בתקנות הגנת הפרטיות ובתקן ISO לאבטחת מידע, והחברה פועלת באחריות סביבתית, חברתית ותאגידית.",
-    icon: "responsibility",
-  },
-  {
-    title: "תרומה לקהילה",
-    desc: "אנחנו מאמינים שלעסקים יש אחריות חברתית, ומסייעים בקביעות לעמותות ולארגונים באמצעות תרומות, שיתופי פעולה ותמיכה טכנולוגית.",
-    icon: "community",
-  },
-]
-
+/* why: moved to src/locales/he/pages/about.json as "why". */
+/* values: moved to src/locales/he/pages/about.json as "values". */
 /* One illustrated set on one shared blue ground (#10649C), a hair off the
    brand's Primary Blue. Each portrait keeps that blue inside its own tile, so
    the set reads as one family without the colour taking over the section.
    Names and roles match the live site exactly. */
-const team = [
-  { name: "אסף שטרן", role: "מנכ״ל ובעלים", photo: asafStern },
-  { name: "מאיה מושקין", role: "מנהלת משרד וכספים", photo: mayaMushkin },
-  { name: "דודי אוחיון", role: "מנהל פיתוח", photo: dudiOchion },
-  { name: "מריאן", role: "מפתחת", photo: marian },
-  { name: "עדי לוי", role: "מפתח קריאדיטור", photo: adiLevi },
-  { name: "שי גולדשטיין", role: "מנהל מוצר וצוות תמיכה", photo: shaiGoldstein },
-  { name: "אלמוג קאפח", role: "תומך בכיר", photo: almogKapach },
-  { name: "מריה קאל", role: "צוות שירות ותמיכה", photo: mariaKal },
-  { name: "יפעת הלוי", role: "צוות שירות ותמיכה", photo: yifatHalevi },
-  { name: "אור סקיי", role: "תפעול וכתיבת תוכן", photo: orSkahi },
+const team = (t: Messages["pages/about"]) => [
+  { name: t.team[0].name, role: t.team[0].role, photo: asafStern },
+  { name: t.team[1].name, role: t.team[1].role, photo: mayaMushkin },
+  { name: t.team[2].name, role: t.team[2].role, photo: dudiOchion },
+  { name: t.team[3].name, role: t.team[3].role, photo: marian },
+  { name: t.team[4].name, role: t.team[4].role, photo: adiLevi },
+  { name: t.team[5].name, role: t.team[5].role, photo: shaiGoldstein },
+  { name: t.team[6].name, role: t.team[6].role, photo: almogKapach },
+  { name: t.team[7].name, role: t.team[7].role, photo: mariaKal },
+  { name: t.team[8].name, role: t.team[8].role, photo: yifatHalevi },
+  { name: t.team[9].name, role: t.team[9].role, photo: orSkahi },
 ]
 
-const certificates = [
+const certificates = (t: Messages["pages/about"]) => [
   {
     id: "iso",
-    name: "תקן ISO לאבטחת מידע",
+    name: t.certificates[0].name,
     desc: "ISO/IEC 27001:2022",
     mark: "seal",
     image: isoCert,
-    alt: "תעודת ISO/IEC 27001:2022 של קומסטאר מערכות בע״מ, מונפקת על ידי מכון התקנים הישראלי",
-    caption: "תעודת ההסמכה כפי שהונפקה על ידי מכון התקנים הישראלי",
+    alt: t.certificates[0].alt,
+    caption: t.certificates[0].caption,
     facts: [
-      ["התקן", "ת״י ISO/IEC 27001:2022"],
-      ["גוף מסמיך", "מכון התקנים הישראלי"],
-      ["מספר אישור", "1124792"],
-      ["בתוקף עד", "06/11/2028"],
+      [t.certificates[0].facts[0][0], t.certificates[0].facts[0][1]],
+      [t.certificates[0].facts[1][0], t.certificates[0].facts[1][1]],
+      [t.certificates[0].facts[2][0], "1124792"],
+      [t.certificates[0].facts[3][0], "06/11/2028"],
     ],
   },
   {
     id: "esg",
-    name: "דוח ESG",
-    desc: "אחריות חברתית, ממשל תאגידי וקיימות",
+    name: t.certificates[1].name,
+    desc: t.certificates[1].desc,
     mark: "leaf",
     image: escReport,
-    alt: "העמוד הראשון של דוח ה-ESG של קומסטאר מערכות בע״מ",
-    caption: "העמוד הראשון של הדוח השנתי",
+    alt: t.certificates[1].alt,
+    caption: t.certificates[1].caption,
     facts: [
-      ["סביבה", "מעבר מלא לדיגיטל, צמצום השימוש בנייר ובשינוע פיזי"],
-      ["חברה", "50% נשים בצוות, גיוס מכלל המגזרים"],
-      ["קהילה", "תרומות וסיוע טכנולוגי לעמותות"],
+      [t.certificates[1].facts[0][0], t.certificates[1].facts[0][1]],
+      [t.certificates[1].facts[1][0], t.certificates[1].facts[1][1]],
+      [t.certificates[1].facts[2][0], t.certificates[1].facts[2][1]],
     ],
-  },
-]
-
-const aboutFaqs: { q: string; a: string; list?: string[] }[] = [
-  {
-    q: "יש הרבה חברות שמציעות דיוור ושיווק. מה הערך המוסף שלכם?",
-    a: "נכון, יש הרבה מערכות בשוק. אצלנו דאגנו לרכז את הכל תחת קורת גג אחת, ברמה הגבוהה ביותר:",
-    list: [
-      "במערכת הקורסים יש כלים שלא תמצאו במקום אחר: תפריט עליון, קישור לקבוצת פייסבוק, מערך וובינרים ועוד.",
-      "מערכת ה-SMS מאפשרת הודעות ארוכות עם תוכן ומתן ערך אישי ללקוחות.",
-      "סטטיסטיקות חכמות שיעזרו להבין מה עובד ומה כדאי לשפר, כולל מפות חום.",
-      "אינטגרציה ברמה הגבוהה ביותר.",
-      "הכל במערכת אחת שחוסכת המון זמן וכסף.",
-    ],
-  },
-  {
-    q: "למי מתאימה מערכת שלח מסר?",
-    a: "המערכת מתאימה לעסקים קטנים וגדולים, ארגונים, עמותות, מרצים, יוצרי תוכן וכל מי שרוצה לנהל קשר ישיר עם קהל הלקוחות שלו.",
-  },
-  {
-    q: "איך עוברים לשלח מסר ממערכת אחרת?",
-    a: "המעבר פשוט וקל, וצוות התמיכה ילווה אתכם לאורך כל הדרך. לקוחות הרוכשים מנוי שנתי זכאים לשירות ניוד תכנים ללא עלות, כולל דפי נחיתה, רשימות תפוצה, קורסים, סדרות ותבניות ניוזלטר, בכמות סבירה במסגרת השירות.",
-  },
-  {
-    q: "איזו תמיכה אתם מספקים?",
-    a: "באתר תמצאו מדריכים מפורטים לשימוש במערכת, וניתן לפנות לצוות התמיכה במייל. לקוחות בתשלום נהנים גם מתמיכת VIP מלאה: מענה בצ׳אט, בוואטסאפ ובטלפון בשעות הפעילות.",
-  },
-  {
-    q: "האם ניתן לנסות את המערכת לפני רכישה?",
-    a: "בטח. ניתן להשתמש במערכת במסגרת חבילה חינמית הכוללת עד 250 מנויים, ולשדרג לחבילה מתקדמת רק כשתצטרכו.",
-  },
-  {
-    q: "האם השימוש בשלח מסר עומד בדרישות חוק הגנת הפרטיות?",
-    a: "כן. המערכת מספקת כלים לניהול רשימות תפוצה ולשליחת מסרים תוך שמירה על עקרונות החוק. יחד עם זאת, האחריות על איסוף המידע, רישום מאגרי המידע במידת הצורך והשימוש בו בהתאם לחוק חלה עליכם, בעלי העסק.",
   },
 ]
 
@@ -452,9 +348,10 @@ function useReveal<T extends HTMLElement>() {
 }
 
 const AboutPage: React.FC = () => {
+  const t = useT("pages/about")
   const [openFaq, setOpenFaq] = useState<number | null>(0)
   const [activeCert, setActiveCert] = useState(0)
-  const cert = certificates[activeCert]
+  const cert = certificates(t)[activeCert]
   const reveal = useReveal<HTMLUListElement>()
 
   return (
@@ -464,24 +361,23 @@ const AboutPage: React.FC = () => {
             claim and the three facts behind it. */}
         <section className="ab-hero">
           <div className="container">
-            <h1 className="ab-hero-title">אודות</h1>
+            <h1 className="ab-hero-title">{t.heroTitle}</h1>
             <p className="ab-hero-claim">
-              מערכת דיוור ושיווק חכמה
-              <span className="ab-hero-year">לעסקים בישראל</span>
+              {t.heroClaim}
+              <span className="ab-hero-year">{t.heroYear}</span>
             </p>
             <p className="ab-hero-lede">
-              מאז 2009 אנחנו מרכזים את כל כלי השיווק של העסק במקום אחד, בעברית,
-              עם אנשים אמיתיים מאחורי המערכת.
+              {t.heroLede}
             </p>
             <ul className="ab-facts">
               <li>
-                <Counter target={50000} suffix="+" /> משתמשים הצטרפו אלינו
+                <Counter target={50000} suffix="+" />{t.li}
               </li>
               <li>
-                <span className="ab-num">2009</span> שנת ההקמה
+                <span className="ab-num">2009</span>{t.li2}
               </li>
               <li>
-                <span className="ab-num">7</span> כלי שיווק בפלטפורמה אחת
+                <span className="ab-num">7</span>{t.li3}
               </li>
             </ul>
           </div>
@@ -491,7 +387,7 @@ const AboutPage: React.FC = () => {
             it. Their own marks, moving, full bleed: the band has to read as
             a wall that continues past both edges, which a fixed row of
             typed-out names never did. */}
-        <section className="ab-clients" aria-label="בין הלקוחות שלנו">
+        <section className="ab-clients" aria-label={t.ariaLabel}>
           <ClientMarquee />
         </section>
 
@@ -499,11 +395,11 @@ const AboutPage: React.FC = () => {
         <section className="ab-section ab-soft">
           <div className="container">
             <div className="ab-head">
-              <h2>מה אנחנו עושים</h2>
+              <h2>{t.h2}</h2>
             </div>
             <div className="ab-do">
               <ol className="ab-outcomes">
-                {outcomes.map((o, i) => (
+                {t.outcomes.map((o, i) => (
                   <li key={o}>
                     <span className="ab-outcome-n">
                       {String(i + 1).padStart(2, "0")}
@@ -517,7 +413,7 @@ const AboutPage: React.FC = () => {
 
               <div className="ab-do-tools">
                 <ul className="ab-tools">
-                  {tools.map((tool) => (
+                  {tools(t).map((tool) => (
                     <li key={tool.label}>
                       <span className="ab-tool-icon">{tool.icon}</span>
                       {tool.label}
@@ -533,11 +429,11 @@ const AboutPage: React.FC = () => {
         <section className="ab-section dot-grid">
           <div className="container">
             <div className="ab-head">
-              <h2>איך הכל התחיל?</h2>
+              <h2>{t.h22}</h2>
             </div>
 
             <ol className="ab-story">
-              {story.map((stop) => (
+              {t.story.map((stop) => (
                 <li key={stop.year} className="ab-stop">
                   <span className="ab-stop-year">{stop.year}</span>
                   <p>{stop.text}</p>
@@ -546,9 +442,9 @@ const AboutPage: React.FC = () => {
             </ol>
 
             <div className="ab-why">
-              <p className="ab-why-lead">{why.lead}</p>
+              <p className="ab-why-lead">{t.why.lead}</p>
               <p className="ab-why-lines">
-                {why.lines.map((line) => (
+                {t.why.lines.map((line) => (
                   <span key={line}>{line}</span>
                 ))}
               </p>
@@ -561,14 +457,13 @@ const AboutPage: React.FC = () => {
           <div className="container">
             <figure>
               <blockquote>
-                ״אנחנו מאמינים שלכל בעל עסק יש ערך ייחודי לתת לעולם, וששום מכשול
-                טכנולוגי או שיווקי לא צריך לעמוד בדרך של החופש שלו לצמוח ולהצליח.״
+                {t.blockquote}
               </blockquote>
               <figcaption>
                 <img src={asafStern} alt="" width={72} height={72} loading="lazy" />
                 <span>
-                  <strong>אסף שטרן</strong>
-                  <span>מנכ״ל ובעלים</span>
+                  <strong>{t.strong}</strong>
+                  <span>{t.span}</span>
                 </span>
               </figcaption>
             </figure>
@@ -576,8 +471,8 @@ const AboutPage: React.FC = () => {
         </section>
 
         <InlineCTA
-          title="רוצים לראות איך זה מרגיש מבפנים?"
-          note="בלי כרטיס אשראי, בלי התחייבות"
+          title={t.title}
+          note={t.note}
           variant="dark"
         />
 
@@ -586,10 +481,9 @@ const AboutPage: React.FC = () => {
         <section className="ab-section">
           <div className="container">
             <div className="ab-head ab-vision">
-              <h2>חזון החברה</h2>
+              <h2>{t.h23}</h2>
               <p>
-                להיות הבחירה הראשונה של כל עסק לשיווק דיגיטלי פשוט, נגיש ואוטומטי,
-                כדי שתוכלו להתרכז במה שאתם טובים בו.
+                {t.p}
               </p>
             </div>
           </div>
@@ -601,11 +495,11 @@ const AboutPage: React.FC = () => {
         <section className="ab-section ab-soft">
           <div className="container">
             <div className="ab-head">
-              <h2>הערכים שלנו</h2>
+              <h2>{t.h24}</h2>
             </div>
 
             <ul className="ab-value-list">
-              {values.map((v) => (
+              {t.values.map((v) => (
                 <li key={v.title}>
                   <ValueMark type={v.icon} />
                   <div>
@@ -622,10 +516,9 @@ const AboutPage: React.FC = () => {
         <section className="ab-section">
           <div className="container">
             <div className="ab-head">
-              <h2>שני מסמכים שאנחנו גאים בהם</h2>
+              <h2>{t.h25}</h2>
               <p>
-                המידע של הלקוחות שלכם שמור אצלנו לפי תקנים בינלאומיים, וגם האחריות
-                החברתית והסביבתית שלנו מתועדת ושקופה.
+                {t.p2}
               </p>
             </div>
 
@@ -642,14 +535,14 @@ const AboutPage: React.FC = () => {
                 <figcaption>
                   <span>{cert.caption}</span>
                   <a href={cert.image} target="_blank" rel="noopener noreferrer">
-                    פתיחה בגודל מלא
+                    {t.a}
                   </a>
                 </figcaption>
               </figure>
 
               <div className="ab-cert-side">
-                <div className="ab-cert-picker" role="group" aria-label="בחירת מסמך לצפייה">
-                  {certificates.map((c, i) => (
+                <div className="ab-cert-picker" role="group" aria-label={t.ariaLabel2}>
+                  {certificates(t).map((c, i) => (
                     <button
                       key={c.id}
                       type="button"
@@ -683,14 +576,13 @@ const AboutPage: React.FC = () => {
         <section className="ab-section ab-team">
           <div className="container">
             <div className="ab-head">
-              <h2>צוות שלח מסר</h2>
+              <h2>{t.h26}</h2>
               <p>
-                חברת קומסטאר וצוות שלח מסר דואגים שהלקוח לא יישאר לבד, ומלווים
-                אותו בבניית תהליכים ובהגדלת העסק.
+                {t.p3}
               </p>
             </div>
             <ul className="ab-team-grid" ref={reveal.ref} data-state={reveal.state}>
-              {team.map((member, i) => (
+              {team(t).map((member, i) => (
                 <li key={member.name} style={{ "--i": i } as React.CSSProperties}>
                   <span className="ab-portrait">
                     <img src={member.photo} alt={member.name} loading="lazy" />
@@ -707,10 +599,10 @@ const AboutPage: React.FC = () => {
         <section className="ab-section dot-grid">
           <div className="container">
             <div className="ab-head">
-              <h2>שאלות נפוצות</h2>
+              <h2>{t.h27}</h2>
             </div>
             <div className="ab-faq">
-              {aboutFaqs.map((faq, i) => (
+              {t.aboutFaqs.map((faq, i) => (
                 <div key={faq.q} className="ab-faq-item" data-open={openFaq === i}>
                   <h3>
                     <button
@@ -770,10 +662,13 @@ const AboutPage: React.FC = () => {
 
 export default AboutPage
 
-export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => (
-  <SEO locale={pageContext.locale}
-    title="אודות"
-    description="הכירו את שלח מסר, מערכת דיוור ושיווק חכמה לעסקים ישראליים מאז 2009. למעלה מ-50 אלף משתמשים."
-    pathname="/about/"
-  />
-)
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
+  const t = getT(pageContext.locale, "pages/about")
+  return (
+    <SEO locale={pageContext.locale}
+      title={t.seo.title}
+      description={t.seo.description}
+      pathname="/about/"
+    />
+  )
+}

@@ -6,6 +6,9 @@ import CTA from "../components/CTA"
 import { SUPPORT_EMAIL } from "../data/api"
 import "../styles/jobs.css"
 import type { PageContext } from "../locales/config"
+import { useT } from "../locales/LocaleContext"
+import { getT } from "../locales/messages"
+import { formatText } from "../locales/config"
 
 /* Applications have nowhere to go yet: the form flips to a success state
    in the browser, exactly like /contact/. The mail row beside it is the
@@ -106,134 +109,15 @@ type Opening = {
   plus: string[]
 }
 
-const OPENINGS: Opening[] = [
-  {
-    id: "support",
-    title: "תמיכה ושירות לקוחות",
-    count: 2,
-    meta: "משרה מלאה · עבודה מרחוק",
-    lede: "עונים ללקוחות בטלפון, בוואטסאפ ובמייל, ומלמדים אותם להוציא מהמערכת את המקסימום.",
-    doing: [
-      "מענה ללקוחות בטלפון, בוואטסאפ ובמייל בשעות הפעילות",
-      "ליווי לקוחות חדשים בהקמת רשימות תפוצה, דיוורים ודפי נחיתה",
-      "בירור תקלות מול צוות הפיתוח, מהפנייה הראשונה ועד הסגירה",
-      "כתיבת מדריכים קצרים למרכז הידע מתוך השאלות שחוזרות",
-    ],
-    need: [
-      "עברית רהוטה בכתב ובדיבור, וסבלנות אמיתית לאנשים",
-      "שנה לפחות בתמיכה, בשירות לקוחות או בהדרכה",
-      "נוחות עם מערכות אינטרנט: ממשקי ניהול, אקסל, דפדפן",
-      "זמינות לשעות הפעילות, ראשון עד חמישי, 9:00 עד 17:00",
-    ],
-    plus: [
-      "היכרות עם מערכת דיוור או CRM מהצד של המשתמש",
-      "אנגלית טובה",
-      "ניסיון בכתיבת תוכן הדרכה",
-    ],
-  },
-  {
-    id: "fullstack-ai",
-    title: "Fullstack AI Developer",
-    count: 1,
-    ltr: true,
-    meta: "משרה מלאה · עבודה מרחוק",
-    lede: "בונים פיצ׳רים מקצה לקצה, ומכניסים מודלים של AI לתוך המוצר עצמו ולא לצידו.",
-    doing: [
-      "פיתוח פיצ׳רים שלמים, מהממשק ועד ה-API ועד הנתונים",
-      "שילוב מודלים של LLM במוצר: כתיבת תוכן, פילוח, סיכומים ואוטומציות",
-      "בנייה ותחזוקה של אינטגרציות ו-API למפתחים ולשותפים",
-      "שיפור מהירות, אמינות ואבטחה בקוד שרץ בפרודקשן מול לקוחות",
-    ],
-    need: [
-      "שלוש שנות ניסיון בפיתוח פולסטאק",
-      "שליטה ב-JavaScript או TypeScript ובצד שרת, Node.js או PHP",
-      "עבודה שוטפת עם בסיס נתונים רלציוני ועם REST API",
-      "ניסיון מעשי בעבודה עם מודלים דרך API, לא רק קריאה עליהם",
-    ],
-    plus: [
-      "React",
-      "RAG, embeddings או בסיס נתונים וקטורי",
-      "CI ותשתיות, ועבודה על מערכות בהיקף של מיליוני הודעות",
-    ],
-  },
-  {
-    id: "biz-dev",
-    title: "פיתוח עסקי",
-    count: 1,
-    meta: "משרה מלאה · עבודה מרחוק",
-    lede: "מביאים לקוחות ושותפים חדשים, מהפנייה הראשונה ועד החתימה ואחריה.",
-    doing: [
-      "יצירת הזדמנויות חדשות: פנייה יזומה, כנסים, סוכנויות ושותפויות",
-      "ניהול תהליך מכירה שלם מול עסקים, ארגונים ועמותות",
-      "הצגת דמו של המערכת ובניית הצעת מחיר שמתאימה לצורך",
-      "עבודה מול השיווק והתמיכה, כדי שהלקוח יישאר גם אחרי החתימה",
-    ],
-    need: [
-      "שנתיים לפחות במכירות B2B או בפיתוח עסקי",
-      "יכולת לנהל שיחה עם בעלי עסקים ומנהלי שיווק בגובה העיניים",
-      "סדר בעבודה מול CRM ובדיווח על צינור העסקאות",
-      "רישיון נהיגה ונכונות לפגישה בשטח כשצריך",
-    ],
-    plus: [
-      "היכרות עם עולם הדיוור, ה-SaaS או השיווק הדיגיטלי",
-      "אנגלית",
-      "ניסיון בבניית שותפויות",
-    ],
-  },
-]
+const countLabel = (n: number, t: { countOne: string; countMany: string }) =>
+  n === 1 ? t.countOne : formatText(t.countMany, { n })
 
-const TOTAL = OPENINGS.reduce((sum, job) => sum + job.count, 0)
-
-const countLabel = (n: number) => (n === 1 ? "משרה אחת" : `${n} משרות`)
-
-/* Facts the site already stands behind elsewhere: the founding years and
-   the user count from /about/, the certificate from its documents
-   section. Nothing here is a perk we made up. */
-const facts = [
-  {
-    icon: "home",
-    t: "עבודה מרחוק, לא היברידית",
-    d: "כל המשרות מרחוק. הצוות עובד מכל מקום בארץ ונפגש כשיש סיבה.",
-  },
-  {
-    icon: "users",
-    t: "למעלה מ-50 אלף משתמשים",
-    d: "מה שתבנו או תתמכו בו נוגע בעסקים אמיתיים באותו שבוע.",
-  },
-  {
-    icon: "layers",
-    t: "חברה עם קרקע מתחת לרגליים",
-    d: "קומסטאר קמה ב-2004, שלח מסר עלתה לאוויר ב-2009 ומתפתחת מאז.",
-  },
-  {
-    icon: "shield",
-    t: "תקן ISO/IEC 27001:2022",
-    d: "עובדים לפי נהלים כתובים של אבטחת מידע, גם בפיתוח וגם בתמיכה.",
-  },
-]
-
-const steps = [
-  {
-    t: "שולחים פרטים",
-    d: "טופס קצר, או מייל עם קורות חיים. שתי הדרכות מגיעות לאותו מקום.",
-  },
-  {
-    t: "שיחת היכרות",
-    d: "עשרים דקות בטלפון, בדרך כלל בתוך שבוע מהשליחה.",
-  },
-  {
-    t: "פגישה מקצועית",
-    d: "שיחה עם מי שתעבדו איתו יום יום, ובפיתוח גם משימה קטנה.",
-  },
-  {
-    t: "תשובה, בכל מקרה",
-    d: "גם כשזה לא מתאים. אף מועמד לא נשאר בלי מענה.",
-  },
-]
-
+/* facts: moved to src/locales/he/pages/jobs.json as "facts". */
 const JobsPage: React.FC = () => {
-  const [openId, setOpenId] = useState<string | null>(OPENINGS[0].id)
-  const [role, setRole] = useState(OPENINGS[0].title)
+  const t = useT("pages/jobs")
+  const TOTAL = t.openings.reduce((sum, job) => sum + job.count, 0)
+  const [openId, setOpenId] = useState<string | null>(t.openings[0].id)
+  const [role, setRole] = useState(t.openings[0].title)
   const [submitted, setSubmitted] = useState(false)
 
   const handleSubmit = (e: FormEvent) => {
@@ -255,15 +139,14 @@ const JobsPage: React.FC = () => {
             makes it worth reading: how many seats are actually open. */}
         <section className="jb-hero">
           <div className="container">
-            <h1 className="jb-hero-title">דרושים</h1>
-            <p className="jb-hero-claim">בואו לבנות איתנו את שלח מסר</p>
+            <h1 className="jb-hero-title">{t.heroTitle}</h1>
+            <p className="jb-hero-claim">{t.heroClaim}</p>
             <p className="jb-hero-lede">
-              כל המשרות בעבודה מרחוק, בצוות שבונה את מערכת השיווק של עשרות אלפי
-              עסקים בישראל.
+              {t.heroLede}
             </p>
             <p className="jb-count">
               <span className="jb-count-n jb-ltr">{TOTAL}</span>
-              <span>משרות פתוחות עכשיו</span>
+              <span>{t.span}</span>
             </p>
           </div>
         </section>
@@ -274,17 +157,15 @@ const JobsPage: React.FC = () => {
           <div className="container jb-split jb-split-why">
             <div className="jb-why-said">
               <div className="jb-head">
-                <h2>למה כאן</h2>
+                <h2>{t.h2}</h2>
                 <p>
-                  שלח מסר היא מערכת שיווק ודיוור לעסקים ישראליים: ניוזלטרים, SMS,
-                  דפי נחיתה, קורסים דיגיטליים ו-CRM במקום אחד. צוות קטן, מוצר
-                  שמשתמשים בו כל יום, ומרחק קצר מאוד בין רעיון לאוויר.
+                  {t.p}
                 </p>
               </div>
             </div>
 
             <dl className="jb-facts">
-              {facts.map(fact => (
+              {t.facts.map(fact => (
                 <div className="jb-fact" key={fact.t}>
                   <span className="jb-fact-icon">{stroke(factIcons[fact.icon])}</span>
                   <dt>{fact.t}</dt>
@@ -301,15 +182,14 @@ const JobsPage: React.FC = () => {
         <section className="jb-section jb-roles-sec">
           <div className="container">
             <div className="jb-head">
-              <h2>המשרות הפתוחות</h2>
+              <h2>{t.h22}</h2>
               <p>
-                {countLabel(TOTAL)} בסך הכול. פותחים משרה כדי לקרוא מה עושים בה, מה
-                נדרש ומה נחשב יתרון.
+                {countLabel(TOTAL, t)}{t.p2}
               </p>
             </div>
 
             <div className="jb-roles">
-              {OPENINGS.map(job => {
+              {t.openings.map(job => {
                 const isOpen = openId === job.id
                 return (
                   <div className="jb-role" key={job.id} data-open={isOpen}>
@@ -327,7 +207,7 @@ const JobsPage: React.FC = () => {
                             <span className={`jb-role-t${job.ltr ? " jb-ltr" : ""}`}>
                               {job.title}
                             </span>
-                            <span className="jb-badge">{countLabel(job.count)}</span>
+                            <span className="jb-badge">{countLabel(job.count, t)}</span>
                           </span>
                           <span className="jb-role-meta">{job.meta}</span>
                           <span className="jb-role-lede">{job.lede}</span>
@@ -348,7 +228,7 @@ const JobsPage: React.FC = () => {
                       <div className="jb-panel-in">
                         <div className="jb-lists">
                           <div className="jb-list">
-                            <h4>מה עושים בתפקיד</h4>
+                            <h4>{t.h4}</h4>
                             <ul>
                               {job.doing.map(line => (
                                 <li key={line}>{line}</li>
@@ -356,7 +236,7 @@ const JobsPage: React.FC = () => {
                             </ul>
                           </div>
                           <div className="jb-list">
-                            <h4>מה נדרש</h4>
+                            <h4>{t.h42}</h4>
                             <ul>
                               {job.need.map(line => (
                                 <li key={line}>{line}</li>
@@ -364,7 +244,7 @@ const JobsPage: React.FC = () => {
                             </ul>
                           </div>
                           <div className="jb-list">
-                            <h4>יתרון</h4>
+                            <h4>{t.h43}</h4>
                             <ul>
                               {job.plus.map(line => (
                                 <li key={line}>{line}</li>
@@ -378,7 +258,7 @@ const JobsPage: React.FC = () => {
                           className="jb-role-apply"
                           onClick={() => applyFor(job.title)}
                         >
-                          להגיש מועמדות לתפקיד הזה
+                          {t.roleApply}
                         </button>
                       </div>
                     </div>
@@ -388,8 +268,7 @@ const JobsPage: React.FC = () => {
             </div>
 
             <p className="jb-none">
-              לא מצאתם משרה מתאימה? שלחו קורות חיים בכל זאת ונשמור אותם אצלנו
-              לתפקיד הבא שייפתח.
+              {t.none}
             </p>
           </div>
         </section>
@@ -399,11 +278,11 @@ const JobsPage: React.FC = () => {
         <section className="jb-section jb-flow-sec">
           <div className="container">
             <div className="jb-head">
-              <h2>מה קורה אחרי שנשלח</h2>
-              <p>התהליך קצר בכוונה. אנחנו צוות קטן ולא מגלגלים מועמדים בין חמישה ראיונות.</p>
+              <h2>{t.h23}</h2>
+              <p>{t.p3}</p>
             </div>
             <ol className="jb-flow">
-              {steps.map((step, i) => (
+              {t.steps.map((step, i) => (
                 <li className="jb-flow-step" key={step.t}>
                   <span className="jb-flow-n jb-ltr" aria-hidden="true">
                     {String(i + 1).padStart(2, "0")}
@@ -429,29 +308,28 @@ const JobsPage: React.FC = () => {
                       <circle className="jb-sent-ring" cx="26" cy="26" r="24" fill="none" />
                       <path className="jb-sent-tick" fill="none" d="M14 27l8 8 16-17" />
                     </svg>
-                    <h3>הפרטים נשלחו, תודה!</h3>
-                    <p>נעבור על מה ששלחתם ונחזור אליכם, גם אם התשובה היא שזה לא מתאים כרגע.</p>
+                    <h3>{t.h3}</h3>
+                    <p>{t.p4}</p>
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit}>
-                    <p className="jb-form-intro">הגשת מועמדות</p>
+                    <p className="jb-form-intro">{t.formIntro}</p>
                     <p className="jb-form-sub">
-                      ממלאים, מוסיפים קישור לקורות חיים או ללינקדאין, ואנחנו חוזרים
-                      אליכם.
+                      {t.formSub}
                     </p>
 
                     <div className="jb-field">
-                      <label htmlFor="jb-name">איך קוראים לך?</label>
+                      <label htmlFor="jb-name">{t.label}</label>
                       <input id="jb-name" name="name" type="text" autoComplete="name" required />
                     </div>
 
                     <div className="jb-pair">
                       <div className="jb-field">
-                        <label htmlFor="jb-phone">מס׳ טלפון שניתן לחזור אליו?</label>
+                        <label htmlFor="jb-phone">{t.label2}</label>
                         <input id="jb-phone" name="phone" type="tel" autoComplete="tel" required />
                       </div>
                       <div className="jb-field">
-                        <label htmlFor="jb-email">כתובת מייל פעילה?</label>
+                        <label htmlFor="jb-email">{t.label3}</label>
                         <input
                           id="jb-email"
                           name="email"
@@ -463,7 +341,7 @@ const JobsPage: React.FC = () => {
                     </div>
 
                     <div className="jb-field">
-                      <label htmlFor="jb-role">לאיזה תפקיד?</label>
+                      <label htmlFor="jb-role">{t.label4}</label>
                       <div className="jb-select">
                         <select
                           id="jb-role"
@@ -471,12 +349,12 @@ const JobsPage: React.FC = () => {
                           value={role}
                           onChange={e => setRole(e.target.value)}
                         >
-                          {OPENINGS.map(job => (
+                          {t.openings.map(job => (
                             <option key={job.id} value={job.title}>
                               {job.title}
                             </option>
                           ))}
-                          <option value="general">משרה אחרת, שולח בכל זאת</option>
+                          <option value="general">{t.select}</option>
                         </select>
                         <span className="jb-select-caret" aria-hidden="true">
                           {stroke(<path d="m6 9 6 6 6-6" />, 18)}
@@ -485,7 +363,7 @@ const JobsPage: React.FC = () => {
                     </div>
 
                     <div className="jb-field">
-                      <label htmlFor="jb-cv">קישור לקורות חיים או ללינקדאין</label>
+                      <label htmlFor="jb-cv">{t.label5}</label>
                       <input
                         id="jb-cv"
                         name="cv"
@@ -498,17 +376,17 @@ const JobsPage: React.FC = () => {
 
                     <div className="jb-field">
                       <label htmlFor="jb-about">
-                        כמה מילים עליך
-                        <span className="jb-opt">לא חובה</span>
+                        {t.label6}
+                        <span className="jb-opt">{t.opt}</span>
                       </label>
                       <textarea id="jb-about" name="about" rows={4} />
                     </div>
 
                     <button type="submit" className="jb-submit">
-                      שליחת מועמדות
+                      {t.submit}
                     </button>
                     <p className="jb-note">
-                      הפרטים מגיעים לצוות שלנו בלבד ולא מועברים לאף גוף אחר.
+                      {t.note}
                     </p>
                   </form>
                 )}
@@ -517,17 +395,17 @@ const JobsPage: React.FC = () => {
 
             <div className="jb-aside">
               <div className="jb-head">
-                <h2>או פשוט במייל</h2>
-                <p>מעדיפים לצרף קובץ? שלחו קורות חיים ונענה משם.</p>
+                <h2>{t.h24}</h2>
+                <p>{t.p5}</p>
               </div>
-              <a className="jb-row" href={`mailto:${JOBS_EMAIL}?subject=${encodeURIComponent("הגשת מועמדות")}`}>
+              <a className="jb-row" href={`mailto:${JOBS_EMAIL}?subject=${encodeURIComponent(t.applySubject)}`}>
                 <span className="jb-row-icon">
                   <MailIcon />
                 </span>
                 <span className="jb-row-main">
-                  <span className="jb-row-t">שליחת קורות חיים</span>
+                  <span className="jb-row-t">{t.rowT}</span>
                   <span className="jb-row-v jb-ltr">{JOBS_EMAIL}</span>
-                  <span className="jb-row-note">כתבו בשורת הנושא את שם התפקיד.</span>
+                  <span className="jb-row-note">{t.rowNote}</span>
                 </span>
                 <span className="jb-row-go">
                   <GoIcon />
@@ -545,10 +423,13 @@ const JobsPage: React.FC = () => {
 
 export default JobsPage
 
-export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => (
-  <SEO locale={pageContext.locale}
-    title="דרושים"
-    description="המשרות הפתוחות בשלח מסר: תמיכה ושירות לקוחות, Fullstack AI Developer ופיתוח עסקי. כל המשרות בעבודה מרחוק."
-    pathname="/jobs/"
-  />
-)
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
+  const t = getT(pageContext.locale, "pages/jobs")
+  return (
+    <SEO locale={pageContext.locale}
+      title={t.seo.title}
+      description={t.seo.description}
+      pathname="/jobs/"
+    />
+  )
+}

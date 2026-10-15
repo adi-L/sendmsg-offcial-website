@@ -46,3 +46,10 @@ test("formatText fills placeholders and leaves unknown ones alone", () => {
   assert.equal(formatText("{n} מדריכים", { n: 98 }), "98 מדריכים")
   assert.equal(formatText("{a} ו-{b}", { a: "x" }), "x ו-{b}")
 })
+
+test("splitTemplate separates text from {placeholders}, keeping spaces", async () => {
+  const { splitTemplate } = await import("../src/locales/config.ts")
+  assert.deepEqual(splitTemplate("מ-{price} לחודש"), ["מ-", { name: "price" }, " לחודש"])
+  assert.deepEqual(splitTemplate("{a}{b}"), [{ name: "a" }, { name: "b" }])
+  assert.deepEqual(splitTemplate("בלי משתנים"), ["בלי משתנים"])
+})

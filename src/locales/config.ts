@@ -45,3 +45,12 @@ export function articleLocale(fileAbsolutePath: string): string | null {
 export function formatText(template: string, vars: Record<string, string | number>): string {
   return template.replace(/\{(\w+)\}/g, (whole, k) => (k in vars ? String(vars[k]) : whole))
 }
+
+/* "מ-{price} לחודש" -> ["מ-", { name: "price" }, " לחודש"], for templates
+   whose placeholders are filled with elements rather than strings. */
+export function splitTemplate(template: string): (string | { name: string })[] {
+  return template
+    .split(/(\{\w+\})/)
+    .filter((part) => part !== "")
+    .map((part) => (/^\{\w+\}$/.test(part) ? { name: part.slice(1, -1) } : part))
+}

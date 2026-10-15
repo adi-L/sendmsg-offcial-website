@@ -25,7 +25,13 @@ import heIsoCertification from "./he/iso-certification.json"
 import heLayout from "./he/layout.json"
 import heMediaPlaceholder from "./he/media-placeholder.json"
 import heMissionQuote from "./he/mission-quote.json"
+import hePages404 from "./he/pages/404.json"
+import hePagesAbout from "./he/pages/about.json"
+import hePagesDigitalCourses from "./he/pages/digital-courses.json"
 import hePagesIndex from "./he/pages/index.json"
+import hePagesJobs from "./he/pages/jobs.json"
+import hePagesNewsletters from "./he/pages/newsletters.json"
+import hePagesServices from "./he/pages/services.json"
 import hePricing from "./he/pricing.json"
 import hePromoPopup from "./he/promo-popup.json"
 import heShowcase from "./he/showcase.json"
@@ -55,7 +61,13 @@ const he = {
   layout: heLayout,
   "media-placeholder": heMediaPlaceholder,
   "mission-quote": heMissionQuote,
+  "pages/404": hePages404,
+  "pages/about": hePagesAbout,
+  "pages/digital-courses": hePagesDigitalCourses,
   "pages/index": hePagesIndex,
+  "pages/jobs": hePagesJobs,
+  "pages/newsletters": hePagesNewsletters,
+  "pages/services": hePagesServices,
   pricing: hePricing,
   "promo-popup": hePromoPopup,
   showcase: heShowcase,
