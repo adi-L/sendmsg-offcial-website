@@ -27,11 +27,17 @@ import heMediaPlaceholder from "./he/media-placeholder.json"
 import heMissionQuote from "./he/mission-quote.json"
 import hePages404 from "./he/pages/404.json"
 import hePagesAbout from "./he/pages/about.json"
+import hePagesAccessibility from "./he/pages/accessibility.json"
+import hePagesCreaditor from "./he/pages/creaditor.json"
 import hePagesDigitalCourses from "./he/pages/digital-courses.json"
+import hePagesDomain from "./he/pages/domain.json"
 import hePagesIndex from "./he/pages/index.json"
 import hePagesJobs from "./he/pages/jobs.json"
 import hePagesNewsletters from "./he/pages/newsletters.json"
 import hePagesServices from "./he/pages/services.json"
+import hePagesShomerShabbat from "./he/pages/shomer-shabbat.json"
+import hePagesSms from "./he/pages/sms.json"
+import hePagesSupport from "./he/pages/support.json"
 import hePricing from "./he/pricing.json"
 import hePromoPopup from "./he/promo-popup.json"
 import heShowcase from "./he/showcase.json"
@@ -63,11 +69,17 @@ const he = {
   "mission-quote": heMissionQuote,
   "pages/404": hePages404,
   "pages/about": hePagesAbout,
+  "pages/accessibility": hePagesAccessibility,
+  "pages/creaditor": hePagesCreaditor,
   "pages/digital-courses": hePagesDigitalCourses,
+  "pages/domain": hePagesDomain,
   "pages/index": hePagesIndex,
   "pages/jobs": hePagesJobs,
   "pages/newsletters": hePagesNewsletters,
   "pages/services": hePagesServices,
+  "pages/shomer-shabbat": hePagesShomerShabbat,
+  "pages/sms": hePagesSms,
+  "pages/support": hePagesSupport,
   pricing: hePricing,
   "promo-popup": hePromoPopup,
   showcase: heShowcase,
