@@ -1,6 +1,8 @@
 import React, { useState } from "react"
-import { Link } from "gatsby"
 import { openSignup, PANEL_URL } from "./SignupDialog"
+import { formatText } from "../locales/config"
+import LocalizedLink from "../locales/LocalizedLink"
+import { useT } from "../locales/LocaleContext"
 
 /* ── Email bank prices ──────────────────────────────────────────
    Read straight off the live calculator at
@@ -37,35 +39,9 @@ const CUSTOM_STEP = QTY.length
 
 const he = (n: number) => n.toLocaleString("he-IL")
 
-/* What the free starter plan actually includes, per the live page */
-const freePlan = [
-  "עד 250 מנויים",
-  "2,000 דיוורים בחודש",
-  "החבילה ללא הגבלת זמן",
-  "עד 5 דפי נחיתה",
-  "הקמת קורס ראשון מלא",
-  "תמיכה במיילים",
-]
-
-/* The thirteen extras the live page lists under
-   "מתנות לחבילה משודרגת" */
-const gifts = [
-  "אנשי קשר ללא הגבלה",
-  "עורך ניוזלטרים מתקדם",
-  "דומיין חינמי + תיבות וירטואליות",
-  "דפי נחיתה ללא הגבלה",
-  "מערכת ניהול לקוחות CRM",
-  "מודול פגישות ושיתופי פעולה",
-  "תמיכה מלאה VIP",
-  "התממשקות ב-API",
-  "חיבור ישיר למערכות סליקה",
-  "חיבור ישיר ל-BizLive",
-  "אוטומציות מתקדמות",
-  "כלי תיקון כתובות שגויות",
-  "קורס שיווקי – מאסטר קלאס",
-]
 
 const EmailBank: React.FC = () => {
+  const t = useT("email-bank")
   const [step, setStep] = useState(0)
 
   const isCustom = step === CUSTOM_STEP
@@ -76,14 +52,14 @@ const EmailBank: React.FC = () => {
     <div className="eb">
       <section className="eb-hero">
         <div className="container">
-          <h1>בנק שליחות מיילים</h1>
+          <h1>{t.heroTitle}</h1>
           <p className="eb-hero-sub">
-            בחרו את החבילה המתאימה לכם ביותר בעזרת הסליידר
+            {t.heroSub}
           </p>
           <ul className="eb-terms">
-            <li>בתשלום חד פעמי</li>
-            <li>בלי מנוי חודשי</li>
-            <li>המחירים אינם כוללים מע״מ</li>
+            {t.terms.map((term) => (
+              <li key={term}>{term}</li>
+            ))}
           </ul>
         </div>
       </section>
@@ -99,9 +75,9 @@ const EmailBank: React.FC = () => {
               {/* A native range input on purpose: keyboard, screen
                   readers and touch all work without rebuilding any of it. */}
               <div className="eb-sizer">
-                <label htmlFor="eb-qty">כמה דיוורים אתם צריכים?</label>
+                <label htmlFor="eb-qty">{t.qtyQuestion}</label>
                 <output htmlFor="eb-qty" className="eb-sizer-value">
-                  {isCustom ? "300,001 +" : he(QTY[step])}
+                  {isCustom ? t.customQty : he(QTY[step])}
                 </output>
                 <input
                   id="eb-qty"
@@ -112,7 +88,7 @@ const EmailBank: React.FC = () => {
                   value={step}
                   onChange={(e) => setStep(Number(e.target.value))}
                   aria-valuetext={
-                    isCustom ? "מעל 300,001 דיוורים" : `${he(QTY[step])} דיוורים`
+                    isCustom ? t.customValueText : formatText(t.qtyValueText, { qty: he(QTY[step]) })
                   }
                   style={
                     { "--fill": `${(step / CUSTOM_STEP) * 100}%` } as React.CSSProperties
@@ -127,8 +103,8 @@ const EmailBank: React.FC = () => {
                   ))}
                 </div>
                 <div className="eb-scale" aria-hidden="true">
-                  <span>10,000</span>
-                  <span>300,001 +</span>
+                  <span>{t.scaleMin}</span>
+                  <span>{t.customQty}</span>
                 </div>
               </div>
 
@@ -138,43 +114,43 @@ const EmailBank: React.FC = () => {
               <div className="eb-quote" key={step}>
                 {isCustom ? (
                   <>
-                    <h2 className="eb-quote-head">300,001 + דיוורים</h2>
+                    <h2 className="eb-quote-head">{t.customHead}</h2>
                     <p className="eb-quote-lead">
-                      נשלח לכם הצעה לחבילה מותאמת עבורכם
+                      {t.customLead}
                     </p>
-                    <Link to="/contact/" className="eb-btn eb-btn-accent">
-                      ליצירת קשר להצעה
-                    </Link>
+                    <LocalizedLink to="/contact/" className="eb-btn eb-btn-accent">
+                      {t.contactForQuote}
+                    </LocalizedLink>
                   </>
                 ) : (
                   <>
                     <h2 className="eb-quote-head">
-                      בנק של {he(qty as number)} דיוורים
+                      {formatText(t.bankOf, { qty: he(qty as number) })}
                     </h2>
                     <p className="eb-price">
                       <s className="eb-price-was">
-                        <span className="eb-sr">מחיר מלא </span>
+                        <span className="eb-sr">{t.fullPrice}</span>
                         {he(list)} ₪
                       </s>
                       <span className="eb-price-now">
                         <span className="eb-price-cur" aria-hidden="true">₪</span>
                         <span className="eb-price-num">{he(net)}</span>
-                        <span className="eb-sr">שקלים</span>
+                        <span className="eb-sr">{t.shekels}</span>
                       </span>
                     </p>
                     <p className="eb-price-terms">
-                      + מע״מ, בתשלום חד פעמי<span aria-hidden="true">*</span>
+                      {t.priceTerms}<span aria-hidden="true">*</span>
                     </p>
                     <a
                       href={PANEL_URL}
                       className="eb-btn eb-btn-accent"
                       onClick={openSignup}
                     >
-                      לפתיחת חשבון
+                      {t.openAccount}
                     </a>
-                    <Link to="/contact/" className="eb-quote-alt">
-                      או בקשו חבילה מותאמת
-                    </Link>
+                    <LocalizedLink to="/contact/" className="eb-quote-alt">
+                      {t.askCustom}
+                    </LocalizedLink>
                   </>
                 )}
               </div>
@@ -183,14 +159,14 @@ const EmailBank: React.FC = () => {
             {/* The free plan is a fact, not a third price column: one
                 number, what it covers, and a way in. */}
             <div className="eb-free">
-              <p className="eb-free-eyebrow">חבילה למתחילים</p>
+              <p className="eb-free-eyebrow">{t.freeEyebrow}</p>
               <h2 className="eb-free-head">
-                חינם
+                {t.free}
                 <span className="eb-free-num" aria-hidden="true">₪0</span>
               </h2>
-              <p className="eb-free-note">ללא צורך בכרטיס אשראי</p>
+              <p className="eb-free-note">{t.freeNote}</p>
               <ul className="eb-free-list">
-                {freePlan.map((f) => (
+                {t.freePlan.map((f) => (
                   <li key={f}>{f}</li>
                 ))}
               </ul>
@@ -199,13 +175,13 @@ const EmailBank: React.FC = () => {
                 className="eb-btn eb-btn-outline"
                 onClick={openSignup}
               >
-                פתיחת חשבון בחינם
+                {t.openFree}
               </a>
             </div>
           </div>
 
           <p className="eb-foot">
-            * עד לסיום יתרת השליחות או לאחר 12 חודשים מהרכישה האחרונה בחשבון
+            {t.foot}
           </p>
         </div>
       </section>
@@ -216,11 +192,11 @@ const EmailBank: React.FC = () => {
       <section className="eb-gifts">
         <div className="container">
           <div className="eb-head">
-            <h2>מתנות לחבילה משודרגת</h2>
-            <p>כלולות בכל בנק שליחות, בלי תוספת תשלום ובלי מנוי חודשי</p>
+            <h2>{t.giftsTitle}</h2>
+            <p>{t.giftsSubtitle}</p>
           </div>
           <ol className="eb-gift-list">
-            {gifts.map((g, i) => (
+            {t.gifts.map((g, i) => (
               <li key={g}>
                 <span className="eb-gift-i" aria-hidden="true">
                   {String(i + 1).padStart(2, "0")}
@@ -237,12 +213,12 @@ const EmailBank: React.FC = () => {
         <div className="container">
           <div className="eb-custom-row">
             <div>
-              <h2>צריכים בנק מיילים גדול יותר?</h2>
-              <p>נשלח לכם הצעה לחבילה מותאמת עבורכם</p>
+              <h2>{t.biggerTitle}</h2>
+              <p>{t.customLead}</p>
             </div>
-            <Link to="/contact/" className="eb-btn eb-btn-light">
-              ליצירת קשר להצעה
-            </Link>
+            <LocalizedLink to="/contact/" className="eb-btn eb-btn-light">
+              {t.contactForQuote}
+            </LocalizedLink>
           </div>
         </div>
       </section>

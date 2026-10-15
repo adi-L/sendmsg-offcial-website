@@ -35,78 +35,78 @@ const Footer: React.FC = () => {
   const t = useT("footer")
   const lp = useLocalePath()
   return (
-  <footer style={styles.footer}>
-    <div className="container">
-      <div className="footer-grid">
-        <div style={styles.col}>
-          {/* h2, not h4: these sit after the CTA's h2 on every page, and
-              h2 -> h4 is a skipped level under WCAG 1.3.1. The look is set by
-              colTitle, so the level is free to be correct. */}
-          <h2 style={styles.colTitle}>{t.servicesTitle}</h2>
-          {t.services.map((link) => (
-            <a key={link.label} href={lp(link.href)} style={styles.link}>{link.label}</a>
-          ))}
-        </div>
-
-        <div style={styles.col}>
-          <h2 style={styles.colTitle}>{t.supportTitle}</h2>
-          {t.support.map((link) => (
-            <a key={link.label} href={lp(link.href)} style={styles.link}>{link.label}</a>
-          ))}
-        </div>
-
-        <div style={styles.col}>
-          <h2 style={styles.colTitle}>{t.companyTitle}</h2>
-          {t.company.map((link) => (
-            <a key={link.label} href={lp(link.href)} style={styles.link}>{link.label}</a>
-          ))}
-        </div>
-
-        <div style={styles.col}>
-          <h2 style={styles.colTitle}>{t.contactTitle}</h2>
-          <a href={`tel:${t.phone}`} style={styles.contactLink}>
-            ☎ {t.phone}
-          </a>
-          <p style={styles.hours}>{t.hours}</p>
-          <a
-            href={t.whatsappHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={styles.contactLink}
-          >
-            WhatsApp 📱
-          </a>
-          <div className="footer-social">
-            {socialLinks.map((s) => (
-              <a
-                key={s.label}
-                href={s.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="footer-social-icon"
-                aria-label={s.label}
-              >
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
-                  <path d={s.path} />
-                </svg>
-              </a>
+    <footer style={styles.footer}>
+      <div className="container">
+        <div className="footer-grid">
+          <div style={styles.col}>
+            {/* h2, not h4: these sit after the CTA's h2 on every page, and
+                h2 -> h4 is a skipped level under WCAG 1.3.1. The look is set by
+                colTitle, so the level is free to be correct. */}
+            <h2 style={styles.colTitle}>{t.servicesTitle}</h2>
+            {t.services.map((link) => (
+              <a key={link.label} href={lp(link.href)} style={styles.link}>{link.label}</a>
             ))}
           </div>
+
+          <div style={styles.col}>
+            <h2 style={styles.colTitle}>{t.supportTitle}</h2>
+            {t.support.map((link) => (
+              <a key={link.label} href={lp(link.href)} style={styles.link}>{link.label}</a>
+            ))}
+          </div>
+
+          <div style={styles.col}>
+            <h2 style={styles.colTitle}>{t.companyTitle}</h2>
+            {t.company.map((link) => (
+              <a key={link.label} href={lp(link.href)} style={styles.link}>{link.label}</a>
+            ))}
+          </div>
+
+          <div style={styles.col}>
+            <h2 style={styles.colTitle}>{t.contactTitle}</h2>
+            <a href={`tel:${t.phone}`} style={styles.contactLink}>
+              ☎ {t.phone}
+            </a>
+            <p style={styles.hours}>{t.hours}</p>
+            <a
+              href={t.whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={styles.contactLink}
+            >
+              WhatsApp 📱
+            </a>
+            <div className="footer-social">
+              {socialLinks.map((s) => (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="footer-social-icon"
+                  aria-label={s.label}
+                >
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+                    <path d={s.path} />
+                  </svg>
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="footer-bottom">
+          <img
+            src={logo}
+            alt={t.logoAlt}
+            style={styles.footerLogo}
+          />
+          <p style={styles.copyright}>
+            {formatText(t.copyright, { year: new Date().getFullYear() })}
+          </p>
         </div>
       </div>
-
-      <div className="footer-bottom">
-        <img
-          src={logo}
-          alt={t.logoAlt}
-          style={styles.footerLogo}
-        />
-        <p style={styles.copyright}>
-          {formatText(t.copyright, { year: new Date().getFullYear() })}
-        </p>
-      </div>
-    </div>
-  </footer>
+    </footer>
   )
 }
 

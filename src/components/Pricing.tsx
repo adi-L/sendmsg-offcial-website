@@ -1,6 +1,8 @@
 import React, { useState } from "react"
-import { Link } from "gatsby"
 import { openSignup, PANEL_URL } from "./SignupDialog"
+import { formatText } from "../locales/config"
+import LocalizedLink from "../locales/LocalizedLink"
+import { useT } from "../locales/LocaleContext"
 
 /* ── price tiers ─────────────────────────────────────────────────
    Read straight off the live calculator at
@@ -48,121 +50,32 @@ const he = (n: number) => n.toLocaleString("he-IL")
 
 type Cycle = "year" | "month"
 
-const plan = {
-  free: {
-    name: "חבילה למתחילים",
-    tagline: "להכיר את המערכת בקצב שלכם",
-    price: "חינם",
-    period: "לתמיד, בלי כרטיס אשראי",
-    lead: "מה מקבלים",
-    features: [
-      "250 מנויים",
-      "2,000 דיוורים בחודש",
-      "5 דפי נחיתה",
-      "בונה קורסים דיגיטליים",
-      "תמיכה במייל",
-    ],
-    cta: "פתיחת חשבון בחינם",
-  },
-  pro: {
-    name: "חבילה משודרגת",
-    tagline: "לעסק שרוצה לצמוח עם כל הכלים",
-    lead: "כל מה שבחבילה למתחילים, ובנוסף",
-    features: [
-      "שליחות יומיות ללא הגבלה",
-      "דפי נחיתה ללא הגבלה",
-      "קורסים דיגיטליים ו-CRM",
-      "API מלא וייצוא לאקסל",
-      "תמיכה במייל, בצ׳אט ובטלפון",
-    ],
-    cta: "שדרגו עכשיו",
-  },
-  custom: {
-    name: "חבילה מותאמת",
-    tagline: "לארגונים ולעסקים גדולים, מעל 100,000 אנשי קשר",
-    features: [
-      "ליווי הקמה אישי",
-      "מנהל חשבון ייעודי",
-      "SLA מובטח",
-      "אינטגרציות מותאמות",
-    ],
-    cta: "דברו איתנו",
-  },
-}
-
-const trust = [
-  "בלי כרטיס אשראי",
-  "מעל 50,000 משתמשים מאז 2009",
-  "תקן אבטחת מידע ISO 27001",
-]
-
-const included = [
-  {
-    title: "מצב שומר שבת",
-    text: "חסימת דפים ועיכוב דיוורים מכניסת שבת וחג ועד צאתם.",
-    icon: (
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
-      </svg>
-    ),
-  },
-  {
-    title: "אבטחת מידע ISO 27001",
-    text: "עומדת בתקן אבטחת המידע הבינלאומי ובתקנות הפרטיות.",
-    icon: (
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-        <path d="M9 12l2 2 4-4" />
-      </svg>
-    ),
-  },
-  {
-    title: "מותאם לכל מסך",
-    text: "ניוזלטרים, דפי נחיתה וקורסים שנראים מצוין בכל מכשיר.",
-    icon: (
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <rect x="7" y="2" width="10" height="20" rx="2" />
-        <path d="M11 18h2" />
-      </svg>
-    ),
-  },
-  {
-    title: "מערכת ישראלית ותיקה",
-    text: "מאז 2009, עם ממשק ותמיכה בעברית מצוות שמכיר את השוק.",
-    icon: (
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-        <circle cx="12" cy="7" r="4" />
-      </svg>
-    ),
-  },
-]
-
-const faqs = [
-  {
-    q: "האם החבילה החינמית מוגבלת בזמן?",
-    a: "לא. חבילת המתחילים היא בחינם לתמיד, עד 250 מנויים ו-2,000 דיוורים בחודש. בלי כרטיס אשראי ובלי התחייבות.",
-  },
-  {
-    q: "איך משדרגים חבילה?",
-    a: "משדרגים מתוך המערכת בכל שלב שמתאים לכם. כל אנשי הקשר, דפי הנחיתה והקמפיינים שלכם נשארים בדיוק כמו שהם.",
-  },
-  {
-    q: "איזו תמיכה מקבלים בכל חבילה?",
-    a: "בחבילה למתחילים תקבלו תמיכה במייל. בחבילה המשודרגת גם בצ׳אט ובטלפון, ובחבילה המותאמת מלווה אתכם מנהל חשבון ייעודי.",
-  },
-  {
-    q: "מה זה מצב שומר שבת?",
-    a: "תכונה ייחודית שחוסמת דפי נחיתה ומעכבת דיוורים מתוזמנים מכניסת שבת וחג ועד צאתם, לפי זמנים מדויקים. זמינה בכל החבילות.",
-  },
-  {
-    q: "למי מתאימה החבילה המותאמת?",
-    a: "לארגונים ולעסקים עם מעל 100,000 אנשי קשר, או עם צרכים מיוחדים כמו אינטגרציות מותאמות, SLA מובטח ומנהל חשבון ייעודי. צרו קשר ונבנה חבילה יחד.",
-  },
-  {
-    q: "איך מתחילים?",
-    a: "נרשמים בחינם, בלי כרטיס אשראי. תוך כמה דקות אפשר לשלוח את הדיוור הראשון שלכם.",
-  },
+/* The icons for the "included" band, in the same order as `included` in
+   pricing.json. */
+const INCLUDED_ICONS = [
+  (
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+    </svg>
+  ),
+  (
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      <path d="M9 12l2 2 4-4" />
+    </svg>
+  ),
+  (
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect x="7" y="2" width="10" height="20" rx="2" />
+      <path d="M11 18h2" />
+    </svg>
+  ),
+  (
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
+    </svg>
+  ),
 ]
 
 const Chevron = () => (
@@ -183,7 +96,7 @@ const Chevron = () => (
 )
 
 /* One price block for both cards, so the figure, the currency and the period
-   all sit on the same baseline whichever plan you look at. "חינם" is a word
+   all sit on the same baseline whichever plan you look at. "Free" is a word
    in a number's slot, so it takes the number's optical size rather than the
    number's weight. */
 function Price({
@@ -197,6 +110,7 @@ function Price({
   word?: string
   note?: string
 }) {
+  const t = useT("pricing")
   return (
     <div className="pp-price">
       <p className="pp-price-fig">
@@ -206,7 +120,7 @@ function Price({
           <>
             <span className="pp-price-cur" aria-hidden="true">₪</span>
             <span className="pp-price-num">{amount}</span>
-            <span className="pp-sr">שקלים</span>
+            <span className="pp-sr">{t.shekels}</span>
           </>
         )}
       </p>
@@ -217,17 +131,18 @@ function Price({
 }
 
 const PricingFAQ: React.FC = () => {
+  const t = useT("pricing")
   const [open, setOpen] = useState<number | null>(0)
 
   return (
     <section className="pp-faq">
       <div className="container">
         <div className="pp-head">
-          <h2>שאלות על המחירון</h2>
-          <p>ולא מצאתם תשובה? נשמח לעזור בצ׳אט או בטלפון</p>
+          <h2>{t.faqTitle}</h2>
+          <p>{t.faqSubtitle}</p>
         </div>
         <div className="pp-faq-list">
-          {faqs.map((faq, i) => (
+          {t.faqs.map((faq, i) => (
             <div key={faq.q} className="pp-faq-item" data-open={open === i}>
               <h3>
                 <button
@@ -255,6 +170,8 @@ const PricingFAQ: React.FC = () => {
 }
 
 const Pricing: React.FC = () => {
+  const t = useT("pricing")
+  const plan = t.plan
   const [cycle, setCycle] = useState<Cycle>("year")
   const [step, setStep] = useState(0)
 
@@ -263,29 +180,28 @@ const Pricing: React.FC = () => {
   const proPrice = tier ? he(cycle === "month" ? tier.month : tier.year) : undefined
   // every figure on the live calculator is quoted before VAT, so these are too
   const proPeriod = isCustom
-    ? "מחיר שנקבע יחד איתכם"
+    ? t.periodCustom
     : cycle === "month"
-      ? "לחודש בחיוב חודשי, לא כולל מע״מ"
-      : "לחודש בחיוב שנתי, לא כולל מע״מ"
+      ? t.periodMonthly
+      : t.periodYearly
   const proNote = tier
-    ? `כולל עד ${he(tier.contacts * SENDS_PER_CONTACT)} שליחות בחודש`
+    ? formatText(t.sendsNote, { sends: he(tier.contacts * SENDS_PER_CONTACT) })
     : undefined
   const contactsLabel = isCustom
-    ? "מעל 100,000"
+    ? t.contactsOverMax
     : he(TIERS[step].contacts)
 
   return (
     <div className="pp" id="pricing">
       <section className="pp-hero">
         <div className="container">
-          <h1>מחירון פשוט ושקוף</h1>
+          <h1>{t.heroTitle}</h1>
           <p className="pp-hero-sub">
-            מתחילים בחינם, בלי כרטיס אשראי ובלי התחייבות. משדרגים רק כשזה מתאים
-            לעסק שלכם.
+            {t.heroSub}
           </p>
           <ul className="pp-trust">
-            {trust.map((t) => (
-              <li key={t}>{t}</li>
+            {t.trust.map((item) => (
+              <li key={item}>{item}</li>
             ))}
           </ul>
         </div>
@@ -294,21 +210,21 @@ const Pricing: React.FC = () => {
       <section className="pp-plans">
         <div className="container">
           <div className="pp-controls">
-            <div className="pp-billing" role="group" aria-label="מחזור חיוב">
+            <div className="pp-billing" role="group" aria-label={t.billingLabel}>
               <button
                 type="button"
                 aria-pressed={cycle === "year"}
                 onClick={() => setCycle("year")}
               >
-                שנתי
-                <span className="pp-billing-save">10% הנחה</span>
+                {t.yearly}
+                <span className="pp-billing-save">{t.yearlySave}</span>
               </button>
               <button
                 type="button"
                 aria-pressed={cycle === "month"}
                 onClick={() => setCycle("month")}
               >
-                חודשי
+                {t.monthly}
               </button>
             </div>
           </div>
@@ -321,7 +237,7 @@ const Pricing: React.FC = () => {
               <header>
                 <h2>
                   {plan.pro.name}
-                  <span className="pp-tag">הכי פופולרי</span>
+                  <span className="pp-tag">{t.popular}</span>
                 </h2>
                 <p className="pp-tagline">{plan.pro.tagline}</p>
               </header>
@@ -329,7 +245,7 @@ const Pricing: React.FC = () => {
               {/* A native range input on purpose: keyboard, screen readers and
                   touch all work without rebuilding any of it. */}
               <div className="pp-sizer">
-                <label htmlFor="pp-contacts">כמה אנשי קשר יש לכם?</label>
+                <label htmlFor="pp-contacts">{t.contactsQuestion}</label>
                 <output htmlFor="pp-contacts" className="pp-sizer-value">
                   {contactsLabel}
                 </output>
@@ -341,7 +257,7 @@ const Pricing: React.FC = () => {
                   step={1}
                   value={step}
                   onChange={(e) => setStep(Number(e.target.value))}
-                  aria-valuetext={`${contactsLabel} אנשי קשר`}
+                  aria-valuetext={formatText(t.contactsValueText, { contacts: contactsLabel })}
                   style={
                     { "--fill": `${(step / CUSTOM_STEP) * 100}%` } as React.CSSProperties
                   }
@@ -350,7 +266,7 @@ const Pricing: React.FC = () => {
 
               <Price
                 amount={proPrice}
-                word={isCustom ? "מותאם אישית" : undefined}
+                word={isCustom ? t.customWord : undefined}
                 period={proPeriod}
                 note={proNote}
               />
@@ -363,9 +279,9 @@ const Pricing: React.FC = () => {
               </ul>
 
               {isCustom ? (
-                <Link to="/contact/" className="pp-btn pp-btn-accent">
-                  דברו איתנו
-                </Link>
+                <LocalizedLink to="/contact/" className="pp-btn pp-btn-accent">
+                  {t.talkToUs}
+                </LocalizedLink>
               ) : (
                 <a href={PANEL_URL} className="pp-btn pp-btn-accent">
                   {plan.pro.cta}
@@ -406,13 +322,13 @@ const Pricing: React.FC = () => {
                 ))}
               </ul>
             </div>
-            <Link to="/contact/" className="pp-btn pp-btn-outline">
+            <LocalizedLink to="/contact/" className="pp-btn pp-btn-outline">
               {plan.custom.cta}
-            </Link>
+            </LocalizedLink>
           </div>
 
           <p className="pp-plans-note">
-            אפשר לשדרג או לעבור חבילה בכל שלב, בלי להקים שום דבר מחדש.
+            {t.plansNote}
           </p>
         </div>
       </section>
@@ -420,13 +336,13 @@ const Pricing: React.FC = () => {
       <section className="pp-band">
         <div className="container">
           <div className="pp-head">
-            <h2>בכל חבילה, בלי קשר למחיר</h2>
-            <p>הדברים שחשובים לנו לתת לכל עסק, מהיום הראשון</p>
+            <h2>{t.bandTitle}</h2>
+            <p>{t.bandSubtitle}</p>
           </div>
           <ul className="pp-band-row">
-            {included.map((item) => (
+            {t.included.map((item, i) => (
               <li key={item.title}>
-                <span className="pp-band-mark">{item.icon}</span>
+                <span className="pp-band-mark">{INCLUDED_ICONS[i]}</span>
                 <h3>{item.title}</h3>
                 <p>{item.text}</p>
               </li>
