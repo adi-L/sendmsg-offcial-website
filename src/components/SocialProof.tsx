@@ -30,64 +30,69 @@ import metuka from "../images/clients/metuka.svg"
 import yarin from "../images/clients/yarin.png"
 import mischar from "../images/clients/mischar-tasia.png"
 import newBrand from "../images/clients/new-brand.png"
+import { useT } from "../locales/LocaleContext"
 
-const row1: Array<{ src: string; alt: string }> = [
-  { src: igudDir, alt: "איגוד הדירקטורים בישראל" },
-  { src: igudTaasia, alt: "איגוד התעשיה הקיבוצית" },
-  { src: success, alt: "Success" },
-  { src: telAviv, alt: "עיריית תל אביב יפו" },
-  { src: tzaarBaalei, alt: "אגודת צער בעלי חיים בישראל" },
-  { src: dataPro, alt: "Data Pro Proximity" },
-  { src: bizmakebiz, alt: "BizMakeBiz" },
-  { src: technion, alt: "אגודת הסטודנטים בטכניון" },
+/* Logos; their alt text is row1Alts / row2Alts in social-proof.json, in order. */
+const row1: Array<{ src: string }> = [
+  { src: igudDir },
+  { src: igudTaasia },
+  { src: success },
+  { src: telAviv },
+  { src: tzaarBaalei },
+  { src: dataPro },
+  { src: bizmakebiz },
+  { src: technion },
 ]
 
-const row2: Array<{ src: string; alt: string }> = [
-  { src: isi, alt: "ISI Science for Life" },
-  { src: logo019, alt: "019 Mobile" },
-  { src: tznuLachayot, alt: "תנו לחיות לחיות" },
-  { src: tzagAliya, alt: "TZAG Computer Systems" },
-  { src: fontbit, alt: "Fontbit" },
-  { src: prakti, alt: "פרקטי" },
-  { src: habima, alt: "הבימה התיאטרון הלאומי" },
-  { src: yadSarah, alt: "יד שרה" },
+const row2: Array<{ src: string }> = [
+  { src: isi },
+  { src: logo019 },
+  { src: tznuLachayot },
+  { src: tzagAliya },
+  { src: fontbit },
+  { src: prakti },
+  { src: habima },
+  { src: yadSarah },
 ]
 
-const SocialProof: React.FC = () => (
-  <section className="section" style={styles.section}>
-    <div className="container" style={styles.container}>
-      <h2 style={styles.heading}>
-        מעל 51,559 משתמשים מרוצים
-      </h2>
+const SocialProof: React.FC = () => {
+  const t = useT("social-proof")
+  return (
+    <section className="section" style={styles.section}>
+      <div className="container" style={styles.container}>
+        <h2 style={styles.heading}>
+          {t.heading}
+        </h2>
 
-      <div style={styles.logosGrid}>
-        {row1.map((item) => (
-          <div key={item.alt} style={styles.logoItem}>
-            <img
-              src={item.src}
-              alt={item.alt}
-              style={styles.logoImg}
-              loading="lazy"
-            />
-          </div>
-        ))}
-      </div>
+        <div style={styles.logosGrid}>
+          {row1.map((item, i) => (
+            <div key={item.src} style={styles.logoItem}>
+              <img
+                src={item.src}
+                alt={t.row1Alts[i]}
+                style={styles.logoImg}
+                loading="lazy"
+              />
+            </div>
+          ))}
+        </div>
 
-      <div style={styles.logosGrid}>
-        {row2.map((item) => (
-          <div key={item.alt} style={styles.logoItem}>
-            <img
-              src={item.src}
-              alt={item.alt}
-              style={styles.logoImg}
-              loading="lazy"
-            />
-          </div>
-        ))}
+        <div style={styles.logosGrid}>
+          {row2.map((item, i) => (
+            <div key={item.src} style={styles.logoItem}>
+              <img
+                src={item.src}
+                alt={t.row2Alts[i]}
+                style={styles.logoImg}
+                loading="lazy"
+              />
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
-  </section>
-)
+    </section>
+  )
+}
 
 const styles: Record<string, React.CSSProperties> = {
   section: {

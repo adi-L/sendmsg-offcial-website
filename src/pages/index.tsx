@@ -20,33 +20,37 @@ import AIAssistant from "../components/AIAssistant"
 import InlineCTA from "../components/InlineCTA"
 import SEO from "../components/SEO"
 import type { PageContext } from "../locales/config"
+import { useT } from "../locales/LocaleContext"
 
-const IndexPage: React.FC = () => (
-  <Layout>
-    <Hero />
-    <AILaunchpad />
-    <AITransform />
-    <AdSpot />
-    <Showcase />
-    <InlineCTA
-      title="רוצים לראות איך זה עובד אצלכם בעסק?"
-      note="בלי כרטיס אשראי, בלי התחייבות"
-      variant="dark"
-    />
-    <Features />
-    <Audience />
-    <FreePlan />
-    <GoogleReviews />
-    <SocialProof />
-    <InlineCTA title="אלפי עסקים כבר שולחים עם שלח מסר. מצטרפים?" />
-    <ISOCertification />
-    <GlobalReach />
-    <FAQ />
-    <MissionQuote />
-    <CTA />
-    <AIAssistant />
-  </Layout>
-)
+const IndexPage: React.FC = () => {
+  const t = useT("pages/index")
+  return (
+    <Layout>
+      <Hero />
+      <AILaunchpad />
+      <AITransform />
+      <AdSpot />
+      <Showcase />
+      <InlineCTA
+        title={t.ctaDemoTitle}
+        note={t.ctaDemoNote}
+        variant="dark"
+      />
+      <Features />
+      <Audience />
+      <FreePlan />
+      <GoogleReviews />
+      <SocialProof />
+      <InlineCTA title={t.ctaJoinTitle} />
+      <ISOCertification />
+      <GlobalReach />
+      <FAQ />
+      <MissionQuote />
+      <CTA />
+      <AIAssistant />
+    </Layout>
+  )
+}
 
 export default IndexPage
 

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react"
+import { useT } from "../locales/LocaleContext"
 
 const VIDEO_ID = "taY1pzs8hWY"
 
@@ -10,6 +11,7 @@ const EMBED_BASE = `https://www.youtube-nocookie.com/embed/${VIDEO_ID}`
 type Mode = "idle" | "muted" | "sound"
 
 const AdSpot: React.FC = () => {
+  const t = useT("ad-spot")
   const [mode, setMode] = useState<Mode>("idle")
   const frameRef = useRef<HTMLDivElement>(null)
 
@@ -34,9 +36,9 @@ const AdSpot: React.FC = () => {
   return (
     <section className="section adspot-section">
       <div className="container">
-        <h2 className="section-title">הצעה שאי אפשר לסרב לה</h2>
+        <h2 className="section-title">{t.title}</h2>
         <p className="section-subtitle">
-          דקה אחת של צחוק, שמסבירה בדיוק מה שלח מסר עושה בשבילכם.
+          {t.subtitle}
         </p>
 
         <div className="adspot-frame" ref={frameRef}>
@@ -44,7 +46,7 @@ const AdSpot: React.FC = () => {
             <iframe
               key="sound"
               src={`${EMBED_BASE}?autoplay=1&mute=0&rel=0&playsinline=1`}
-              title="הפרסומת של שלח מסר"
+              title={t.videoTitle}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             />
@@ -54,7 +56,7 @@ const AdSpot: React.FC = () => {
                 <iframe
                   key="muted"
                   src={`${EMBED_BASE}?autoplay=1&mute=1&controls=0&rel=0&loop=1&playlist=${VIDEO_ID}&playsinline=1`}
-                  title="הפרסומת של שלח מסר"
+                  title={t.videoTitle}
                   allow="accelerometer; autoplay; encrypted-media; gyroscope"
                   tabIndex={-1}
                 />
@@ -62,7 +64,7 @@ const AdSpot: React.FC = () => {
                 <img
                   className="adspot-poster-img"
                   src={`https://i.ytimg.com/vi/${VIDEO_ID}/maxresdefault.jpg`}
-                  alt="הפרסומת של שלח מסר"
+                  alt={t.videoTitle}
                   loading="lazy"
                   onError={(e) => {
                     e.currentTarget.src = `https://i.ytimg.com/vi/${VIDEO_ID}/hqdefault.jpg`
@@ -73,7 +75,7 @@ const AdSpot: React.FC = () => {
                 type="button"
                 className="adspot-poster"
                 onClick={() => setMode("sound")}
-                aria-label="הפעלת הפרסומת של שלח מסר עם סאונד"
+                aria-label={t.playLabel}
               >
                 <span className="adspot-play">
                   <svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor">
@@ -81,7 +83,7 @@ const AdSpot: React.FC = () => {
                   </svg>
                 </span>
                 {mode === "muted" && (
-                  <span className="adspot-sound-label">לצפייה עם סאונד</span>
+                  <span className="adspot-sound-label">{t.soundLabel}</span>
                 )}
               </button>
             </>

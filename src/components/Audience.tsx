@@ -5,13 +5,14 @@ import courseOwners from "../images/audience/course-owners.webp"
 import organizations from "../images/audience/organizations.webp"
 import startups from "../images/audience/startups.webp"
 import institutions from "../images/audience/institutions.webp"
+import { useT } from "../locales/LocaleContext"
 
 const audiences = [
-  { title: "עסקים קטנים", img: smallBusiness },
-  { title: "בעלי קורסים", img: courseOwners },
-  { title: "ארגונים", img: organizations },
-  { title: "סטארטאפים", img: startups },
-  { title: "מוסדות ועמותות", img: institutions },
+  { img: smallBusiness },
+  { img: courseOwners },
+  { img: organizations },
+  { img: startups },
+  { img: institutions },
 ]
 
 const centeredIndex = (t: HTMLElement): number => {
@@ -32,6 +33,7 @@ const centeredIndex = (t: HTMLElement): number => {
 }
 
 const Audience: React.FC = () => {
+  const t = useT("audience")
   const trackRef = useRef<HTMLDivElement>(null)
   const snapTimer = useRef<number | undefined>(undefined)
   const [scrollable, setScrollable] = useState(false)
@@ -93,12 +95,11 @@ const Audience: React.FC = () => {
   return (
     <section className="section" style={styles.section}>
       <div className="container" style={styles.container}>
-        <h2 style={styles.heading}>למי המערכת שלנו מתאימה?</h2>
+        <h2 style={styles.heading}>{t.heading}</h2>
         <div style={styles.divider} />
 
         <p style={styles.subtitle}>
-          שיווק באמצעות שלח מסר מתאים לכל מי שמכיר בחשיבות של שיווק
-          נכון ומדויק ללקוחות שלו, אבל בעיקר ל:
+          {t.subtitle}
         </p>
 
         <div className="audience-carousel">
@@ -108,7 +109,7 @@ const Audience: React.FC = () => {
               className="audience-arrow"
               onClick={() => scrollStep(-1)}
               disabled={atStart}
-              aria-label="הקודם"
+              aria-label={t.prev}
             >
               ‹
             </button>
@@ -119,10 +120,10 @@ const Audience: React.FC = () => {
             className={`audience-track${scrollable ? "" : " is-static"}`}
             onScroll={update}
           >
-            {audiences.map((a) => (
-              <div key={a.title} className="audience-item">
+            {audiences.map((a, i) => (
+              <div key={t.audiences[i]} className="audience-item">
                 <img src={a.img} alt="" style={styles.image} />
-                <h3 style={styles.title}>{a.title}</h3>
+                <h3 style={styles.title}>{t.audiences[i]}</h3>
               </div>
             ))}
           </div>
@@ -133,7 +134,7 @@ const Audience: React.FC = () => {
               className="audience-arrow"
               onClick={() => scrollStep(1)}
               disabled={atEnd}
-              aria-label="הבא"
+              aria-label={t.next}
             >
               ›
             </button>

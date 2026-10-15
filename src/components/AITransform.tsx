@@ -1,14 +1,14 @@
 import React from "react"
 import MediaPlaceholder from "./MediaPlaceholder"
+import { useT } from "../locales/LocaleContext"
 
 /* Four identical ticks said the same thing four times. Each point gets the
    mark that describes it instead: the AI sparkle carried over from the hero,
    a branching path, a two-way link, and -- for the Hebrew point -- an alef
    set in the page's own face, which says it better than a flag would. */
+/* Icons for the points; their text is `points` in ai-transform.json, in order. */
 const points = [
   {
-    title: "AI שלומד את העסק",
-    text: "המערכת מכירה את התחום, הקהל והטון שלכם, ויוצרת תוכן שמתאים בדיוק לעסק.",
     lead: true,
     mark: (
       <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -18,8 +18,6 @@ const points = [
     ),
   },
   {
-    title: "מסעות לקוח אוטומטיים",
-    text: "קשר רציף עם לידים ולקוחות לאורך כל מחזור החיים, בלי עבודה ידנית.",
     mark: (
       <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M5 4v6a4 4 0 0 0 4 4h6" />
@@ -31,8 +29,6 @@ const points = [
     ),
   },
   {
-    title: "מתחבר למערכות שלכם",
-    text: "חיבורים, Webhooks ו-API מרכזים את התקשורת השיווקית סביב הכלים שכבר יש לכם בעסק.",
     mark: (
       <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M4 9h12l-2.6-2.8" />
@@ -41,47 +37,50 @@ const points = [
     ),
   },
   {
-    title: "בעברית, לשוק הישראלי",
-    text: "מותאם לשפה, לחוק ולהתנהגות של לקוחות בישראל, כולל פתרון מלא לשומרי שבת וחג.",
-    mark: <span className="transform-alef">א</span>,
+    // the Hebrew letter, as text: alefMark in ai-transform.json
+    mark: null,
   },
 ]
 
-const AITransform: React.FC = () => (
-  <section className="section transform-section">
-    <div className="container">
-      <h2 className="section-title">תנו ל-AI לעשות את העבודה  </h2>
-      <p className="section-subtitle">
-        המערכת לומדת את העסק שלכם, כותבת, מעצבת ומנהלת קמפיינים ומסעות
-        לקוח מקצה לקצה. אתם פנויים להתרכז במה שאתם באמת טובים.
-      </p>
+const AITransform: React.FC = () => {
+  const t = useT("ai-transform")
+  return (
+    <section className="section transform-section">
+      <div className="container">
+        <h2 className="section-title">{t.title}</h2>
+        <p className="section-subtitle">
+          {t.subtitle}
+        </p>
 
-      <div className="transform-grid">
-        <ul className="transform-list">
-          {points.map((p) => (
-            <li
-              key={p.title}
-              className={`transform-item${p.lead ? " transform-item--lead" : ""}`}
-            >
-              <span className="transform-mark">{p.mark}</span>
-              <div>
-                <h3 className="transform-item-title">{p.title}</h3>
-                <p className="transform-item-text">{p.text}</p>
-              </div>
-            </li>
-          ))}
-        </ul>
+        <div className="transform-grid">
+          <ul className="transform-list">
+            {points.map((p, i) => (
+              <li
+                key={t.points[i].title}
+                className={`transform-item${p.lead ? " transform-item--lead" : ""}`}
+              >
+                <span className="transform-mark">
+                  {p.mark ?? <span className="transform-alef">{t.alefMark}</span>}
+                </span>
+                <div>
+                  <h3 className="transform-item-title">{t.points[i].title}</h3>
+                  <p className="transform-item-text">{t.points[i].text}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
 
-        <div className="transform-media">
-          <MediaPlaceholder
-            kind="video"
-            ratio="4 / 3"
-            label="כאן ייכנס סרטון: ה-AI בונה קמפיין"
-          />
+          <div className="transform-media">
+            <MediaPlaceholder
+              kind="video"
+              ratio="4 / 3"
+              label={t.videoLabel}
+            />
+          </div>
         </div>
       </div>
-    </div>
-  </section>
-)
+    </section>
+  )
+}
 
 export default AITransform

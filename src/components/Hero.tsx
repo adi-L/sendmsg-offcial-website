@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react"
 import TextTransition from "react-text-transition"
+import Rich from "../locales/Rich"
 import { openSignup } from "./SignupDialog"
 import heroPerson from "../images/hero-person.webp"
+import { useT } from "../locales/LocaleContext"
 
 const PANEL_URL = "https://panel.sendmsg.co.il/"
-
-const rotatingTexts = ["פשוט יותר.", "חכם יותר.", "אישי יותר.", "אוטומטי יותר."]
 
 const featureItems = [
   {
@@ -15,7 +15,6 @@ const featureItems = [
         <polyline points="22,7 12,13 2,7" />
       </svg>
     ),
-    label: "קמפיינים וניוזלטרים",
   },
   {
     icon: (
@@ -26,7 +25,6 @@ const featureItems = [
         <path d="M16 3.13a4 4 0 0 1 0 7.75" />
       </svg>
     ),
-    label: "מערכת SMS",
   },
   {
     icon: (
@@ -36,7 +34,6 @@ const featureItems = [
         <line x1="12" y1="17" x2="12" y2="21" />
       </svg>
     ),
-    label: "יצירת דפי נחיתה",
   },
   {
     icon: (
@@ -44,7 +41,6 @@ const featureItems = [
         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
       </svg>
     ),
-    label: "מועדון לקוחות (CRM)",
   },
   {
     icon: (
@@ -53,7 +49,6 @@ const featureItems = [
         <path d="M6 12v5c3 3 9 3 12 0v-5" />
       </svg>
     ),
-    label: "מערכת קורסים",
   },
   {
     icon: (
@@ -64,7 +59,6 @@ const featureItems = [
         <line x1="3" y1="10" x2="21" y2="10" />
       </svg>
     ),
-    label: "פגישות ושיתופי פעולה",
   },
 ]
 
@@ -75,8 +69,6 @@ const orbitCards = [
   {
     id: "ai",
     tone: "violet",
-    title: "ה-AI כתב את הקמפיין",
-    meta: "3 גרסאות, 40 שניות",
     icon: (
       <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 3.2l2 5.3 5.3 2-5.3 2-2 5.3-2-5.3-5.3-2 5.3-2z" />
@@ -87,8 +79,6 @@ const orbitCards = [
   {
     id: "mail",
     tone: "green",
-    title: "הדיוור נשלח",
-    meta: "2,480 נמענים",
     icon: (
       <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M20 6L9 17l-5-5" />
@@ -98,8 +88,6 @@ const orbitCards = [
   {
     id: "deal",
     tone: "pink",
-    title: "עסקה נסגרה",
-    meta: "דנה כהן · ₪1,240",
     icon: (
       <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
         <path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0l-7-7A2 2 0 0 1 3 12.2V5a2 2 0 0 1 2-2h7.2a2 2 0 0 1 1.4.6l7 7a2 2 0 0 1 0 2.8z" />
@@ -110,8 +98,6 @@ const orbitCards = [
   {
     id: "sms",
     tone: "blue",
-    title: "SMS נמסר",
-    meta: "98.4% מסירה",
     icon: (
       <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
         <path d="M21 14a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z" />
@@ -121,6 +107,7 @@ const orbitCards = [
 ]
 
 const Hero: React.FC = () => {
+  const t = useT("hero")
   const [textIndex, setTextIndex] = useState(0)
 
   useEffect(() => {
@@ -128,10 +115,10 @@ const Hero: React.FC = () => {
       return
     }
     const interval = setInterval(() => {
-      setTextIndex((prev) => (prev + 1) % rotatingTexts.length)
+      setTextIndex((prev) => (prev + 1) % t.rotating.length)
     }, 3200)
     return () => clearInterval(interval)
-  }, [])
+  }, [t.rotating.length])
 
   return (
     <section className="hero-section">
@@ -139,7 +126,7 @@ const Hero: React.FC = () => {
         {/* Text content, right side in RTL */}
         <div className="hero-text">
           <h1 className="hero-headline">
-            שיווק העסק שלך,
+            {t.headline}
             <span className="hero-rotate">
               <span className="hero-rotate-word">
                 {/* Slightly overdamped: at display size a slow spring keeps
@@ -149,31 +136,30 @@ const Hero: React.FC = () => {
                   inline
                   springConfig={{ mass: 1, tension: 300, friction: 38 }}
                 >
-                  {rotatingTexts[textIndex]}
+                  {t.rotating[textIndex]}
                 </TextTransition>
               </span>
             </span>
           </h1>
 
           <p className="hero-subtitle">
-            מערכת הדיוור והשיווק הישראלית, עכשיו עם AI שכותב, מעצב
-            ובונה בשבילך קמפיינים, ניוזלטרים ודפי נחיתה בתוך דקות.
+            {t.subtitle}
           </p>
-          <p className="hero-tagline">כל הפתרונות במקום אחד.</p>
+          <p className="hero-tagline">{t.tagline}</p>
 
           <a href={PANEL_URL} className="hero-cta" onClick={openSignup}>
             <span className="hero-cta-arrow">←</span>
-            פתיחת חשבון חינם
+            {t.cta}
           </a>
 
           <p className="hero-cta-note">
-            הצטרפו ל-<strong>1,165</strong> עסקים שנרשמו השבוע
+            <Rich text={t.ctaNote} />
           </p>
 
           <div className="hero-trust">
-            <span>✓ ללא כרטיס אשראי</span>
-            <span>✓ ללא התחייבות</span>
-            <span>✓ ללא הגבלת זמן</span>
+            {t.trust.map((item) => (
+              <span key={item}>{item}</span>
+            ))}
           </div>
         </div>
 
@@ -191,14 +177,14 @@ const Hero: React.FC = () => {
             decoding="async"
           />
 
-          {orbitCards.map((card) => (
+          {orbitCards.map((card, i) => (
             <span key={card.id} className={`hero-orb hero-orb--${card.id}`}>
               <span className={`hero-orb-icon hero-orb-icon--${card.tone}`}>
                 {card.icon}
               </span>
               <span className="hero-orb-text">
-                <b>{card.title}</b>
-                <i>{card.meta}</i>
+                <b>{t.orbitCards[i].title}</b>
+                <i>{t.orbitCards[i].meta}</i>
               </span>
             </span>
           ))}
@@ -207,10 +193,10 @@ const Hero: React.FC = () => {
 
       <div className="container">
         <div className="hero-rail">
-          {featureItems.map((item) => (
-            <div key={item.label} className="hero-feature-item">
+          {featureItems.map((item, i) => (
+            <div key={t.features[i].label} className="hero-feature-item">
               <span className="hero-feature-icon">{item.icon}</span>
-              <span className="hero-feature-label">{item.label}</span>
+              <span className="hero-feature-label">{t.features[i].label}</span>
             </div>
           ))}
         </div>
