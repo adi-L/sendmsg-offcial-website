@@ -1,7 +1,11 @@
 import React from "react"
 import { formatText } from "../locales/config"
-import { useLocalePath, useT } from "../locales/LocaleContext"
+import { useLocalePath, useText } from "../locales/LocaleContext"
 import logo from "../images/logo.png"
+import heText from "../locales/he/footer.json"
+
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 const socialLinks = [
   {
@@ -32,7 +36,7 @@ const socialLinks = [
 ]
 
 const Footer: React.FC = () => {
-  const t = useT("footer")
+  const t = useText(TEXT)
   const lp = useLocalePath()
   return (
     <footer style={styles.footer}>

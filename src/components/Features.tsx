@@ -1,9 +1,13 @@
 import React from "react"
 import Rich from "../locales/Rich"
-import { useT } from "../locales/LocaleContext"
+import { useText } from "../locales/LocaleContext"
+import heText from "../locales/he/features.json"
+
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 const Features: React.FC = () => {
-  const t = useT("features")
+  const t = useText(TEXT)
   return (
     <section className="section dot-grid">
       <div className="container">

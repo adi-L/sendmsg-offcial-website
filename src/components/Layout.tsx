@@ -3,7 +3,11 @@ import Header from "./Header"
 import Footer from "./Footer"
 import SignupDialog from "./SignupDialog"
 import PromoPopup from "./PromoPopup"
-import { useT } from "../locales/LocaleContext"
+import { useText } from "../locales/LocaleContext"
+import heText from "../locales/he/layout.json"
+
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 interface LayoutProps {
   children: ReactNode
@@ -15,7 +19,7 @@ interface LayoutProps {
    the AA conformance /accessibility/ declares. The link is the first thing
    in the tab order and only shows itself once focused. */
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-  const t = useT("layout")
+  const t = useText(TEXT)
   return (
     <>
       <a className="skip-link" href="#main">

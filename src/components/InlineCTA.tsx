@@ -1,6 +1,10 @@
 import React from "react"
 import { openSignup, PANEL_URL } from "./SignupDialog"
-import { useT } from "../locales/LocaleContext"
+import { useText } from "../locales/LocaleContext"
+import heText from "../locales/he/inline-cta.json"
+
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 type Props = {
   title: string
@@ -9,7 +13,7 @@ type Props = {
 }
 
 const InlineCTA: React.FC<Props> = ({ title, note, variant = "light" }) => {
-  const t = useT("inline-cta")
+  const t = useText(TEXT)
   return (
     <section className={`inline-cta${variant === "dark" ? " is-dark" : ""}`}>
       <div className="container">

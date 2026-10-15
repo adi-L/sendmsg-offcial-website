@@ -4,9 +4,12 @@ import Layout from "../components/Layout"
 import SEO from "../components/SEO"
 import "../styles/creaditor.css"
 import type { PageContext } from "../locales/config"
-import { useT } from "../locales/LocaleContext"
-import { getT } from "../locales/messages"
+import { useText } from "../locales/LocaleContext"
 import Rich from "../locales/Rich"
+import heText from "../locales/he/pages/creaditor.json"
+
+/* This page's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 /* Creaditor is a separate product with its own site. Every outbound
    link here leaves sendmsg.co.il, so they all open in a new tab and
@@ -121,7 +124,7 @@ const Shot = ({
 )
 
 const CreaditorPage = () => {
-  const t = useT("pages/creaditor")
+  const t = useText(TEXT)
   return (
     <Layout>
       <div className="cr">
@@ -361,7 +364,7 @@ const CreaditorPage = () => {
 export default CreaditorPage
 
 export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
-  const t = getT(pageContext.locale, "pages/creaditor")
+  const t = TEXT[pageContext.locale]
   return (
     <SEO locale={pageContext.locale}
       title="Creaditor"

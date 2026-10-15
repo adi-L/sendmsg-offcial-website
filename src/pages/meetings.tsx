@@ -6,15 +6,18 @@ import SEO from "../components/SEO"
 import { openSignup, PANEL_URL } from "../components/SignupDialog"
 import "../styles/meetings.css"
 import type { PageContext } from "../locales/config"
-import { useT } from "../locales/LocaleContext"
+import { useText } from "../locales/LocaleContext"
 import Rich from "../locales/Rich"
-import { getT } from "../locales/messages"
 import LocalizedLink from "../locales/LocalizedLink"
+import heText from "../locales/he/pages/meetings.json"
+
+/* This page's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 /* steps: moved to src/locales/he/pages/meetings.json as "steps". */
 /* uses: moved to src/locales/he/pages/meetings.json as "uses". */
 const MeetingsPage: React.FC = () => {
-  const t = useT("pages/meetings")
+  const t = useText(TEXT)
   return (
     <Layout>
       <div className="mt">
@@ -113,7 +116,7 @@ const MeetingsPage: React.FC = () => {
 export default MeetingsPage
 
 export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
-  const t = getT(pageContext.locale, "pages/meetings")
+  const t = TEXT[pageContext.locale]
   return (
     <SEO locale={pageContext.locale}
       title={t.seo.title}

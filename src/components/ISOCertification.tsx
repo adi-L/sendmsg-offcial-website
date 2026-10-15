@@ -1,10 +1,14 @@
 import React from "react"
 
 import isoCertificate from "../images/iso-27001-certificate.png"
-import { useT } from "../locales/LocaleContext"
+import { useText } from "../locales/LocaleContext"
+import heText from "../locales/he/iso-certification.json"
+
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 const ISOCertification: React.FC = () => {
-  const t = useT("iso-certification")
+  const t = useText(TEXT)
   return (
     <section className="section" style={styles.section}>
       <div className="container" style={styles.container}>

@@ -6,7 +6,10 @@ import CTA from "../components/CTA"
 import SEO from "../components/SEO"
 import "../styles/email-bank.css"
 import type { PageContext } from "../locales/config"
-import { getT } from "../locales/messages"
+import heText from "../locales/he/pages/email-bank.json"
+
+/* This page's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 const EmailBankPage: React.FC = () => (
   <Layout>
@@ -18,7 +21,7 @@ const EmailBankPage: React.FC = () => (
 export default EmailBankPage
 
 export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
-  const t = getT(pageContext.locale, "pages/email-bank")
+  const t = TEXT[pageContext.locale]
   return (
     <SEO locale={pageContext.locale}
       title={t.seo.title}

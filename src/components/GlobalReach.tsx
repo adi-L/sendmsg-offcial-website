@@ -1,6 +1,10 @@
 import React, { useEffect, useRef, useState } from "react"
 import worldMap from "../images/illustrations/world-map.png"
-import { useT } from "../locales/LocaleContext"
+import { useText } from "../locales/LocaleContext"
+import heText from "../locales/he/global-reach.json"
+
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 // Israel, read off the map's own geometry: the dot lattice puts 34.9°E at
 // x=584, and Africa's Mediterranean coastline begins at y≈296.
@@ -19,7 +23,7 @@ const ROUTES = [
 const STAGGER = 0.6
 
 const GlobalReach: React.FC = () => {
-  const t = useT("global-reach")
+  const t = useText(TEXT)
   const mapRef = useRef<HTMLDivElement>(null)
   const [live, setLive] = useState(false)
 

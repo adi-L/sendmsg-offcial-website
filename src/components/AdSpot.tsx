@@ -1,5 +1,9 @@
 import React, { useEffect, useRef, useState } from "react"
-import { useT } from "../locales/LocaleContext"
+import { useText } from "../locales/LocaleContext"
+import heText from "../locales/he/ad-spot.json"
+
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 const VIDEO_ID = "taY1pzs8hWY"
 
@@ -11,7 +15,7 @@ const EMBED_BASE = `https://www.youtube-nocookie.com/embed/${VIDEO_ID}`
 type Mode = "idle" | "muted" | "sound"
 
 const AdSpot: React.FC = () => {
-  const t = useT("ad-spot")
+  const t = useText(TEXT)
   const [mode, setMode] = useState<Mode>("idle")
   const frameRef = useRef<HTMLDivElement>(null)
 

@@ -9,10 +9,13 @@ import "../styles/kb.css"
 import { articleLocale, defaultLocale, formatText } from "../locales/config"
 import type { PageContext } from "../locales/config"
 import { useLocale } from "../locales/LocaleContext"
-import { useT } from "../locales/LocaleContext"
-import { getT } from "../locales/messages"
+import { useText } from "../locales/LocaleContext"
 import Rich from "../locales/Rich"
 import LocalizedLink from "../locales/LocalizedLink"
+import heText from "../locales/he/pages/kb.json"
+
+/* This page's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 /* ── /kb/ — מרכז ההדרכה ─────────────────────────────────────────
    The index over every guide. src/data/kb.ts holds the full crawled
@@ -72,7 +75,7 @@ const Row: React.FC<{
   showCats?: boolean
   local?: Local
 }> = ({ a, showCats, local }) => {
-  const t = useT("pages/kb")
+  const t = useText(TEXT)
   const localSlug = local?.slug
   const inner = (
     <>
@@ -123,7 +126,7 @@ interface Data {
 type Local = { slug: string; excerpt: string | null }
 
 const KbPage: React.FC<PageProps<Data>> = ({ data }) => {
-  const t = useT("pages/kb")
+  const t = useText(TEXT)
   const locale = useLocale()
   /* source url -> the imported guide, matched on the decoded path
      because the live links are inconsistent about percent-encoding. */
@@ -329,7 +332,7 @@ export const query = graphql`
 `
 
 export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
-  const t = getT(pageContext.locale, "pages/kb")
+  const t = TEXT[pageContext.locale]
   return (
     <SEO locale={pageContext.locale}
       title={t.seo.title}

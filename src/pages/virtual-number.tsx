@@ -6,9 +6,12 @@ import SEO from "../components/SEO"
 import { openSignup, PANEL_URL } from "../components/SignupDialog"
 import "../styles/virtual-number.css"
 import type { PageContext } from "../locales/config"
-import { useT } from "../locales/LocaleContext"
-import { getT } from "../locales/messages"
+import { useText } from "../locales/LocaleContext"
 import Fmt from "../locales/Fmt"
+import heText from "../locales/he/pages/virtual-number.json"
+
+/* This page's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 /* Where the live page's "לרכישת מס' וירטואלי חדש" button goes */
 const BUY_URL =
@@ -20,7 +23,7 @@ const DEMO_NUMBER = "055-9377588"
 
 /* capabilities: moved to src/locales/he/pages/virtual-number.json as "capabilities". */
 const VirtualNumberPage: React.FC = () => {
-  const t = useT("pages/virtual-number")
+  const t = useText(TEXT)
   return (
     <Layout>
       <div className="vn">
@@ -133,7 +136,7 @@ const VirtualNumberPage: React.FC = () => {
 export default VirtualNumberPage
 
 export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
-  const t = getT(pageContext.locale, "pages/virtual-number")
+  const t = TEXT[pageContext.locale]
   return (
     <SEO locale={pageContext.locale}
       title={t.seo.title}

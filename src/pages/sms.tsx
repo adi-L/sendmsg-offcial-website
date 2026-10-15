@@ -6,10 +6,13 @@ import SEO from "../components/SEO"
 import { openSignup, PANEL_URL } from "../components/SignupDialog"
 import "../styles/sms.css"
 import type { PageContext } from "../locales/config"
-import { useT } from "../locales/LocaleContext"
+import { useText } from "../locales/LocaleContext"
 import Rich from "../locales/Rich"
-import { getT } from "../locales/messages"
 import LocalizedLink from "../locales/LocalizedLink"
+import heText from "../locales/he/pages/sms.json"
+
+/* This page's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 /* Copy is the live SMS page's own. Where it names the virtual number
    or the message banks, this page links to ours instead of to the
@@ -28,7 +31,7 @@ const PlusIcon: React.FC = () => (
 )
 
 const SmsPage: React.FC = () => {
-  const t = useT("pages/sms")
+  const t = useText(TEXT)
   const [openId, setOpenId] = useState<string | null>(null)
 
   return (
@@ -194,7 +197,7 @@ const SmsPage: React.FC = () => {
 export default SmsPage
 
 export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
-  const t = getT(pageContext.locale, "pages/sms")
+  const t = TEXT[pageContext.locale]
   return (
     <SEO locale={pageContext.locale}
       title={t.seo.title}

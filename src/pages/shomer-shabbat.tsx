@@ -6,11 +6,14 @@ import SEO from "../components/SEO"
 import { openSignup, PANEL_URL } from "../components/SignupDialog"
 import "../styles/shomer-shabbat.css"
 import type { PageContext } from "../locales/config"
-import { useT } from "../locales/LocaleContext"
-import { getT } from "../locales/messages"
-import type { Messages } from "../locales/messages"
+import { useText } from "../locales/LocaleContext"
 import Rich from "../locales/Rich"
 import LocalizedLink from "../locales/LocalizedLink"
+import heText from "../locales/he/pages/shomer-shabbat.json"
+
+/* This page's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
+type PageText = typeof heText
 
 const CheckIcon = () => (
   <svg width="15" height="15" viewBox="0 0 12 12" fill="none" aria-hidden="true">
@@ -31,7 +34,7 @@ const CandlesIcon = ({ size = 26 }: { size?: number }) => (
   </svg>
 )
 
-const steps = (t: Messages["pages/shomer-shabbat"]) => [
+const steps = (t: PageText) => [
   {
     label: t.steps[0].label,
     title: t.steps[0].title,
@@ -58,7 +61,7 @@ const steps = (t: Messages["pages/shomer-shabbat"]) => [
   },
 ]
 
-const features = (t: Messages["pages/shomer-shabbat"]) => [
+const features = (t: PageText) => [
   {
     title: t.features[0].title,
     desc: t.features[0].desc,
@@ -102,7 +105,7 @@ const features = (t: Messages["pages/shomer-shabbat"]) => [
 ]
 
 const ShomerShabbatPage: React.FC = () => {
-  const t = useT("pages/shomer-shabbat")
+  const t = useText(TEXT)
   const [openFaq, setOpenFaq] = useState<number | null>(0)
 
   return (
@@ -237,7 +240,7 @@ const ShomerShabbatPage: React.FC = () => {
 export default ShomerShabbatPage
 
 export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
-  const t = getT(pageContext.locale, "pages/shomer-shabbat")
+  const t = TEXT[pageContext.locale]
   return (
     <SEO locale={pageContext.locale}
       title={t.seo.title}

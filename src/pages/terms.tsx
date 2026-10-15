@@ -7,9 +7,12 @@ import { TERMS } from "../data/terms"
 import { SUPPORT_PHONE } from "../data/support-hours"
 import "../styles/legal.css"
 import type { PageContext } from "../locales/config"
-import { useT } from "../locales/LocaleContext"
+import { useText } from "../locales/LocaleContext"
 import Rich from "../locales/Rich"
-import { getT } from "../locales/messages"
+import heText from "../locales/he/pages/terms.json"
+
+/* This page's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 /* ── /terms/ ────────────────────────────────────────────────────
    The agreement, rendered from src/data/terms.ts, which holds the
@@ -23,7 +26,7 @@ import { getT } from "../locales/messages"
 const AFFILIATE_EMAIL = "sales@comstar.co.il"
 
 const TermsPage: React.FC = () => {
-  const t = useT("pages/terms")
+  const t = useText(TEXT)
   return (
     <Layout>
       <div className="lg">
@@ -136,7 +139,7 @@ const TermsPage: React.FC = () => {
 export default TermsPage
 
 export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
-  const t = getT(pageContext.locale, "pages/terms")
+  const t = TEXT[pageContext.locale]
   return (
     <SEO locale={pageContext.locale}
       title={t.seo.title}

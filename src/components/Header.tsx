@@ -2,12 +2,16 @@ import React, { useState, useEffect, useRef } from "react"
 import { useLocation } from "@reach/router"
 import logo from "../images/logo.png"
 import { openSignup } from "./SignupDialog"
-import { useLocalePath, useT } from "../locales/LocaleContext"
+import { useLocalePath, useText } from "../locales/LocaleContext"
 
 import megaServices from "../images/blog/mailing-system.webp"
 import megaPricing from "../images/illustrations/sms-bank.svg"
 import megaSupport from "../images/illustrations/collab.svg"
 import megaKnowledge from "../images/blog/digital-course-guide.webp"
+import heText from "../locales/he/header.json"
+
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 const PANEL_URL = "https://panel.sendmsg.co.il/"
 
@@ -128,7 +132,7 @@ const Caret: React.FC<{ open: boolean }> = ({ open }) => (
 )
 
 const Header: React.FC = () => {
-  const t = useT("header")
+  const t = useText(TEXT)
   const lp = useLocalePath()
   const navItems = t.nav as NavItem[]
   const [scrolled, setScrolled] = useState(false)

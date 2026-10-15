@@ -14,8 +14,9 @@ apart from:
 Find the text: `grep -rn "some words" src/locales/he/`. Edit the JSON. That's it.
 
 - `\n` is a line break.
-- `<strong>…</strong>` is bold and `<a href="/pricing/">…</a>` is a link, but
-  only in strings a component renders with `<Rich>`. Internal links start with
+- `<strong>…</strong>` is bold, `<ltr>₪40</ltr>` keeps a price or number
+  left-to-right inside a Hebrew sentence, and `<a href="/pricing/">…</a>` is a
+  link, but only in strings a component renders with `<Rich>`. Internal links start with
   `/` and stay inside the current language automatically. No other HTML works;
   it shows up as literal text.
 - `{name}` is a value filled in by code: a number, a price or a link. Keep the
@@ -31,35 +32,60 @@ Find the text: `grep -rn "some words" src/locales/he/`. Edit the JSON. That's it
 - `he/pages/<page>.json`: one per page in `src/pages`, including its `seo` title
   and description.
 - `he/templates/<template>.json`: the guide and blog-post templates.
-- `he/common.json`: site-wide SEO strings.
+- `he/common.json`: site-wide SEO strings (used by `SEO.tsx`).
 - Guides and blog posts are markdown in `content/kb/he/` and `content/blog/he/`.
+
+## How a file gets its text
+
+Each component, page and template imports its own JSON, so the text ships in
+the same JavaScript chunk as the code that shows it:
+
+```tsx
+import heText from "../locales/he/pages/about.json"
+
+const TEXT = { he: heText }
+
+const AboutPage = () => {
+  const t = useText(TEXT)   // picks the current page's language
+  ...
+}
+```
+
+A page's `Head` can't use hooks, so it reads `TEXT[pageContext.locale]`.
 
 ## Adding a new string
 
-1. Add the key to the right `he/…json`.
-2. In the component: `const t = useT("<namespace>")`, then one of:
+1. Add the key to the file's `he/…json`.
+2. Use it:
    - `{t.key}` for plain text
-   - `<Rich text={t.key} />` for text with `\n`, `<strong>` or links
+   - `<Rich text={t.key} />` for text with `\n`, `<strong>`, `<ltr>` or links;
+     pass `ltrClass="xx-ltr"` to style `<ltr>` runs (prices, numbers, Latin
+     words inside a Hebrew sentence)
    - `formatText(t.key, { n })` for text with `{placeholders}`
-   - `<Fmt text={t.key} vars={{ price: <Ltr>₪40</Ltr> }} />` when a
-     placeholder is an element
+   - `<Fmt text={t.key} vars={{ n: <Counter … /> }} />` when a placeholder is
+     an element
 3. Internal links: `<LocalizedLink to="/x/">`, or `const lp = useLocalePath()`
    and `href={lp("/x/")}` on a plain `<a>`.
-4. A page's `Head` can't use hooks:
-   `const t = getT(pageContext.locale, "pages/x")`.
-5. A new JSON file also needs one import and one key in `messages.ts`, kept
-   alphabetical.
+4. A new component with text: create `he/<name>.json` and add the
+   `heText` import and the `TEXT` line shown above.
 
 ## Adding a language (e.g. English)
 
-1. `cp -r src/locales/he src/locales/en` and translate the values. The keys
-   stay the same.
-2. `config.ts`: add `en: { dir: "ltr", label: "English", enabled: true }`.
-3. `messages.ts`: import the `en/` files, build `const en: Messages = {...}` and
-   add it to `messages`. `npm run typecheck` fails until every key exists.
+1. `node scripts/add-locale.mjs en ltr English`. This copies `he/` to `en/`,
+   adds the `en` import and `TEXT` entry to every file, and registers `en` in
+   `config.ts` with `enabled: false`.
+2. Translate the values in `src/locales/en/`. The keys, the list lengths and
+   the `{placeholders}` stay the same.
+3. Run `npm run verify`.
+   - Typecheck fails on a file with no `en` entry or a missing key.
+   - `tests/locale-shape` fails on a list with a different length or a
+     placeholder that doesn't match. Lists are matched to icons and images by
+     position, so a shorter list would break a page.
 4. Articles go in `content/kb/en/` and `content/blog/en/`.
-5. Pages appear at `/en/...`. Hebrew URLs don't change, and `/api/` stays a
-   single page.
+5. Set `enabled: true` in `config.ts`. Pages appear at `/en/...`, Hebrew URLs
+   don't change, and `/api/` stays a single page. hreflang links appear only
+   between pages that exist in both languages. Articles get none until they
+   are translated.
 
 After disabling or removing a language, run `npx gatsby clean` before the next
 local build. Gatsby's cache keeps the old `/<code>/` pages, and they fail to
@@ -70,6 +96,10 @@ Before shipping a language:
   Convert them to logical properties (`start`, `marginInlineStart`) for LTR.
 - Number and date formatting still uses `"he-IL"` in a few components
   (pricing, banks, AILaunchpad).
+- AILaunchpad shows holiday names from Hebcal's Hebrew field (`item.hebrew`);
+  English would read `item.title`.
+- An unknown `/en/...` URL shows the Hebrew 404 page: GitHub Pages serves only
+  the root `404.html`.
 - Add the language switcher to the Header.
 
 ## Proving a text move changed nothing

@@ -21,10 +21,13 @@ import mariaKal from "../images/team/maria.webp"
 import yifatHalevi from "../images/team/yifat.webp"
 import orSkahi from "../images/team/or.webp"
 import type { PageContext } from "../locales/config"
-import { useT } from "../locales/LocaleContext"
-import { getT } from "../locales/messages"
-import type { Messages } from "../locales/messages"
+import { useText } from "../locales/LocaleContext"
 import Fmt from "../locales/Fmt"
+import heText from "../locales/he/pages/about.json"
+
+/* This page's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
+type PageText = typeof heText
 
 /* outcomes: moved to src/locales/he/pages/about.json as "outcomes". */
 /* The platform's seven modules. Icons are the site's own set, lifted
@@ -47,7 +50,7 @@ const icon = (paths: React.ReactNode) => (
   </svg>
 )
 
-const tools = (t: Messages["pages/about"]) => [
+const tools = (t: PageText) => [
   {
     label: t.tools[0].label,
     icon: icon(
@@ -123,7 +126,7 @@ const tools = (t: Messages["pages/about"]) => [
    brand's Primary Blue. Each portrait keeps that blue inside its own tile, so
    the set reads as one family without the colour taking over the section.
    Names and roles match the live site exactly. */
-const team = (t: Messages["pages/about"]) => [
+const team = (t: PageText) => [
   { name: t.team[0].name, role: t.team[0].role, photo: asafStern },
   { name: t.team[1].name, role: t.team[1].role, photo: mayaMushkin },
   { name: t.team[2].name, role: t.team[2].role, photo: dudiOchion },
@@ -136,7 +139,7 @@ const team = (t: Messages["pages/about"]) => [
   { name: t.team[9].name, role: t.team[9].role, photo: orSkahi },
 ]
 
-const certificates = (t: Messages["pages/about"]) => [
+const certificates = (t: PageText) => [
   {
     id: "iso",
     name: t.certificates[0].name,
@@ -349,7 +352,7 @@ function useReveal<T extends HTMLElement>() {
 }
 
 const AboutPage: React.FC = () => {
-  const t = useT("pages/about")
+  const t = useText(TEXT)
   const [openFaq, setOpenFaq] = useState<number | null>(0)
   const [activeCert, setActiveCert] = useState(0)
   const cert = certificates(t)[activeCert]
@@ -664,7 +667,7 @@ const AboutPage: React.FC = () => {
 export default AboutPage
 
 export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
-  const t = getT(pageContext.locale, "pages/about")
+  const t = TEXT[pageContext.locale]
   return (
     <SEO locale={pageContext.locale}
       title={t.seo.title}

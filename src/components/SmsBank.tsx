@@ -2,7 +2,11 @@ import React, { useState } from "react"
 import { openSignup, PANEL_URL } from "./SignupDialog"
 import { formatText } from "../locales/config"
 import LocalizedLink from "../locales/LocalizedLink"
-import { useT } from "../locales/LocaleContext"
+import { useText } from "../locales/LocaleContext"
+import heText from "../locales/he/sms-bank.json"
+
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 /* ── SMS bank prices ────────────────────────────────────────────
    Read straight off the live calculator at
@@ -49,7 +53,7 @@ const he = (n: number) => n.toLocaleString("he-IL")
 
 
 const SmsBank: React.FC = () => {
-  const t = useT("sms-bank")
+  const t = useText(TEXT)
   const [len, setLen] = useState<Len>(70)
   const [step, setStep] = useState(0)
 

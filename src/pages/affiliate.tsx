@@ -7,10 +7,13 @@ import { openSignup, PANEL_URL } from "../components/SignupDialog"
 import { TIERS } from "../components/Pricing"
 import "../styles/affiliate.css"
 import type { PageContext } from "../locales/config"
-import { useT } from "../locales/LocaleContext"
-import { getT } from "../locales/messages"
+import { useText } from "../locales/LocaleContext"
 import LocalizedLink from "../locales/LocalizedLink"
 import Fmt from "../locales/Fmt"
+import heText from "../locales/he/pages/affiliate.json"
+
+/* This page's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 /* Copy is the live /affiliate/ page's own.
 
@@ -43,7 +46,7 @@ const shekels = (n: number) =>
 
 /* earns: moved to src/locales/he/pages/affiliate.json as "earns". */
 const AffiliatePage: React.FC = () => {
-  const t = useT("pages/affiliate")
+  const t = useText(TEXT)
   return (
     <Layout>
       <div className="af">
@@ -219,7 +222,7 @@ const AffiliatePage: React.FC = () => {
 export default AffiliatePage
 
 export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
-  const t = getT(pageContext.locale, "pages/affiliate")
+  const t = TEXT[pageContext.locale]
   return (
     <SEO locale={pageContext.locale}
       title={t.seo.title}

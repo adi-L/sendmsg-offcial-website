@@ -6,7 +6,10 @@ import CTA from "../components/CTA"
 import SEO from "../components/SEO"
 import "../styles/sms-bank.css"
 import type { PageContext } from "../locales/config"
-import { getT } from "../locales/messages"
+import heText from "../locales/he/pages/sms-bank.json"
+
+/* This page's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 const SmsBankPage: React.FC = () => (
   <Layout>
@@ -18,7 +21,7 @@ const SmsBankPage: React.FC = () => (
 export default SmsBankPage
 
 export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
-  const t = getT(pageContext.locale, "pages/sms-bank")
+  const t = TEXT[pageContext.locale]
   return (
     <SEO locale={pageContext.locale}
       title={t.seo.title}

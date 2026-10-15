@@ -6,10 +6,13 @@ import SEO from "../components/SEO"
 import { PRIVACY, PrivacyBlock } from "../data/privacy"
 import "../styles/legal.css"
 import type { PageContext } from "../locales/config"
-import { useT } from "../locales/LocaleContext"
-import { getT } from "../locales/messages"
+import { useText } from "../locales/LocaleContext"
 import Rich from "../locales/Rich"
 import LocalizedLink from "../locales/LocalizedLink"
+import heText from "../locales/he/pages/privacy.json"
+
+/* This page's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 /* ── /privacy/ ──────────────────────────────────────────────────
    The policy, rendered from src/data/privacy.ts, which holds the
@@ -42,7 +45,7 @@ function group(blocks: PrivacyBlock[]) {
 }
 
 const PrivacyPage: React.FC = () => {
-  const t = useT("pages/privacy")
+  const t = useText(TEXT)
   return (
     <Layout>
       <div className="lg">
@@ -145,7 +148,7 @@ const PrivacyPage: React.FC = () => {
 export default PrivacyPage
 
 export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
-  const t = getT(pageContext.locale, "pages/privacy")
+  const t = TEXT[pageContext.locale]
   return (
     <SEO locale={pageContext.locale}
       title={t.seo.title}

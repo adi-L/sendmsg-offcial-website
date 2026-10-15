@@ -20,10 +20,14 @@ import AIAssistant from "../components/AIAssistant"
 import InlineCTA from "../components/InlineCTA"
 import SEO from "../components/SEO"
 import type { PageContext } from "../locales/config"
-import { useT } from "../locales/LocaleContext"
+import { useText } from "../locales/LocaleContext"
+import heText from "../locales/he/pages/index.json"
+
+/* This page's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 const IndexPage: React.FC = () => {
-  const t = useT("pages/index")
+  const t = useText(TEXT)
   return (
     <Layout>
       <Hero />

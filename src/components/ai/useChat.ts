@@ -1,6 +1,10 @@
 import { useCallback, useRef, useState } from "react"
 import { loadTurnstile, getToken } from "./turnstile"
-import { useT } from "../../locales/LocaleContext"
+import { useText } from "../../locales/LocaleContext"
+import heText from "../../locales/he/ai-assistant.json"
+
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 const BASE = process.env.GATSBY_AGENT_URL ?? ""
 const SITE_KEY = process.env.GATSBY_TURNSTILE_SITE_KEY ?? ""
@@ -49,7 +53,7 @@ export function useChat() {
   /* t.greeting is kept in sync with the line in knowledge/00-identity.md
      that tells the agent how the conversation opened. Change one, change
      the other. */
-  const t = useT("ai-assistant")
+  const t = useText(TEXT)
   const [phase, setPhase] = useState<Phase>("idle")
   const [messages, setMessages] = useState<Msg[]>([])
   // Transient, inline notice for a condition that must NOT degrade the

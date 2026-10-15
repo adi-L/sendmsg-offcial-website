@@ -1,5 +1,9 @@
 import React from "react"
-import { useT } from "../locales/LocaleContext"
+import { useText } from "../locales/LocaleContext"
+import heText from "../locales/he/google-reviews.json"
+
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 const GOOGLE_ICON =
   "https://cdn.trustindex.io/assets/platform/Google/icon.svg"
@@ -17,7 +21,7 @@ type Review = { name: string; date: string; avatar: string; text: string }
 const REPEATS = 4
 
 const Stars: React.FC = () => {
-  const t = useT("google-reviews")
+  const t = useText(TEXT)
   return (
     <div style={styles.stars}>
       {[1, 2, 3, 4, 5].map((i) => (
@@ -85,7 +89,7 @@ const MarqueeRow: React.FC<{ items: Review[]; reverse?: boolean }> = ({
 )
 
 const GoogleReviews: React.FC = () => {
-  const t = useT("google-reviews")
+  const t = useText(TEXT)
   const rowTop = t.reviews.slice(0, 4)
   const rowBottom = t.reviews.slice(4)
   return (

@@ -31,7 +31,11 @@ import tzagAliya from "../images/clients/tzag-aliya.webp"
 import yadSarah from "../images/clients/yad-sarah.webp"
 import yarin from "../images/clients/yarin.png"
 import zaka from "../images/clients/zaka.png"
-import { useT } from "../locales/LocaleContext"
+import { useText } from "../locales/LocaleContext"
+import heText from "../locales/he/client-marquee.json"
+
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 type Logo = { src: string }
 
@@ -84,7 +88,7 @@ const logos: Logo[] = [
    static grid, because a paused max-content track would clip two thirds
    of the clients out of the page. */
 const ClientMarquee: React.FC = () => {
-  const t = useT("client-marquee")
+  const t = useText(TEXT)
   return (
     <div className="cm" dir="ltr">
       <div className="cm-track">

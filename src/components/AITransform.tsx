@@ -1,6 +1,10 @@
 import React from "react"
 import MediaPlaceholder from "./MediaPlaceholder"
-import { useT } from "../locales/LocaleContext"
+import { useText } from "../locales/LocaleContext"
+import heText from "../locales/he/ai-transform.json"
+
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 /* Four identical ticks said the same thing four times. Each point gets the
    mark that describes it instead: the AI sparkle carried over from the hero,
@@ -43,7 +47,7 @@ const points = [
 ]
 
 const AITransform: React.FC = () => {
-  const t = useT("ai-transform")
+  const t = useText(TEXT)
   return (
     <section className="section transform-section">
       <div className="container">

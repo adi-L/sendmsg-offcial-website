@@ -6,10 +6,13 @@ import SEO from "../components/SEO"
 import { openSignup, PANEL_URL } from "../components/SignupDialog"
 import "../styles/newsletters.css"
 import type { PageContext } from "../locales/config"
-import { useT } from "../locales/LocaleContext"
+import { useText } from "../locales/LocaleContext"
 import Rich from "../locales/Rich"
-import { getT } from "../locales/messages"
 import LocalizedLink from "../locales/LocalizedLink"
+import heText from "../locales/he/pages/newsletters.json"
+
+/* This page's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 /* offers: moved to src/locales/he/pages/newsletters.json as "offers". */
 /* bonuses: moved to src/locales/he/pages/newsletters.json as "bonuses". */
@@ -22,7 +25,7 @@ const PlusIcon: React.FC = () => (
 )
 
 const NewslettersPage: React.FC = () => {
-  const t = useT("pages/newsletters")
+  const t = useText(TEXT)
   const [openId, setOpenId] = useState<string | null>(null)
 
   return (
@@ -193,7 +196,7 @@ const NewslettersPage: React.FC = () => {
 export default NewslettersPage
 
 export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
-  const t = getT(pageContext.locale, "pages/newsletters")
+  const t = TEXT[pageContext.locale]
   return (
     <SEO locale={pageContext.locale}
       title={t.seo.title}

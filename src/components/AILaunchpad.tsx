@@ -1,6 +1,10 @@
 import React, { useEffect, useRef, useState } from "react"
 import { formatText } from "../locales/config"
-import { useT } from "../locales/LocaleContext"
+import { useText } from "../locales/LocaleContext"
+import heText from "../locales/he/ai-launchpad.json"
+
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 const PANEL_URL = "https://panel.sendmsg.co.il/"
 
@@ -81,7 +85,7 @@ const useTypedExample = (enabled: boolean, examples: string[]): string => {
 }
 
 const AILaunchpad: React.FC = () => {
-  const t = useT("ai-launchpad")
+  const t = useText(TEXT)
   const [prompt, setPrompt] = useState("")
   const [holidays, setHolidays] = useState<Holiday[]>([])
   const [selectedHoliday, setSelectedHoliday] = useState<Holiday | null>(null)

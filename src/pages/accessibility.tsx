@@ -5,10 +5,13 @@ import CTA from "../components/CTA"
 import SEO from "../components/SEO"
 import "../styles/legal.css"
 import type { PageContext } from "../locales/config"
-import { useT } from "../locales/LocaleContext"
+import { useText } from "../locales/LocaleContext"
 import Rich from "../locales/Rich"
-import { getT } from "../locales/messages"
 import { formatText } from "../locales/config"
+import heText from "../locales/he/pages/accessibility.json"
+
+/* This page's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 /* ── /accessibility/ ────────────────────────────────────────────
    הצהרת נגישות, following the live sendmsg.co.il/accessibility/
@@ -65,7 +68,7 @@ const CheckIcon = () => (
 )
 
 const AccessibilityPage: React.FC = () => {
-  const t = useT("pages/accessibility")
+  const t = useText(TEXT)
   return (
     <Layout>
       <div className="lg">
@@ -190,7 +193,7 @@ const AccessibilityPage: React.FC = () => {
 export default AccessibilityPage
 
 export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
-  const t = getT(pageContext.locale, "pages/accessibility")
+  const t = TEXT[pageContext.locale]
   return (
     <SEO locale={pageContext.locale}
       title={t.seo.title}

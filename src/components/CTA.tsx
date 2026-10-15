@@ -2,12 +2,16 @@ import React from "react"
 
 import trustLogos from "../images/image.png"
 import { openSignup } from "./SignupDialog"
-import { useT } from "../locales/LocaleContext"
+import { useText } from "../locales/LocaleContext"
+import heText from "../locales/he/cta.json"
+
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 const PANEL_URL = "https://panel.sendmsg.co.il/"
 
 const CTA: React.FC = () => {
-  const t = useT("cta")
+  const t = useText(TEXT)
   return (
     <section style={styles.section}>
       <div className="container" style={styles.container}>

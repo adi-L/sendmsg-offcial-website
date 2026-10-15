@@ -14,11 +14,14 @@ import authorYifat from "../images/team/yifat.webp"
 import { articleLocale, defaultLocale } from "../locales/config"
 import type { PageContext } from "../locales/config"
 import { useLocale } from "../locales/LocaleContext"
-import { useT } from "../locales/LocaleContext"
-import { getT } from "../locales/messages"
+import { useText } from "../locales/LocaleContext"
 import Rich from "../locales/Rich"
 import LocalizedLink from "../locales/LocalizedLink"
 import { formatText } from "../locales/config"
+import heText from "../locales/he/pages/blog.json"
+
+/* This page's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 /* Thumbnails and author photos live in src/images; posts reference them
    by slug / author name until frontmatter carries real image paths. The
@@ -65,7 +68,7 @@ const postImage = (post: Post) =>
     : postImages[post.frontmatter.slug] || null
 
 const PostMeta: React.FC<{ post: Post }> = ({ post }) => {
-  const t = useT("pages/blog")
+  const t = useText(TEXT)
   const author = post.frontmatter.author
   const photo = author ? authorPhotos[author] : null
   return (
@@ -81,7 +84,7 @@ const PostMeta: React.FC<{ post: Post }> = ({ post }) => {
 }
 
 const BlogPage: React.FC<PageProps<BlogData>> = ({ data }) => {
-  const t = useT("pages/blog")
+  const t = useText(TEXT)
   /* Only this page's language: the folder is the language (content/blog/he/). */
   const locale = useLocale()
   const posts = data.allMarkdownRemark.nodes.filter(
@@ -179,7 +182,7 @@ const BlogPage: React.FC<PageProps<BlogData>> = ({ data }) => {
 export default BlogPage
 
 export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
-  const t = getT(pageContext.locale, "pages/blog")
+  const t = TEXT[pageContext.locale]
   return (
     <SEO locale={pageContext.locale} title={t.seo.title} description={t.seo.description} pathname="/blog/" />
   )

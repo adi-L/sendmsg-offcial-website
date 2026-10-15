@@ -4,8 +4,12 @@ import { prepareArticleImages, ImageSizes } from "../utils/article-images"
 import Layout from "../components/Layout"
 import SEO from "../components/SEO"
 import type { PageContext } from "../locales/config"
-import { useLocalePath, useT } from "../locales/LocaleContext"
+import { useLocalePath, useText } from "../locales/LocaleContext"
 import { formatText } from "../locales/config"
+import heText from "../locales/he/templates/blog-post.json"
+
+/* This page's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 interface BlogPostData {
   markdownRemark: {
@@ -28,7 +32,7 @@ const BlogPostTemplate: React.FC<PageProps<BlogPostData, Context>> = ({
   data,
   pageContext,
 }) => {
-  const t = useT("templates/blog-post")
+  const t = useText(TEXT)
   const lp = useLocalePath()
   const post = data.markdownRemark
 

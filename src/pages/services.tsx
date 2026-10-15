@@ -6,12 +6,15 @@ import SEO from "../components/SEO"
 import { openSignup, PANEL_URL } from "../components/SignupDialog"
 import "../styles/services.css"
 import type { PageContext } from "../locales/config"
-import { useT } from "../locales/LocaleContext"
-import { getT } from "../locales/messages"
-import type { Messages } from "../locales/messages"
+import { useText } from "../locales/LocaleContext"
 import LocalizedLink from "../locales/LocalizedLink"
 import { formatText } from "../locales/config"
 import Rich from "../locales/Rich"
+import heText from "../locales/he/pages/services.json"
+
+/* This page's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
+type PageText = typeof heText
 
 /* ── The services hub ───────────────────────────────────────────
    This page routes. Every module below now has its own page, so
@@ -40,7 +43,7 @@ type Family = {
   rows: Row[]
 }
 
-const FAMILIES = (t: Messages["pages/services"]): Family[] => [
+const FAMILIES = (t: PageText): Family[] => [
   {
     id: "mailing",
     label: t.families[0].label,
@@ -189,7 +192,7 @@ const RowBody: React.FC<{ r: Row }> = ({ r }) => (
 )
 
 const ServicesPage: React.FC = () => {
-  const t = useT("pages/services")
+  const t = useText(TEXT)
   const MODULE_COUNT = FAMILIES(t).reduce((n, f) => n + f.rows.length, 0)
   return (
     <Layout>
@@ -303,7 +306,7 @@ const ServicesPage: React.FC = () => {
 export default ServicesPage
 
 export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
-  const t = getT(pageContext.locale, "pages/services")
+  const t = TEXT[pageContext.locale]
   return (
     <SEO locale={pageContext.locale}
       title={t.seo.title}

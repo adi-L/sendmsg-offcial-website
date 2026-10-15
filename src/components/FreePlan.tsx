@@ -1,7 +1,11 @@
 import React from "react"
 import { openSignup, PANEL_URL } from "./SignupDialog"
 import LocalizedLink from "../locales/LocalizedLink"
-import { useT } from "../locales/LocaleContext"
+import { useText } from "../locales/LocaleContext"
+import heText from "../locales/he/free-plan.json"
+
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 const Check: React.FC = () => (
   <span style={styles.checkWrap} aria-hidden="true">
@@ -18,7 +22,7 @@ const Check: React.FC = () => (
 )
 
 const FreePlan: React.FC = () => {
-  const t = useT("free-plan")
+  const t = useText(TEXT)
   return (
     <section className="section" style={styles.section}>
       <div className="container" style={styles.container}>

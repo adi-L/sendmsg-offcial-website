@@ -3,7 +3,11 @@ import TextTransition from "react-text-transition"
 import Rich from "../locales/Rich"
 import { openSignup } from "./SignupDialog"
 import heroPerson from "../images/hero-person.webp"
-import { useT } from "../locales/LocaleContext"
+import { useText } from "../locales/LocaleContext"
+import heText from "../locales/he/hero.json"
+
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 const PANEL_URL = "https://panel.sendmsg.co.il/"
 
@@ -107,7 +111,7 @@ const orbitCards = [
 ]
 
 const Hero: React.FC = () => {
-  const t = useT("hero")
+  const t = useText(TEXT)
   const [textIndex, setTextIndex] = useState(0)
 
   useEffect(() => {

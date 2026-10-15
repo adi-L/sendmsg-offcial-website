@@ -30,7 +30,11 @@ import metuka from "../images/clients/metuka.svg"
 import yarin from "../images/clients/yarin.png"
 import mischar from "../images/clients/mischar-tasia.png"
 import newBrand from "../images/clients/new-brand.png"
-import { useT } from "../locales/LocaleContext"
+import { useText } from "../locales/LocaleContext"
+import heText from "../locales/he/social-proof.json"
+
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 /* Logos; their alt text is row1Alts / row2Alts in social-proof.json, in order. */
 const row1: Array<{ src: string }> = [
@@ -56,7 +60,7 @@ const row2: Array<{ src: string }> = [
 ]
 
 const SocialProof: React.FC = () => {
-  const t = useT("social-proof")
+  const t = useText(TEXT)
   return (
     <section className="section" style={styles.section}>
       <div className="container" style={styles.container}>

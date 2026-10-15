@@ -1,10 +1,14 @@
 import React from "react"
 
 import assafPhoto from "../images/assaf-stern.png"
-import { useT } from "../locales/LocaleContext"
+import { useText } from "../locales/LocaleContext"
+import heText from "../locales/he/mission-quote.json"
+
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 const MissionQuote: React.FC = () => {
-  const t = useT("mission-quote")
+  const t = useText(TEXT)
   return (
     <section className="section mission-section">
       <div className="container">

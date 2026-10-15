@@ -12,11 +12,14 @@ import {
 } from "../data/support-hours"
 import "../styles/support.css"
 import type { PageContext } from "../locales/config"
-import { useT } from "../locales/LocaleContext"
+import { useText } from "../locales/LocaleContext"
 import Rich from "../locales/Rich"
-import { getT } from "../locales/messages"
-import type { Messages } from "../locales/messages"
 import LocalizedLink from "../locales/LocalizedLink"
+import heText from "../locales/he/pages/support.json"
+
+/* This page's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
+type PageText = typeof heText
 
 /* ── /support/ ──────────────────────────────────────────────────
    Copy is the live /support/ page's own.
@@ -101,7 +104,7 @@ type Faq = {
   body: React.ReactNode
 }
 
-const FAQS = (t: Messages["pages/support"]): Faq[] => [
+const FAQS = (t: PageText): Faq[] => [
   {
     id: "lists",
     q: t.faqs[0].q,
@@ -182,7 +185,7 @@ const FAQS = (t: Messages["pages/support"]): Faq[] => [
 ]
 
 const SupportPage: React.FC = () => {
-  const t = useT("pages/support")
+  const t = useText(TEXT)
   const [openId, setOpenId] = useState<string | null>(FAQS(t)[0].id)
   const status = useSupportStatus()
 
@@ -363,7 +366,7 @@ const SupportPage: React.FC = () => {
 export default SupportPage
 
 export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
-  const t = getT(pageContext.locale, "pages/support")
+  const t = TEXT[pageContext.locale]
   return (
     <SEO locale={pageContext.locale}
       title={t.seo.title}

@@ -1,5 +1,9 @@
 import React from "react"
-import { useT } from "../locales/LocaleContext"
+import { useText } from "../locales/LocaleContext"
+import heText from "../locales/he/media-placeholder.json"
+
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 type Props = {
   label?: string
@@ -13,7 +17,7 @@ const MediaPlaceholder: React.FC<Props> = ({
   ratio = "16 / 9",
   kind = "video",
 }) => {
-  const t = useT("media-placeholder")
+  const t = useText(TEXT)
   const label = labelProp ?? t.defaultLabel
   return (
     <div

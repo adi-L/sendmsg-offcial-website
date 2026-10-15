@@ -2,7 +2,11 @@ import React, { useState } from "react"
 import { openSignup, PANEL_URL } from "./SignupDialog"
 import { formatText } from "../locales/config"
 import LocalizedLink from "../locales/LocalizedLink"
-import { useT } from "../locales/LocaleContext"
+import { useText } from "../locales/LocaleContext"
+import heText from "../locales/he/pricing.json"
+
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 /* ── price tiers ─────────────────────────────────────────────────
    Read straight off the live calculator at
@@ -110,7 +114,7 @@ function Price({
   word?: string
   note?: string
 }) {
-  const t = useT("pricing")
+  const t = useText(TEXT)
   return (
     <div className="pp-price">
       <p className="pp-price-fig">
@@ -131,7 +135,7 @@ function Price({
 }
 
 const PricingFAQ: React.FC = () => {
-  const t = useT("pricing")
+  const t = useText(TEXT)
   const [open, setOpen] = useState<number | null>(0)
 
   return (
@@ -170,7 +174,7 @@ const PricingFAQ: React.FC = () => {
 }
 
 const Pricing: React.FC = () => {
-  const t = useT("pricing")
+  const t = useText(TEXT)
   const plan = t.plan
   const [cycle, setCycle] = useState<Cycle>("year")
   const [step, setStep] = useState(0)

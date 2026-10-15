@@ -5,7 +5,11 @@ import courseOwners from "../images/audience/course-owners.webp"
 import organizations from "../images/audience/organizations.webp"
 import startups from "../images/audience/startups.webp"
 import institutions from "../images/audience/institutions.webp"
-import { useT } from "../locales/LocaleContext"
+import { useText } from "../locales/LocaleContext"
+import heText from "../locales/he/audience.json"
+
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 const audiences = [
   { img: smallBusiness },
@@ -33,7 +37,7 @@ const centeredIndex = (t: HTMLElement): number => {
 }
 
 const Audience: React.FC = () => {
-  const t = useT("audience")
+  const t = useText(TEXT)
   const trackRef = useRef<HTMLDivElement>(null)
   const snapTimer = useRef<number | undefined>(undefined)
   const [scrollable, setScrollable] = useState(false)

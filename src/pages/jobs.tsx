@@ -6,9 +6,12 @@ import CTA from "../components/CTA"
 import { SUPPORT_EMAIL } from "../data/api"
 import "../styles/jobs.css"
 import type { PageContext } from "../locales/config"
-import { useT } from "../locales/LocaleContext"
-import { getT } from "../locales/messages"
+import { useText } from "../locales/LocaleContext"
 import { formatText } from "../locales/config"
+import heText from "../locales/he/pages/jobs.json"
+
+/* This page's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 /* Applications have nowhere to go yet: the form flips to a success state
    in the browser, exactly like /contact/. The mail row beside it is the
@@ -114,7 +117,7 @@ const countLabel = (n: number, t: { countOne: string; countMany: string }) =>
 
 /* facts: moved to src/locales/he/pages/jobs.json as "facts". */
 const JobsPage: React.FC = () => {
-  const t = useT("pages/jobs")
+  const t = useText(TEXT)
   const TOTAL = t.openings.reduce((sum, job) => sum + job.count, 0)
   const [openId, setOpenId] = useState<string | null>(t.openings[0].id)
   const [role, setRole] = useState(t.openings[0].title)
@@ -424,7 +427,7 @@ const JobsPage: React.FC = () => {
 export default JobsPage
 
 export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
-  const t = getT(pageContext.locale, "pages/jobs")
+  const t = TEXT[pageContext.locale]
   return (
     <SEO locale={pageContext.locale}
       title={t.seo.title}

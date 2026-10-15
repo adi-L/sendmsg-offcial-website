@@ -6,10 +6,13 @@ import SEO from "../components/SEO"
 import { openSignup, PANEL_URL } from "../components/SignupDialog"
 import "../styles/crm.css"
 import type { PageContext } from "../locales/config"
-import { useT } from "../locales/LocaleContext"
+import { useText } from "../locales/LocaleContext"
 import Rich from "../locales/Rich"
-import { getT } from "../locales/messages"
 import LocalizedLink from "../locales/LocalizedLink"
+import heText from "../locales/he/pages/crm.json"
+
+/* This page's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 /* capabilities: moved to src/locales/he/pages/crm.json as "capabilities". */
 /* alsoIncluded: moved to src/locales/he/pages/crm.json as "alsoIncluded". */
@@ -20,7 +23,7 @@ const ArrowIcon: React.FC = () => (
 )
 
 const CrmPage: React.FC = () => {
-  const t = useT("pages/crm")
+  const t = useText(TEXT)
   return (
     <Layout>
       <div className="crm">
@@ -118,7 +121,7 @@ const CrmPage: React.FC = () => {
 export default CrmPage
 
 export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
-  const t = getT(pageContext.locale, "pages/crm")
+  const t = TEXT[pageContext.locale]
   return (
     <SEO locale={pageContext.locale}
       title={t.seo.title}

@@ -7,7 +7,10 @@ import CTA from "../components/CTA"
 import SEO from "../components/SEO"
 import "../styles/pricing.css"
 import type { PageContext } from "../locales/config"
-import { getT } from "../locales/messages"
+import heText from "../locales/he/pages/pricing.json"
+
+/* This page's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 const PricingPage: React.FC = () => (
   <Layout>
@@ -21,7 +24,7 @@ const PricingPage: React.FC = () => (
 export default PricingPage
 
 export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
-  const t = getT(pageContext.locale, "pages/pricing")
+  const t = TEXT[pageContext.locale]
   return (
     <SEO locale={pageContext.locale}
       title={t.seo.title}

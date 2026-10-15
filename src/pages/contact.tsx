@@ -12,10 +12,13 @@ import {
 } from "../data/support-hours"
 import "../styles/contact.css"
 import type { PageContext } from "../locales/config"
-import { useT } from "../locales/LocaleContext"
-import { getT } from "../locales/messages"
+import { useText } from "../locales/LocaleContext"
 import LocalizedLink from "../locales/LocalizedLink"
 import Fmt from "../locales/Fmt"
+import heText from "../locales/he/pages/contact.json"
+
+/* This page's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 
 /* The site's own icon set: 24-grid, 1.8 stroke, round caps. The WhatsApp
@@ -64,7 +67,7 @@ const GoIcon = ({ size = 20 }: { size?: number }) =>
 
 /* elsewhere: moved to src/locales/he/pages/contact.json as "elsewhere". */
 const ContactPage: React.FC = () => {
-  const t = useT("pages/contact")
+  const t = useText(TEXT)
   const [submitted, setSubmitted] = useState(false)
   const status = useSupportStatus()
 
@@ -307,7 +310,7 @@ const ContactPage: React.FC = () => {
 export default ContactPage
 
 export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
-  const t = getT(pageContext.locale, "pages/contact")
+  const t = TEXT[pageContext.locale]
   return (
     <SEO locale={pageContext.locale}
       title={t.seo.title}

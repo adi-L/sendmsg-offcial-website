@@ -1,6 +1,10 @@
 import React, { useEffect, useRef, useState } from "react"
 import LocalizedLink from "../locales/LocalizedLink"
-import { useLocalePath, useT } from "../locales/LocaleContext"
+import { useLocalePath, useText } from "../locales/LocaleContext"
+import heText from "../locales/he/promo-popup.json"
+
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 const COUPON_CODE = "GE5H43D"
 const SHOW_DELAY_MS = 12_000
@@ -8,7 +12,7 @@ const STORAGE_KEY = "sendmsg-promo-seen"
 const SNOOZE_DAYS = 7
 
 const PromoPopup: React.FC = () => {
-  const t = useT("promo-popup")
+  const t = useText(TEXT)
   const lp = useLocalePath()
   const [visible, setVisible] = useState(false)
   const [step, setStep] = useState<"form" | "code">("form")

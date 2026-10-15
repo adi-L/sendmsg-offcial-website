@@ -8,9 +8,12 @@ import "../styles/kb-article.css"
 import { formatText } from "../locales/config"
 import type { PageContext } from "../locales/config"
 import LocalizedLink from "../locales/LocalizedLink"
-import { useT } from "../locales/LocaleContext"
+import { useText } from "../locales/LocaleContext"
 import Rich from "../locales/Rich"
-import { getT } from "../locales/messages"
+import heText from "../locales/he/templates/kb-article.json"
+
+/* This page's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 /* ── a single guide ─────────────────────────────────────────────
    Imported from the live knowledge base by scripts/import-kb.py.
@@ -51,7 +54,7 @@ const KbArticle: React.FC<PageProps<Data, Context>> = ({
   data,
   pageContext,
 }) => {
-  const t = useT("templates/kb-article")
+  const t = useText(TEXT)
   const g = data.markdownRemark
   const { title, author, categories, tags } = g.frontmatter
 
@@ -140,7 +143,7 @@ export const query = graphql`
 
 export const Head: HeadFC<Data, PageContext> = ({ data, pageContext }) => {
   const f = data.markdownRemark.frontmatter
-  const t = getT(pageContext.locale, "templates/kb-article")
+  const t = TEXT[pageContext.locale]
   return (
     <SEO locale={pageContext.locale} availableIn={[pageContext.locale]}
       title={f.title}

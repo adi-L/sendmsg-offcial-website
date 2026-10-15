@@ -6,9 +6,12 @@ import SEO from "../components/SEO"
 import { openSignup, PANEL_URL } from "../components/SignupDialog"
 import "../styles/domain.css"
 import type { PageContext } from "../locales/config"
-import { useT } from "../locales/LocaleContext"
-import { getT } from "../locales/messages"
+import { useText } from "../locales/LocaleContext"
 import LocalizedLink from "../locales/LocalizedLink"
+import heText from "../locales/he/pages/domain.json"
+
+/* This page's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 /* Copy is the live domain page's own. Its answers arrive as one run-on
    string because the source joins paragraphs without spaces; they are
@@ -30,7 +33,7 @@ const PlusIcon: React.FC = () => (
 )
 
 const DomainPage: React.FC = () => {
-  const t = useT("pages/domain")
+  const t = useText(TEXT)
   const [openId, setOpenId] = useState<string | null>(null)
 
   return (
@@ -175,7 +178,7 @@ const DomainPage: React.FC = () => {
 export default DomainPage
 
 export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
-  const t = getT(pageContext.locale, "pages/domain")
+  const t = TEXT[pageContext.locale]
   return (
     <SEO locale={pageContext.locale}
       title={t.seo.title}

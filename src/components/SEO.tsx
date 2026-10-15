@@ -1,7 +1,10 @@
 import React from "react"
 import { withPrefix } from "gatsby"
 import { alternates, enabledLocales, Locale, localePath, locales } from "../locales/config"
-import { getT } from "../locales/messages"
+import heText from "../locales/he/common.json"
+
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 interface SEOProps {
   /* Required, so a page's Head can't forget it: pass pageContext.locale. */
@@ -29,7 +32,7 @@ const SEO: React.FC<SEOProps> = ({
   pathname,
   image,
 }) => {
-  const c = getT(locale, "common").seo
+  const c = TEXT[locale].seo
   const siteTitle = c.siteTitle
   const siteDescription = c.siteDescription
   const siteUrl = "https://sendmsg.co.il"

@@ -3,11 +3,14 @@ import { type HeadFC } from "gatsby"
 import Layout from "../components/Layout"
 import SEO from "../components/SEO"
 import type { PageContext } from "../locales/config"
-import { useLocalePath, useT } from "../locales/LocaleContext"
-import { getT } from "../locales/messages"
+import { useLocalePath, useText } from "../locales/LocaleContext"
+import heText from "../locales/he/pages/404.json"
+
+/* This page's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 const NotFoundPage: React.FC = () => {
-  const t = useT("pages/404")
+  const t = useText(TEXT)
   const lp = useLocalePath()
   return (
     <Layout>
@@ -28,7 +31,7 @@ const NotFoundPage: React.FC = () => {
 export default NotFoundPage
 
 export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
-  const t = getT(pageContext.locale, "pages/404")
+  const t = TEXT[pageContext.locale]
   return <SEO locale={pageContext.locale} title={t.seo.title} />
 }
 

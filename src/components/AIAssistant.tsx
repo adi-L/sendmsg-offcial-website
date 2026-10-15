@@ -3,8 +3,12 @@ import { openSignup } from "./SignupDialog"
 import alexAvatar from "../images/alex-avatar.png"
 import { useChat } from "./ai/useChat"
 import { renderRtlText } from "./ai/renderRtl"
-import { useLocalePath, useT } from "../locales/LocaleContext"
+import { useLocalePath, useText } from "../locales/LocaleContext"
 import Rich from "../locales/Rich"
+import heText from "../locales/he/ai-assistant.json"
+
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 const PANEL_URL = "https://panel.sendmsg.co.il/"
 const WHATSAPP_URL = "https://api.whatsapp.com/send?phone=972559377588&text="
@@ -28,7 +32,7 @@ const BUBBLE_TO = 2100
 const FallbackActions: React.FC<{ onPanelLinkClick: (e: React.MouseEvent) => void }> = ({
   onPanelLinkClick,
 }) => {
-  const t = useT("ai-assistant")
+  const t = useText(TEXT)
   const lp = useLocalePath()
   return (
     <div className="ai-panel-actions">
@@ -57,7 +61,7 @@ const FallbackActions: React.FC<{ onPanelLinkClick: (e: React.MouseEvent) => voi
 }
 
 const AIAssistant: React.FC = () => {
-  const t = useT("ai-assistant")
+  const t = useText(TEXT)
   const lp = useLocalePath()
   const [inRange, setInRange] = useState(false)
   const [bubbleDismissed, setBubbleDismissed] = useState(true)

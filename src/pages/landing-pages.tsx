@@ -10,17 +10,20 @@ import tplTherapy from "../images/templates/template-therapy.webp"
 import tplTech from "../images/templates/template-tech.webp"
 import "../styles/landing-pages.css"
 import type { PageContext } from "../locales/config"
-import { useT } from "../locales/LocaleContext"
+import { useText } from "../locales/LocaleContext"
 import Rich from "../locales/Rich"
-import { getT } from "../locales/messages"
-import type { Messages } from "../locales/messages"
 import LocalizedLink from "../locales/LocalizedLink"
+import heText from "../locales/he/pages/landing-pages.json"
+
+/* This page's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
+type PageText = typeof heText
 
 /* canDo: moved to src/locales/he/pages/landing-pages.json as "canDo". */
 /* Four of the live gallery's templates, pulled from the live page.
    Each image is the whole page, 2560px tall, so the preview shows the
    top and travels down on hover: the length is the point. */
-const templates = (t: Messages["pages/landing-pages"]) => [
+const templates = (t: PageText) => [
   { src: tplWorkshop, alt: t.templates[0].alt, t: t.templates[0].t },
   { src: tplProgram, alt: t.templates[1].alt, t: t.templates[1].t },
   { src: tplTherapy, alt: t.templates[2].alt, t: t.templates[2].t },
@@ -43,7 +46,7 @@ const ArrowIcon: React.FC = () => (
 )
 
 const LandingPagesPage: React.FC = () => {
-  const t = useT("pages/landing-pages")
+  const t = useText(TEXT)
   const [openId, setOpenId] = useState<string | null>(null)
 
   return (
@@ -207,7 +210,7 @@ const LandingPagesPage: React.FC = () => {
 export default LandingPagesPage
 
 export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
-  const t = getT(pageContext.locale, "pages/landing-pages")
+  const t = TEXT[pageContext.locale]
   return (
     <SEO locale={pageContext.locale}
       title={t.seo.title}

@@ -1,8 +1,12 @@
 import React, { useState } from "react"
-import { useT } from "../locales/LocaleContext"
+import { useText } from "../locales/LocaleContext"
+import heText from "../locales/he/faq.json"
+
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 const FAQ: React.FC = () => {
-  const t = useT("faq")
+  const t = useText(TEXT)
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   return (

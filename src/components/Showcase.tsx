@@ -1,13 +1,17 @@
 import React from "react"
 import MediaPlaceholder from "./MediaPlaceholder"
-import { useT } from "../locales/LocaleContext"
+import { useText } from "../locales/LocaleContext"
+import heText from "../locales/he/showcase.json"
+
+/* This component's text, per language: see src/locales/README.md. */
+const TEXT = { he: heText }
 
 /* One slot, not three. A dashed placeholder reads as "asset coming here";
    three in a grid read as a gallery that failed to load. When the real
    screenshots exist they can come back -- until then the section promises
    one look inside and shows one. */
 const Showcase: React.FC = () => {
-  const t = useT("showcase")
+  const t = useText(TEXT)
   return (
     <section className="section showcase-section">
       <div className="container">
