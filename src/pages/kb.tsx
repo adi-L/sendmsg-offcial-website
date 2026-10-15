@@ -4,12 +4,10 @@ import type { HeadFC } from "gatsby"
 import Layout from "../components/Layout"
 import CTA from "../components/CTA"
 import SEO from "../components/SEO"
-import { KB_ARTICLES, KB_CATEGORIES, KbArticle } from "../data/kb"
 import "../styles/kb.css"
 import { articleLocale, defaultLocale, formatText } from "../locales/config"
 import type { PageContext } from "../locales/config"
-import { useLocale } from "../locales/LocaleContext"
-import { useText } from "../locales/LocaleContext"
+import { useLocale, useText } from "../locales/LocaleContext"
 import Rich from "../locales/Rich"
 import LocalizedLink from "../locales/LocalizedLink"
 import heText from "../locales/he/pages/kb.json"
@@ -18,10 +16,12 @@ import heText from "../locales/he/pages/kb.json"
 const TEXT = { he: heText }
 
 /* ── /kb/ — מרכז ההדרכה ─────────────────────────────────────────
-   The index over every guide. src/data/kb.ts holds the full crawled
-   catalogue; the ones imported into content/kb/<lang>/ are matched to it by
-   source url and linked internally, the rest still open on
-   sendmsg.co.il. That keeps the index whole while the migration runs.
+   The index over every guide, built from the guides themselves: the
+   markdown in content/kb/<lang>/ for this page's language. Each guide's
+   frontmatter gives its title, its place in the list (`order`) and its
+   categories, which are matched by name to `categories` in this page's
+   JSON. (src/data/kb.ts, the crawl of the live index, now only feeds
+   scripts/import-kb.py.)
 
    The live page shows 30 cards at a time behind a filter, which hides
    most of what exists — you cannot tell from it that there are 98
@@ -30,15 +30,8 @@ const TEXT = { he: heText }
    control here; the category chips are the browse path for someone
    who does not yet know the word to type. */
 
-const LABELS = new Map(KB_CATEGORIES.map((c) => [c.id, c.label]))
-
-/* Counts come from the data, never from a number typed in the copy. */
-const COUNTS = new Map(
-  KB_CATEGORIES.map((c) => [
-    c.id,
-    KB_ARTICLES.filter((a) => a.cats.includes(c.id)).length,
-  ])
-)
+/* A guide as the index shows it; `cats` are category ids. */
+type Guide = { title: string; slug: string; excerpt: string | null; cats: string[] }
 
 const SearchIcon = () => (
   <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" aria-hidden="true" focusable="false">
@@ -53,12 +46,6 @@ const ClearIcon = () => (
   </svg>
 )
 
-const ExternalIcon = () => (
-  <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
-    <path d="M14 4h6v6M20 4l-8.5 8.5M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4" />
-  </svg>
-)
-
 const GoIcon = () => (
   <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
     <path d="M19 12H5" />
@@ -66,91 +53,68 @@ const GoIcon = () => (
   </svg>
 )
 
-/* The guides are being migrated in batches, so the index is mixed for
-   a while: a guide that lives in the repo gets an internal link, one
-   that does not still opens on sendmsg.co.il. The row says which it
-   is rather than leaving the reader to find out by clicking. */
 const Row: React.FC<{
-  a: KbArticle
+  a: Guide
   showCats?: boolean
-  local?: Local
-}> = ({ a, showCats, local }) => {
-  const t = useText(TEXT)
-  const localSlug = local?.slug
-  const inner = (
-    <>
+  labels: Map<string, string>
+}> = ({ a, showCats, labels }) => (
+  <li>
+    <LocalizedLink to={`/kb/${a.slug}/`}>
       <span className="kb-row-t">{a.title}</span>
-      {showCats && local?.excerpt && (
-        <span className="kb-row-ex">{local.excerpt}</span>
-      )}
+      {showCats && a.excerpt && <span className="kb-row-ex">{a.excerpt}</span>}
       {showCats && (
-        <span className="kb-row-cats">
-          {a.cats.map((c) => LABELS.get(c)).join(" · ")}
-        </span>
+        <span className="kb-row-cats">{a.cats.map((c) => labels.get(c)).join(" · ")}</span>
       )}
       <span className="kb-row-go" aria-hidden="true">
-        {localSlug ? <GoIcon /> : <ExternalIcon />}
+        <GoIcon />
       </span>
-      {!localSlug && (
-        <span className="kb-sr">{t.sr}</span>
-      )}
-    </>
-  )
-
-  return (
-    <li>
-      {localSlug ? (
-        <LocalizedLink to={`/kb/${localSlug}/`}>{inner}</LocalizedLink>
-      ) : (
-        <a href={a.url} target="_blank" rel="noopener noreferrer">
-          {inner}
-        </a>
-      )}
-    </li>
-  )
-}
+    </LocalizedLink>
+  </li>
+)
 
 interface Data {
   allMarkdownRemark: {
     nodes: Array<{
       fileAbsolutePath: string
       frontmatter: {
+        title: string
         slug: string
-        source: string | null
+        order: number | null
+        categories: string[] | null
         excerpt: string | null
       }
     }>
   }
 }
 
-type Local = { slug: string; excerpt: string | null }
-
 const KbPage: React.FC<PageProps<Data>> = ({ data }) => {
   const t = useText(TEXT)
   const locale = useLocale()
-  /* source url -> the imported guide, matched on the decoded path
-     because the live links are inconsistent about percent-encoding. */
-  const local = useMemo(() => {
-    const key = (u: string) => {
-      try {
-        return decodeURIComponent(new URL(u).pathname).replace(/^\/|\/$/g, "").toLowerCase()
-      } catch {
-        return u
-      }
-    }
-    const m = new Map<string, Local>()
-    for (const n of data.allMarkdownRemark.nodes) {
-      /* Only guides in this page's language (content/kb/he/ is Hebrew). */
-      if ((articleLocale(n.fileAbsolutePath) ?? defaultLocale) !== locale) continue
-      if (n.frontmatter.source) {
-        m.set(key(n.frontmatter.source), {
-          slug: n.frontmatter.slug,
-          excerpt: n.frontmatter.excerpt,
-        })
-      }
-    }
-    return { get: (u: string) => m.get(key(u)) }
-  }, [data, locale])
+  const categories = t.categories
+  const labels = useMemo(() => new Map(categories.map((c) => [c.id, c.label])), [categories])
+
+  /* This language's guides, in index order. A category name the JSON
+     doesn't list is dropped (tests/kb-categories catches that). */
+  const guides = useMemo<Guide[]>(() => {
+    const idOf = new Map(categories.map((c) => [c.label, c.id]))
+    return data.allMarkdownRemark.nodes
+      .filter((n) => (articleLocale(n.fileAbsolutePath) ?? defaultLocale) === locale)
+      .map((n) => ({
+        title: n.frontmatter.title,
+        slug: n.frontmatter.slug,
+        excerpt: n.frontmatter.excerpt,
+        order: n.frontmatter.order ?? Number.MAX_SAFE_INTEGER,
+        cats: (n.frontmatter.categories ?? []).flatMap((c) => idOf.get(c) ?? []),
+      }))
+      .sort((x, y) => x.order - y.order || x.title.localeCompare(y.title))
+      .map(({ order: _order, ...g }) => g)
+  }, [data, locale, categories])
+
+  /* Counts come from the data, never from a number typed in the copy. */
+  const counts = useMemo(
+    () => new Map(categories.map((c) => [c.id, guides.filter((g) => g.cats.includes(c.id)).length])),
+    [categories, guides]
+  )
 
   const [query, setQuery] = useState("")
   const [cat, setCat] = useState<string | null>(null)
@@ -163,24 +127,23 @@ const KbPage: React.FC<PageProps<Data>> = ({ data }) => {
   const matches = useMemo(() => {
     if (!q) return null
     const needle = q.toLowerCase()
-    return KB_ARTICLES.filter((a) => {
+    return guides.filter((a) => {
       if (a.title.toLowerCase().includes(needle)) return true
-      const ex = local.get(a.url)?.excerpt
-      return !!ex && ex.toLowerCase().includes(needle)
+      return !!a.excerpt && a.excerpt.toLowerCase().includes(needle)
     })
-  }, [q, local])
+  }, [q, guides])
 
   /* Search wins over the chips: typing is a more specific intent than
      the category you happened to have open. */
   const shown = matches
     ? matches
     : cat
-      ? KB_ARTICLES.filter((a) => a.cats.includes(cat))
-      : KB_ARTICLES
+      ? guides.filter((a) => a.cats.includes(cat))
+      : guides
 
-  const groups = KB_CATEGORIES.map((c) => ({
+  const groups = categories.map((c) => ({
     c,
-    items: KB_ARTICLES.filter((a) => a.cats.includes(c.id)),
+    items: guides.filter((a) => a.cats.includes(c.id)),
   }))
 
   return (
@@ -195,8 +158,8 @@ const KbPage: React.FC<PageProps<Data>> = ({ data }) => {
             <p className="kb-hero-note">
               <Rich
                 text={formatText(t.heroNote, {
-                  guides: KB_ARTICLES.length,
-                  cats: KB_CATEGORIES.length,
+                  guides: guides.length,
+                  cats: categories.length,
                 })}
               />
             </p>
@@ -240,9 +203,9 @@ const KbPage: React.FC<PageProps<Data>> = ({ data }) => {
                   onClick={() => setCat(null)}
                 >
                   {t.chip}
-                  <span className="kb-chip-n">{KB_ARTICLES.length}</span>
+                  <span className="kb-chip-n">{guides.length}</span>
                 </button>
-                {KB_CATEGORIES.map((c) => (
+                {categories.map((c) => (
                   <button
                     key={c.id}
                     type="button"
@@ -251,7 +214,7 @@ const KbPage: React.FC<PageProps<Data>> = ({ data }) => {
                     onClick={() => setCat(cat === c.id ? null : c.id)}
                   >
                     {c.label}
-                    <span className="kb-chip-n">{COUNTS.get(c.id)}</span>
+                    <span className="kb-chip-n">{counts.get(c.id)}</span>
                   </button>
                 ))}
               </div>
@@ -265,8 +228,8 @@ const KbPage: React.FC<PageProps<Data>> = ({ data }) => {
               {q
                 ? formatText(t.resultsFor, { n: shown.length, q })
                 : cat
-                  ? formatText(t.inCategory, { n: shown.length, cat: LABELS.get(cat) ?? "" })
-                  : formatText(t.total, { n: KB_ARTICLES.length })}
+                  ? formatText(t.inCategory, { n: shown.length, cat: labels.get(cat) ?? "" })
+                  : formatText(t.total, { n: guides.length })}
             </p>
 
             {shown.length === 0 && (
@@ -287,7 +250,7 @@ const KbPage: React.FC<PageProps<Data>> = ({ data }) => {
             {shown.length > 0 && (q || cat) && (
               <ul className="kb-rows">
                 {shown.map((a) => (
-                  <Row key={a.url} a={a} showCats={!!q} local={local.get(a.url)} />
+                  <Row key={a.slug} a={a} showCats={!!q} labels={labels} />
                 ))}
               </ul>
             )}
@@ -301,7 +264,7 @@ const KbPage: React.FC<PageProps<Data>> = ({ data }) => {
                   </div>
                   <ul className="kb-rows">
                     {items.map((a) => (
-                      <Row key={a.url} a={a} local={local.get(a.url)} />
+                      <Row key={a.slug} a={a} labels={labels} />
                     ))}
                   </ul>
                 </div>
@@ -318,12 +281,16 @@ export default KbPage
 
 export const query = graphql`
   query KbIndex {
-    allMarkdownRemark(filter: { frontmatter: { source: { ne: null } } }) {
+    # Guides only, every language; the page keeps its own. Blog posts are
+    # markdown too, so the path filter is what keeps them out.
+    allMarkdownRemark(filter: { fileAbsolutePath: { regex: "//content/kb//" } }) {
       nodes {
         fileAbsolutePath
         frontmatter {
+          title
           slug
-          source
+          order
+          categories
           excerpt
         }
       }

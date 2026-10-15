@@ -1,6 +1,7 @@
 ---
 title: "התממשקות בין Verifone לשלח מסר"
 slug: "התממשקות-verifone-לשלח-מסר"
+order: 86
 source: "https://www.sendmsg.co.il/%d7%94%d7%aa%d7%9e%d7%9e%d7%a9%d7%a7%d7%95%d7%aa-verifone-%d7%9c%d7%a9%d7%9c%d7%97-%d7%9e%d7%a1%d7%a8/"
 categories:
   - "אוטומציות"

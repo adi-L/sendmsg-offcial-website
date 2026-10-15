@@ -1,6 +1,7 @@
 ---
 title: "חיבור רימייל (ReMail) לשלח מסר"
 slug: "remail-sendmsg-connection"
+order: 97
 source: "https://www.sendmsg.co.il/remail-sendmsg-connection/"
 categories:
   - "חיבור למערכות חיצוניות"

@@ -1,6 +1,7 @@
 ---
 title: "התממשקות WeWise עם שלח מסר"
 slug: "התממשקות-wewise-עם-שלח-מסר"
+order: 98
 source: "https://www.sendmsg.co.il/%d7%94%d7%aa%d7%9e%d7%9e%d7%a9%d7%a7%d7%95%d7%aa-wewise-%d7%a2%d7%9d-%d7%a9%d7%9c%d7%97-%d7%9e%d7%a1%d7%a8/"
 categories:
   - "חיבור למערכות חיצוניות"

@@ -1,6 +1,7 @@
 ---
 title: "חיבור מערכת 2LINK לשלח מסר"
 slug: "חיבור-מערכת-2link-לשלח-מסר"
+order: 26
 source: "https://www.sendmsg.co.il/%d7%97%d7%99%d7%91%d7%95%d7%a8-%d7%9e%d7%a2%d7%a8%d7%9b%d7%aa-2link-%d7%9c%d7%a9%d7%9c%d7%97-%d7%9e%d7%a1%d7%a8/"
 categories:
   - "מנויים וקבוצות דיוור"

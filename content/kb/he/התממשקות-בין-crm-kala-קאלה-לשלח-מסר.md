@@ -1,6 +1,7 @@
 ---
 title: "התממשקות בין CRM KALA (קאלה) לשלח מסר"
 slug: "התממשקות-בין-crm-kala-קאלה-לשלח-מסר"
+order: 38
 source: "https://www.sendmsg.co.il/%d7%94%d7%aa%d7%9e%d7%9e%d7%a9%d7%a7%d7%95%d7%aa-%d7%91%d7%99%d7%9f-crm-kala-%d7%a7%d7%90%d7%9c%d7%94-%d7%9c%d7%a9%d7%9c%d7%97-%d7%9e%d7%a1%d7%a8/"
 categories:
   - "ניוזלטרים וקמפיינים"

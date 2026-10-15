@@ -82,6 +82,8 @@ def read_catalogue():
             "title": m.group(1).replace('\\"', '"'),
             "url": m.group(2),
             "cats": [cats[i] for i in ids if i in cats],
+            # position in the live index; /kb/ lists guides in this order
+            "order": len(arts) + 1,
         })
     return arts
 
@@ -600,6 +602,7 @@ def import_one(art, verbose=True):
         "---",
         f"title: {yaml_quote(art['title'])}",
         f"slug: {yaml_quote(slug)}",
+        f"order: {art['order']}",
         f"source: {yaml_quote(art['url'])}",
         "categories:",
     ]

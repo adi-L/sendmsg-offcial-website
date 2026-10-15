@@ -1,6 +1,7 @@
 ---
 title: "ניהול קשרי הלקוחות CRM שלח מסר"
 slug: "ניהול-קשרי-הלקוחות-crm-שלח_מסר"
+order: 14
 source: "https://www.sendmsg.co.il/%d7%a0%d7%99%d7%94%d7%95%d7%9c-%d7%a7%d7%a9%d7%a8%d7%99-%d7%94%d7%9c%d7%a7%d7%95%d7%97%d7%95%d7%aa-crm-%d7%a9%d7%9c%d7%97_%d7%9e%d7%a1%d7%a8/"
 categories:
   - "מנויים וקבוצות דיוור"

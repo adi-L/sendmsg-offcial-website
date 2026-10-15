@@ -1,6 +1,7 @@
 ---
 title: "הגדרת וקבלת REF מטופס אלמנטור עם תוסף שלח מסר"
 slug: "הגדרת-ref-טופס-אלמנטור-תוסף-שלח-מסר"
+order: 73
 source: "https://www.sendmsg.co.il/%d7%94%d7%92%d7%93%d7%a8%d7%aa-ref-%d7%98%d7%95%d7%a4%d7%a1-%d7%90%d7%9c%d7%9e%d7%a0%d7%98%d7%95%d7%a8-%d7%aa%d7%95%d7%a1%d7%a3-%d7%a9%d7%9c%d7%97-%d7%9e%d7%a1%d7%a8/"
 categories:
   - "דפי נחיתה"

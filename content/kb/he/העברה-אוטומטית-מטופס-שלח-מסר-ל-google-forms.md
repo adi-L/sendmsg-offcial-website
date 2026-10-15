@@ -1,6 +1,7 @@
 ---
 title: "העברת נתונים משלח מסר לגוגל פורמס"
 slug: "העברה-אוטומטית-מטופס-שלח-מסר-ל-google-forms"
+order: 88
 source: "https://www.sendmsg.co.il/%d7%94%d7%a2%d7%91%d7%a8%d7%94-%d7%90%d7%95%d7%98%d7%95%d7%9e%d7%98%d7%99%d7%aa-%d7%9e%d7%98%d7%95%d7%a4%d7%a1-%d7%a9%d7%9c%d7%97-%d7%9e%d7%a1%d7%a8-%d7%9c-google-forms/"
 categories:
   - "אוטומציות"

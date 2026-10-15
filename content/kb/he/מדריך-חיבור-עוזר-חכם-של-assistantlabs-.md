@@ -1,6 +1,7 @@
 ---
 title: "מדריך חיבור שלח מסר לבוט וואטסאפ AI🚀"
 slug: "מדריך-חיבור-עוזר-חכם-של-assistantlabs🚀"
+order: 15
 source: "https://www.sendmsg.co.il/%d7%9e%d7%93%d7%a8%d7%99%d7%9a-%d7%97%d7%99%d7%91%d7%95%d7%a8-%d7%a2%d7%95%d7%96%d7%a8-%d7%97%d7%9b%d7%9d-%d7%a9%d7%9c-assistantlabs%f0%9f%9a%80/"
 categories:
   - "מנויים וקבוצות דיוור"

@@ -1,6 +1,7 @@
 ---
 title: "יצירת התממשקות בין Woocommerce לשלח מסר"
 slug: "יצירת-התממשקות-בין-woocommerce-לשלח-מסר"
+order: 95
 source: "https://www.sendmsg.co.il/%d7%99%d7%a6%d7%99%d7%a8%d7%aa-%d7%94%d7%aa%d7%9e%d7%9e%d7%a9%d7%a7%d7%95%d7%aa-%d7%91%d7%99%d7%9f-woocommerce-%d7%9c%d7%a9%d7%9c%d7%97-%d7%9e%d7%a1%d7%a8/"
 categories:
   - "אוטומציות"

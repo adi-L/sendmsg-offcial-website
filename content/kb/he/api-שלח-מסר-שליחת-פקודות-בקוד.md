@@ -1,6 +1,7 @@
 ---
 title: "API שלח מסר שליחת פקודות בקוד"
 slug: "api-שלח-מסר-שליחת-פקודות-בקוד"
+order: 90
 source: "https://www.sendmsg.co.il/api-%d7%a9%d7%9c%d7%97-%d7%9e%d7%a1%d7%a8-%d7%a9%d7%9c%d7%99%d7%97%d7%aa-%d7%a4%d7%a7%d7%95%d7%93%d7%95%d7%aa-%d7%91%d7%a7%d7%95%d7%93/"
 categories:
   - "אוטומציות"

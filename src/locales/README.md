@@ -34,6 +34,11 @@ Find the text: `grep -rn "some words" src/locales/he/`. Edit the JSON. That's it
 - `he/templates/<template>.json`: the guide and blog-post templates.
 - `he/common.json`: site-wide SEO strings (used by `SEO.tsx`).
 - Guides and blog posts are markdown in `content/kb/he/` and `content/blog/he/`.
+  A guide's title, categories and place in the `/kb/` index (`order:`) are in
+  its own frontmatter. The 10 category names are `categories` in
+  `he/pages/kb.json`, and a guide names its categories by those labels.
+  `tests/kb-categories` checks that every name exists and every guide has a
+  unique `order`.
 
 ## How a file gets its text
 
@@ -81,7 +86,9 @@ A page's `Head` can't use hooks, so it reads `TEXT[pageContext.locale]`.
    - `tests/locale-shape` fails on a list with a different length or a
      placeholder that doesn't match. Lists are matched to icons and images by
      position, so a shorter list would break a page.
-4. Articles go in `content/kb/en/` and `content/blog/en/`.
+4. Articles go in `content/kb/en/` and `content/blog/en/`, with the same
+   frontmatter. A translated guide names its categories by their English
+   labels from `en/pages/kb.json` and keeps its `order:`.
 5. Set `enabled: true` in `config.ts`. Pages appear at `/en/...`, Hebrew URLs
    don't change, and `/api/` stays a single page. hreflang links appear only
    between pages that exist in both languages. Articles get none until they

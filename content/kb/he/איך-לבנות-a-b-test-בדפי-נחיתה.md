@@ -1,6 +1,7 @@
 ---
 title: "איך לבנות A/B Test בדפי נחיתה"
 slug: "איך-לבנות-a-b-test-בדפי-נחיתה"
+order: 63
 source: "https://www.sendmsg.co.il/%d7%90%d7%99%d7%9a-%d7%9c%d7%91%d7%a0%d7%95%d7%aa-a-b-test-%d7%91%d7%93%d7%a4%d7%99-%d7%a0%d7%97%d7%99%d7%aa%d7%94/"
 categories:
   - "דפי נחיתה"

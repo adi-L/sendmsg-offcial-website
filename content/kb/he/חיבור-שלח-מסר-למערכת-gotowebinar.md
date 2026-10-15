@@ -1,6 +1,7 @@
 ---
 title: "חיבור שלח מסר למערכת GoToWebinar"
 slug: "חיבור-שלח-מסר-למערכת-gotowebinar"
+order: 76
 source: "https://www.sendmsg.co.il/%d7%97%d7%99%d7%91%d7%95%d7%a8-%d7%a9%d7%9c%d7%97-%d7%9e%d7%a1%d7%a8-%d7%9c%d7%9e%d7%a2%d7%a8%d7%9b%d7%aa-gotowebinar/"
 categories:
   - "קורסים דיגיטליים"

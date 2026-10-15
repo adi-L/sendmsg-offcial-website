@@ -1,6 +1,7 @@
 ---
 title: "יצירת Webhook באמצעות מערכת טפסים"
 slug: "יצירת-webhook-באמצעות-מערכת-טפסים"
+order: 93
 source: "https://www.sendmsg.co.il/%d7%99%d7%a6%d7%99%d7%a8%d7%aa-webhook-%d7%91%d7%90%d7%9e%d7%a6%d7%a2%d7%95%d7%aa-%d7%9e%d7%a2%d7%a8%d7%9b%d7%aa-%d7%98%d7%a4%d7%a1%d7%99%d7%9d/"
 categories:
   - "אוטומציות"
