@@ -11,7 +11,8 @@
     "clean": "gatsby clean",
     "typecheck": "tsc --noEmit",
     "check:api": "node scripts/check-api-coverage.mjs",
-    "verify": "npm run typecheck && npm run check:api"
+    "verify": "npm run typecheck && npm test && npm run check:api",
+    "test": "node --test tests/"
   },
   "keywords": [
     "sendmsg",
