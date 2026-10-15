@@ -28,21 +28,36 @@ import heMissionQuote from "./he/mission-quote.json"
 import hePages404 from "./he/pages/404.json"
 import hePagesAbout from "./he/pages/about.json"
 import hePagesAccessibility from "./he/pages/accessibility.json"
+import hePagesAffiliate from "./he/pages/affiliate.json"
+import hePagesBlog from "./he/pages/blog.json"
+import hePagesContact from "./he/pages/contact.json"
 import hePagesCreaditor from "./he/pages/creaditor.json"
+import hePagesCrm from "./he/pages/crm.json"
 import hePagesDigitalCourses from "./he/pages/digital-courses.json"
 import hePagesDomain from "./he/pages/domain.json"
+import hePagesEmailBank from "./he/pages/email-bank.json"
 import hePagesIndex from "./he/pages/index.json"
 import hePagesJobs from "./he/pages/jobs.json"
+import hePagesKb from "./he/pages/kb.json"
+import hePagesLandingPages from "./he/pages/landing-pages.json"
+import hePagesMeetings from "./he/pages/meetings.json"
 import hePagesNewsletters from "./he/pages/newsletters.json"
+import hePagesPricing from "./he/pages/pricing.json"
+import hePagesPrivacy from "./he/pages/privacy.json"
 import hePagesServices from "./he/pages/services.json"
 import hePagesShomerShabbat from "./he/pages/shomer-shabbat.json"
 import hePagesSms from "./he/pages/sms.json"
+import hePagesSmsBank from "./he/pages/sms-bank.json"
 import hePagesSupport from "./he/pages/support.json"
+import hePagesTerms from "./he/pages/terms.json"
+import hePagesVirtualNumber from "./he/pages/virtual-number.json"
 import hePricing from "./he/pricing.json"
 import hePromoPopup from "./he/promo-popup.json"
 import heShowcase from "./he/showcase.json"
 import heSmsBank from "./he/sms-bank.json"
 import heSocialProof from "./he/social-proof.json"
+import heTemplatesBlogPost from "./he/templates/blog-post.json"
+import heTemplatesKbArticle from "./he/templates/kb-article.json"
 
 const he = {
   "ad-spot": heAdSpot,
@@ -70,21 +85,36 @@ const he = {
   "pages/404": hePages404,
   "pages/about": hePagesAbout,
   "pages/accessibility": hePagesAccessibility,
+  "pages/affiliate": hePagesAffiliate,
+  "pages/blog": hePagesBlog,
+  "pages/contact": hePagesContact,
   "pages/creaditor": hePagesCreaditor,
+  "pages/crm": hePagesCrm,
   "pages/digital-courses": hePagesDigitalCourses,
   "pages/domain": hePagesDomain,
+  "pages/email-bank": hePagesEmailBank,
   "pages/index": hePagesIndex,
   "pages/jobs": hePagesJobs,
+  "pages/kb": hePagesKb,
+  "pages/landing-pages": hePagesLandingPages,
+  "pages/meetings": hePagesMeetings,
   "pages/newsletters": hePagesNewsletters,
+  "pages/pricing": hePagesPricing,
+  "pages/privacy": hePagesPrivacy,
   "pages/services": hePagesServices,
   "pages/shomer-shabbat": hePagesShomerShabbat,
   "pages/sms": hePagesSms,
+  "pages/sms-bank": hePagesSmsBank,
   "pages/support": hePagesSupport,
+  "pages/terms": hePagesTerms,
+  "pages/virtual-number": hePagesVirtualNumber,
   pricing: hePricing,
   "promo-popup": hePromoPopup,
   showcase: heShowcase,
   "sms-bank": heSmsBank,
   "social-proof": heSocialProof,
+  "templates/blog-post": heTemplatesBlogPost,
+  "templates/kb-article": heTemplatesKbArticle,
 }
 
 export type Messages = typeof he

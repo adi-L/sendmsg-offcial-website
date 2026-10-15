@@ -7,6 +7,7 @@ import CTA from "../components/CTA"
 import SEO from "../components/SEO"
 import "../styles/pricing.css"
 import type { PageContext } from "../locales/config"
+import { getT } from "../locales/messages"
 
 const PricingPage: React.FC = () => (
   <Layout>
@@ -19,10 +20,13 @@ const PricingPage: React.FC = () => (
 
 export default PricingPage
 
-export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => (
-  <SEO locale={pageContext.locale}
-    title="מחירון"
-    description="מחירון פשוט ושקוף למערכת הדיוור של שלח מסר. מתחילים בחינם, בלי כרטיס אשראי, ומשדרגים רק כשזה מתאים לעסק שלכם."
-    pathname="/pricing/"
-  />
-)
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
+  const t = getT(pageContext.locale, "pages/pricing")
+  return (
+    <SEO locale={pageContext.locale}
+      title={t.seo.title}
+      description={t.seo.description}
+      pathname="/pricing/"
+    />
+  )
+}

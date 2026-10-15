@@ -1,5 +1,4 @@
 import React from "react"
-import { Link } from "gatsby"
 import type { HeadFC } from "gatsby"
 import Layout from "../components/Layout"
 import CTA from "../components/CTA"
@@ -7,6 +6,10 @@ import SEO from "../components/SEO"
 import { PRIVACY, PrivacyBlock } from "../data/privacy"
 import "../styles/legal.css"
 import type { PageContext } from "../locales/config"
+import { useT } from "../locales/LocaleContext"
+import { getT } from "../locales/messages"
+import Rich from "../locales/Rich"
+import LocalizedLink from "../locales/LocalizedLink"
 
 /* ── /privacy/ ──────────────────────────────────────────────────
    The policy, rendered from src/data/privacy.ts, which holds the
@@ -22,7 +25,6 @@ import type { PageContext } from "../locales/config"
 
 const PRIVACY_EMAIL = "privacy@comstar.co.il"
 const DPO_EMAIL = "adv.shalom@gmail.com"
-const POST_ADDRESS = "קומסטאר מערכות בע״מ, הסיבים 18, פתח תקווה, מיקוד 4925052, ת.ד. 7996"
 
 /* Consecutive clause items are one list, not one list each. */
 function group(blocks: PrivacyBlock[]) {
@@ -39,114 +41,116 @@ function group(blocks: PrivacyBlock[]) {
   return out
 }
 
-const PrivacyPage: React.FC = () => (
-  <Layout>
-    <div className="lg">
-      <section className="lg-hero">
-        <div className="container">
-          <h1>מדיניות פרטיות</h1>
-          <p className="lg-hero-sub">
-            אילו פרטים נאספים בעת השימוש במערכת שלח מסר, מה נעשה בהם, למי הם
-            מועברים, ואיך מממשים את הזכות לעיין בהם ולתקן אותם.
-          </p>
-          <p className="lg-hero-meta">
-            המדיניות כפופה להוראות <Link to="/terms/">התקנון</Link> של המערכת.
-            לשאלות בנושא פרטיות אפשר לפנות אלינו, והפרטים נמצאים בתחתית העמוד.
-          </p>
-        </div>
-      </section>
+const PrivacyPage: React.FC = () => {
+  const t = useT("pages/privacy")
+  return (
+    <Layout>
+      <div className="lg">
+        <section className="lg-hero">
+          <div className="container">
+            <h1>{t.h1}</h1>
+            <p className="lg-hero-sub">
+              {t.heroSub}
+            </p>
+            <p className="lg-hero-meta">
+              <Rich text={t.heroMeta} />
+            </p>
+          </div>
+        </section>
 
-      <section className="lg-doc">
-        <div className="container">
-          <div className="lg-grid">
-            <nav
-              className="lg-toc"
-              aria-label="תוכן עניינים"
-              data-scroll={PRIVACY.length > 8}
-            >
-              <h2>תוכן עניינים</h2>
-              <ol>
+        <section className="lg-doc">
+          <div className="container">
+            <div className="lg-grid">
+              <nav
+                className="lg-toc"
+                aria-label={t.ariaLabel}
+                data-scroll={PRIVACY.length > 8}
+              >
+                <h2>{t.h2}</h2>
+                <ol>
+                  {PRIVACY.map((s) => (
+                    <li key={s.id}>
+                      <a href={`#${s.id}`}>{s.heading}</a>
+                    </li>
+                  ))}
+                </ol>
+              </nav>
+
+              <div>
                 {PRIVACY.map((s) => (
-                  <li key={s.id}>
-                    <a href={`#${s.id}`}>{s.heading}</a>
-                  </li>
+                  <section className="lg-sec" id={s.id} key={s.id}>
+                    <h2>{s.heading}</h2>
+                    {group(s.blocks).map((b, i) => {
+                      if (b.kind === "dl") {
+                        return (
+                          <dl className="lg-dl" key={i}>
+                            {b.items.map((it) => (
+                              <div key={it.t}>
+                                <dt>{it.t}</dt>
+                                <dd>{it.d}</dd>
+                              </div>
+                            ))}
+                          </dl>
+                        )
+                      }
+                      if (b.kind === "list") {
+                        return (
+                          <ul className="lg-list" key={i}>
+                            {b.items.map((t) => (
+                              <li key={t}>{t}</li>
+                            ))}
+                          </ul>
+                        )
+                      }
+                      return <p key={i}>{b.text}</p>
+                    })}
+                  </section>
                 ))}
-              </ol>
-            </nav>
-
-            <div>
-              {PRIVACY.map((s) => (
-                <section className="lg-sec" id={s.id} key={s.id}>
-                  <h2>{s.heading}</h2>
-                  {group(s.blocks).map((b, i) => {
-                    if (b.kind === "dl") {
-                      return (
-                        <dl className="lg-dl" key={i}>
-                          {b.items.map((it) => (
-                            <div key={it.t}>
-                              <dt>{it.t}</dt>
-                              <dd>{it.d}</dd>
-                            </div>
-                          ))}
-                        </dl>
-                      )
-                    }
-                    if (b.kind === "list") {
-                      return (
-                        <ul className="lg-list" key={i}>
-                          {b.items.map((t) => (
-                            <li key={t}>{t}</li>
-                          ))}
-                        </ul>
-                      )
-                    }
-                    return <p key={i}>{b.text}</p>
-                  })}
-                </section>
-              ))}
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="lg-contact">
-        <div className="container">
-          <div className="lg-contact-in">
-            <h2>פניות בנושא פרטיות</h2>
-            <p>
-              לכל שאלה, הבהרה, בקשה לעיון במידע או בקשה לתיקון או מחיקה של מידע
-              אישי, אפשר לפנות אלינו. כדי שנוכל לטפל בפנייה ביעילות, אנא כללו
-              בה שם מלא, כתובת, טלפון ודואר אלקטרוני ליצירת קשר.
-            </p>
-            <ul className="lg-contact-rows">
-              <li>
-                <a href={`mailto:${PRIVACY_EMAIL}`}>
-                  <span className="lg-contact-t">מייל</span>
-                  <span className="lg-contact-v lg-ltr">{PRIVACY_EMAIL}</span>
-                </a>
-              </li>
-              <li>
-                <a href={`mailto:${DPO_EMAIL}`}>
-                  <span className="lg-contact-t">ממונה הגנת פרטיות</span>
-                  <span className="lg-contact-v lg-ltr">{DPO_EMAIL}</span>
-                </a>
-              </li>
-            </ul>
-            <p>דואר רגיל: {POST_ADDRESS}.</p>
+        <section className="lg-contact">
+          <div className="container">
+            <div className="lg-contact-in">
+              <h2>{t.h22}</h2>
+              <p>
+                {t.p}
+              </p>
+              <ul className="lg-contact-rows">
+                <li>
+                  <a href={`mailto:${PRIVACY_EMAIL}`}>
+                    <span className="lg-contact-t">{t.contactT}</span>
+                    <span className="lg-contact-v lg-ltr">{PRIVACY_EMAIL}</span>
+                  </a>
+                </li>
+                <li>
+                  <a href={`mailto:${DPO_EMAIL}`}>
+                    <span className="lg-contact-t">{t.contactT2}</span>
+                    <span className="lg-contact-v lg-ltr">{DPO_EMAIL}</span>
+                  </a>
+                </li>
+              </ul>
+              <p>{t.p2}{t.postAddress}.</p>
+            </div>
           </div>
-        </div>
-      </section>
-    </div>
-    <CTA />
-  </Layout>
-)
+        </section>
+      </div>
+      <CTA />
+    </Layout>
+  )
+}
 
 export default PrivacyPage
 
-export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => (
-  <SEO locale={pageContext.locale}
-    title="מדיניות פרטיות"
-    description="מדיניות הפרטיות של שלח מסר: איסוף מידע, השימוש בו, העברת מידע לצדדים שלישיים, אבטחת מידע לפי תקן ISO 27001, וזכות העיון והתיקון לפי חוק הגנת הפרטיות."
-    pathname="/privacy/"
-  />
-)
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
+  const t = getT(pageContext.locale, "pages/privacy")
+  return (
+    <SEO locale={pageContext.locale}
+      title={t.seo.title}
+      description={t.seo.description}
+      pathname="/privacy/"
+    />
+  )
+}

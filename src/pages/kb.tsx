@@ -1,14 +1,18 @@
 import React, { useMemo, useState } from "react"
-import { graphql, Link, PageProps } from "gatsby"
+import { graphql, PageProps } from "gatsby"
 import type { HeadFC } from "gatsby"
 import Layout from "../components/Layout"
 import CTA from "../components/CTA"
 import SEO from "../components/SEO"
 import { KB_ARTICLES, KB_CATEGORIES, KbArticle } from "../data/kb"
 import "../styles/kb.css"
-import { articleLocale, defaultLocale } from "../locales/config"
+import { articleLocale, defaultLocale, formatText } from "../locales/config"
 import type { PageContext } from "../locales/config"
 import { useLocale } from "../locales/LocaleContext"
+import { useT } from "../locales/LocaleContext"
+import { getT } from "../locales/messages"
+import Rich from "../locales/Rich"
+import LocalizedLink from "../locales/LocalizedLink"
 
 /* ── /kb/ — מרכז ההדרכה ─────────────────────────────────────────
    The index over every guide. src/data/kb.ts holds the full crawled
@@ -68,6 +72,7 @@ const Row: React.FC<{
   showCats?: boolean
   local?: Local
 }> = ({ a, showCats, local }) => {
+  const t = useT("pages/kb")
   const localSlug = local?.slug
   const inner = (
     <>
@@ -84,7 +89,7 @@ const Row: React.FC<{
         {localSlug ? <GoIcon /> : <ExternalIcon />}
       </span>
       {!localSlug && (
-        <span className="kb-sr">נפתח באתר שלח מסר, בחלון חדש</span>
+        <span className="kb-sr">{t.sr}</span>
       )}
     </>
   )
@@ -92,7 +97,7 @@ const Row: React.FC<{
   return (
     <li>
       {localSlug ? (
-        <Link to={`/kb/${localSlug}/`}>{inner}</Link>
+        <LocalizedLink to={`/kb/${localSlug}/`}>{inner}</LocalizedLink>
       ) : (
         <a href={a.url} target="_blank" rel="noopener noreferrer">
           {inner}
@@ -118,6 +123,7 @@ interface Data {
 type Local = { slug: string; excerpt: string | null }
 
 const KbPage: React.FC<PageProps<Data>> = ({ data }) => {
+  const t = useT("pages/kb")
   const locale = useLocale()
   /* source url -> the imported guide, matched on the decoded path
      because the live links are inconsistent about percent-encoding. */
@@ -179,15 +185,13 @@ const KbPage: React.FC<PageProps<Data>> = ({ data }) => {
       <div className="kb">
         <section className="kb-hero">
           <div className="container">
-            <h1>מרכז ההדרכה</h1>
+            <h1>{t.h1}</h1>
             <p className="kb-hero-sub">
-              כל המדריכים למערכת, צעד אחר צעד: איך מקימים, איך מחברים ואיך
-              פותרים.
+              {t.heroSub}
             </p>
             <p className="kb-hero-note">
-              {KB_ARTICLES.length} מדריכים ב-{KB_CATEGORIES.length} קטגוריות.
-              מדריך שייך ליותר מקטגוריה אחת, אז הוא יופיע בכל אחת מהן. לא מצאתם?{" "}
-              <Link to="/support/">התמיכה כאן</Link>.
+              {KB_ARTICLES.length}{t.heroNote}{KB_CATEGORIES.length}{t.heroNote2}{" "}
+              <LocalizedLink to="/support/">{t.heroNote3}</LocalizedLink>.
             </p>
           </div>
         </section>
@@ -206,29 +210,29 @@ const KbPage: React.FC<PageProps<Data>> = ({ data }) => {
                   id="kb-q"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="חיפוש מדריך"
-                  aria-label="חיפוש מדריך לפי שם"
+                  placeholder={t.placeholder}
+                  aria-label={t.ariaLabel}
                 />
                 {q && (
                   <button
                     type="button"
                     className="kb-search-clear"
                     onClick={() => setQuery("")}
-                    aria-label="ניקוי החיפוש"
+                    aria-label={t.ariaLabel2}
                   >
                     <ClearIcon />
                   </button>
                 )}
               </div>
 
-              <div className="kb-chips" role="group" aria-label="סינון לפי קטגוריה">
+              <div className="kb-chips" role="group" aria-label={t.ariaLabel3}>
                 <button
                   type="button"
                   className="kb-chip"
                   aria-pressed={cat === null}
                   onClick={() => setCat(null)}
                 >
-                  הכל
+                  {t.chip}
                   <span className="kb-chip-n">{KB_ARTICLES.length}</span>
                 </button>
                 {KB_CATEGORIES.map((c) => (
@@ -252,21 +256,20 @@ const KbPage: React.FC<PageProps<Data>> = ({ data }) => {
           <div className="container">
             <p className="kb-count" aria-live="polite">
               {q
-                ? `${shown.length} תוצאות עבור "${q}"`
+                ? formatText(t.resultsFor, { n: shown.length, q })
                 : cat
-                  ? `${shown.length} מדריכים ב${LABELS.get(cat)}`
-                  : `${KB_ARTICLES.length} מדריכים`}
+                  ? formatText(t.inCategory, { n: shown.length, cat: LABELS.get(cat) ?? "" })
+                  : formatText(t.total, { n: KB_ARTICLES.length })}
             </p>
 
             {shown.length === 0 && (
               <div className="kb-empty">
-                <p className="kb-empty-t">לא נמצא מדריך בשם הזה.</p>
+                <p className="kb-empty-t">{t.emptyT}</p>
                 <p>
-                  נסו מילה אחת במקום ביטוי, או דפדפו לפי קטגוריה. אם המדריך
-                  פשוט לא קיים, <Link to="/support/">כתבו לנו</Link> ונכתוב אותו.
+                  <Rich text={t.p} />
                 </p>
                 <button type="button" className="kb-btn" onClick={() => setQuery("")}>
-                  ניקוי החיפוש
+                  {t.btn}
                 </button>
               </div>
             )}
@@ -287,7 +290,7 @@ const KbPage: React.FC<PageProps<Data>> = ({ data }) => {
                 <div className="kb-group" key={c.id}>
                   <div className="kb-group-head">
                     <h2>{c.label}</h2>
-                    <span className="kb-group-n">{items.length} מדריכים</span>
+                    <span className="kb-group-n">{items.length}{t.groupN}</span>
                   </div>
                   <ul className="kb-rows">
                     {items.map((a) => (
@@ -321,10 +324,13 @@ export const query = graphql`
   }
 `
 
-export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => (
-  <SEO locale={pageContext.locale}
-    title="מרכז ההדרכה"
-    description="כל המדריכים למערכת שלח מסר במקום אחד: צעדים ראשונים, מנויים וקבוצות דיוור, ניוזלטרים, מסרונים, דפי נחיתה, קורסים דיגיטליים, אוטומציות וחיבור למערכות חיצוניות."
-    pathname="/kb/"
-  />
-)
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
+  const t = getT(pageContext.locale, "pages/kb")
+  return (
+    <SEO locale={pageContext.locale}
+      title={t.seo.title}
+      description={t.seo.description}
+      pathname="/kb/"
+    />
+  )
+}

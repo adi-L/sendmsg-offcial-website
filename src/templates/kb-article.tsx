@@ -1,11 +1,15 @@
 import React from "react"
-import { graphql, Link, PageProps, HeadFC } from "gatsby"
+import { graphql, PageProps, HeadFC } from "gatsby"
 import { prepareArticleImages, ImageSizes } from "../utils/article-images"
 import Layout from "../components/Layout"
 import CTA from "../components/CTA"
 import SEO from "../components/SEO"
 import "../styles/kb-article.css"
+import { formatText } from "../locales/config"
 import type { PageContext } from "../locales/config"
+import LocalizedLink from "../locales/LocalizedLink"
+import { useT } from "../locales/LocaleContext"
+import { getT } from "../locales/messages"
 
 /* ── a single guide ─────────────────────────────────────────────
    Imported from the live knowledge base by scripts/import-kb.py.
@@ -46,6 +50,7 @@ const KbArticle: React.FC<PageProps<Data, Context>> = ({
   data,
   pageContext,
 }) => {
+  const t = useT("templates/kb-article")
   const g = data.markdownRemark
   const { title, author, categories, tags } = g.frontmatter
 
@@ -54,19 +59,19 @@ const KbArticle: React.FC<PageProps<Data, Context>> = ({
       <div className="kba">
         <section className="kba-hero">
           <div className="container">
-            <Link to="/kb/" className="kba-back">
+            <LocalizedLink to="/kb/" className="kba-back">
               <span aria-hidden="true">
                 <BackIcon />
               </span>
-              מרכז ההדרכה
-            </Link>
+              {t.back}
+            </LocalizedLink>
             <h1>{title}</h1>
             <p className="kba-meta">
               {categories && categories.length > 0 && (
                 <span>{categories.join(" · ")}</span>
               )}
               <span>
-                {g.timeToRead <= 1 ? "כדקה קריאה" : `כ-${g.timeToRead} דקות קריאה`}
+                {g.timeToRead <= 1 ? t.readOne : formatText(t.readMany, { n: g.timeToRead })}
               </span>
               {author && <span>{author}</span>}
             </p>
@@ -87,7 +92,7 @@ const KbArticle: React.FC<PageProps<Data, Context>> = ({
             />
 
             {tags && tags.length > 0 && (
-              <ul className="kba-tags" aria-label="תגיות">
+              <ul className="kba-tags" aria-label={t.ariaLabel}>
                 {tags.map((t) => (
                   <li key={t}>{t}</li>
                 ))}
@@ -95,14 +100,14 @@ const KbArticle: React.FC<PageProps<Data, Context>> = ({
             )}
 
             <div className="kba-foot">
-              <Link to="/kb/" className="kba-foot-link">
+              <LocalizedLink to="/kb/" className="kba-foot-link">
                 <span aria-hidden="true">
                   <BackIcon />
                 </span>
-                לכל המדריכים
-              </Link>
+                {t.footLink}
+              </LocalizedLink>
               <p>
-                לא הסתדר? <Link to="/support/">התמיכה כאן</Link>, ראשון עד חמישי{" "}
+                {t.p}<LocalizedLink to="/support/">{t.p3}</LocalizedLink>{t.p2}{" "}
                 <span className="kba-ltr">9:00–17:00</span>.
               </p>
             </div>
@@ -135,10 +140,11 @@ export const query = graphql`
 
 export const Head: HeadFC<Data, PageContext> = ({ data, pageContext }) => {
   const f = data.markdownRemark.frontmatter
+  const t = getT(pageContext.locale, "templates/kb-article")
   return (
     <SEO locale={pageContext.locale}
       title={f.title}
-      description={`מדריך שלח מסר: ${f.title}. צעד אחר צעד, עם צילומי מסך מהמערכת.`}
+      description={formatText(t.seoDescription, { title: f.title })}
       pathname={`/kb/${f.slug}/`}
     />
   )

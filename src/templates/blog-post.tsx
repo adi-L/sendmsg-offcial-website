@@ -1,9 +1,10 @@
 import React from "react"
-import { graphql, withPrefix, PageProps, HeadFC } from "gatsby"
+import { graphql, PageProps, HeadFC } from "gatsby"
 import { prepareArticleImages, ImageSizes } from "../utils/article-images"
 import Layout from "../components/Layout"
 import SEO from "../components/SEO"
 import type { PageContext } from "../locales/config"
+import { useLocalePath, useT } from "../locales/LocaleContext"
 
 interface BlogPostData {
   markdownRemark: {
@@ -26,6 +27,8 @@ const BlogPostTemplate: React.FC<PageProps<BlogPostData, Context>> = ({
   data,
   pageContext,
 }) => {
+  const t = useT("templates/blog-post")
+  const lp = useLocalePath()
   const post = data.markdownRemark
 
   return (
@@ -33,7 +36,7 @@ const BlogPostTemplate: React.FC<PageProps<BlogPostData, Context>> = ({
       <article style={styles.article}>
         <div className="container" style={styles.container}>
           <div style={styles.breadcrumbs}>
-            <a href={withPrefix("/")}>ראשי</a> &gt; <a href={withPrefix("/blog/")}>מרכז הידע</a> &gt;{" "}
+            <a href={lp("/")}>{t.a}</a> &gt; <a href={lp("/blog/")}>{t.a2}</a> &gt;{" "}
             <span>{post.frontmatter.title}</span>
           </div>
 
@@ -45,7 +48,7 @@ const BlogPostTemplate: React.FC<PageProps<BlogPostData, Context>> = ({
               <span>·</span>
               <span>{post.frontmatter.date}</span>
               <span>·</span>
-              <span>{post.timeToRead} דקות קריאה</span>
+              <span>{post.timeToRead}{t.span}</span>
             </div>
           </header>
 
