@@ -63,7 +63,9 @@ const SEO: React.FC<SEOProps> = ({
 
   // inner pages carry the short brand only: the full siteTitle pushed 68
   // of 153 titles past the ~65 characters a search result shows
-  const pageTitle = title ? `${title} | ${c.titleSuffix}` : siteTitle
+  // the home page keeps the old site's title: it is the page that ranks
+  // for "מערכת דיוור", and these are the words it ranks with
+  const pageTitle = title ? `${title} | ${c.titleSuffix}` : c.homeTitle
   const pageDescription = clampDescription(description || siteDescription)
   // the Hebrew home is the bare domain, as it always was; /en/ keeps its path
   const localized = pathname ? localePath(locale, pathname) : "/"

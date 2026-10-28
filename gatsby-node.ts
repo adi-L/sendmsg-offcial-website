@@ -10,7 +10,6 @@ import {
 import { articleImageSrcs, ImageSizes } from "./src/utils/article-images"
 import { buildSiteLlmsTxt, LlmsLink } from "./src/data/site-llms"
 import { SITE_URL } from "./src/utils/structured-data"
-import commonText from "./src/locales/he/common.json"
 import {
   articleLocale,
   defaultLocale,
@@ -283,8 +282,7 @@ const writeSiteLlmsTxt = async (
     .map(linkTo("blog"))
 
   const contents = buildSiteLlmsTxt({
-    name: `${commonText.seo.orgName} (Sendmsg)`,
-    summary: commonText.seo.siteDescription,
+    intro: fs.readFileSync(path.join(__dirname, "src", "data", "llms-intro.he.md"), "utf8"),
     siteUrl: SITE_URL,
     pages,
     guides,

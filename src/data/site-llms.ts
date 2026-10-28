@@ -3,15 +3,16 @@
    layout. /api/llms.txt already covers the API in depth; this one points
    at it rather than repeating it.
 
-   Everything here comes from text the site already shows: each page's own
-   SEO title and description, each article's title and excerpt. Nothing is
-   written for the crawler alone. */
+   The opening (heading, summary, what the company does) is
+   src/data/llms-intro.he.md, carried over from the old site's file. The
+   lists come from text the site already shows: each page's own SEO title
+   and description, each guide's and article's title. */
 
 export type LlmsLink = { title: string; url: string; description?: string }
 
 export type SiteLlmsInput = {
-  name: string
-  summary: string
+  /* markdown: the "# name", the "> summary" and any prose under them */
+  intro: string
   pages: LlmsLink[]
   guides: LlmsLink[]
   articles: LlmsLink[]
@@ -27,14 +28,13 @@ const section = (heading: string, links: LlmsLink[]) =>
 
 export const buildSiteLlmsTxt = (i: SiteLlmsInput): string =>
   [
-    `# ${i.name}`,
+    // the source file's HTML comment is a note for editors, not content
+    i.intro.replace(/<!--[\s\S]*?-->\s*/g, "").trim(),
     "",
-    `> ${i.summary}`,
+    `- האתר: ${i.siteUrl}/`,
+    "- המערכת עצמה (כניסה והרשמה): https://panel.sendmsg.co.il/",
     "",
-    `Site: ${i.siteUrl}/ (Hebrew, right-to-left). The product itself runs at`,
-    "https://panel.sendmsg.co.il/.",
-    "",
-    ...section("Product and company pages", i.pages),
+    ...section("עמודי מוצר וחברה", i.pages),
     ...section("API", [
       {
         title: "API reference for language models",
@@ -43,7 +43,8 @@ export const buildSiteLlmsTxt = (i: SiteLlmsInput): string =>
       },
       { title: "OpenAPI description", url: `${i.siteUrl}/api/openapi.json` },
     ]),
-    ...section("Guides (how-to, step by step)", i.guides),
-    ...section("Articles", i.articles),
+    ...section("מדריכים (מרכז ההדרכה)", i.guides),
+    ...section("מאמרים", i.articles),
+    // "Optional" is the llms.txt spec's own heading for what may be skipped
     ...section("Optional", i.optional),
   ].join("\n")

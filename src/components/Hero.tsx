@@ -129,7 +129,12 @@ const Hero: React.FC = () => {
       <div className="container hero-row">
         {/* Text content, right side in RTL */}
         <div className="hero-text">
-          <h1 className="hero-headline">
+          {/* The H1 is the phrase people search for, as on the old home page
+              ("מערכת דיוור" is the site's main non-brand query). The slogan
+              stays the big line, as a paragraph: a rotating word in the H1
+              read to crawlers as "שיווק העסק שלך,פשוט יותר." */}
+          <h1 className="hero-eyebrow">{t.eyebrow}</h1>
+          <p className="hero-headline">
             {t.headline}
             <span className="hero-rotate">
               <span className="hero-rotate-word">
@@ -144,7 +149,7 @@ const Hero: React.FC = () => {
                 </TextTransition>
               </span>
             </span>
-          </h1>
+          </p>
 
           <p className="hero-subtitle">
             {t.subtitle}
