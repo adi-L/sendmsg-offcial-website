@@ -66,6 +66,32 @@ const LandingPagesPage: React.FC = () => {
           </div>
         </section>
 
+        {/* What the page is for and how it is done, in prose: the old
+            page carried this text and ranked with it for "בניית דף נחיתה"
+            and "דף נחיתה בחינם". The steps are numbered because they are
+            a sequence, which nothing else on the page is. */}
+        <section className="lp-intro">
+          <div className="container">
+            <div className="lp-head">
+              <h2>{t.introH}</h2>
+              {t.introP.map((p) => (
+                <p key={p}>{p}</p>
+              ))}
+            </div>
+
+            <h3 className="lp-steps-h">{t.stepsH}</h3>
+            <ol className="lp-steps">
+              {t.steps.map((s, i) => (
+                <li key={s.t}>
+                  <span className="lp-step-n" aria-hidden="true">{i + 1}</span>
+                  <h4>{s.t}</h4>
+                  <p>{s.d}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+
         {/* A heading that stays beside the list it names, and nine plain
             rows. No ticks: nine identical checkmarks would say nothing
             the heading has not already said. */}

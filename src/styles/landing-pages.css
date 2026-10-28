@@ -131,6 +131,70 @@
   margin: 16px 0 0;
 }
 
+/* ── intro and the four steps ───────────────────────────────────
+   Sky, between the ink hero and the white list, so the page keeps
+   alternating. The steps sit on white cards: they are the one
+   sequence on the page, and the numbers carry it. */
+.lp-intro {
+  padding: clamp(60px, 7.5vw, 96px) 0;
+  background: var(--lp-sky);
+}
+
+.lp-intro .lp-head {
+  max-width: 64ch;
+}
+
+.lp-steps-h {
+  font-size: clamp(1.2rem, 1.8vw, 1.4rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--lp-ink-2);
+  margin: 0 0 clamp(18px, 2.2vw, 24px);
+}
+
+.lp-steps {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(14px, 1.8vw, 24px);
+}
+
+.lp-steps li {
+  background: var(--bg-white);
+  border: 1px solid var(--lp-line);
+  border-radius: var(--lp-r);
+  padding: clamp(18px, 2vw, 24px);
+}
+
+.lp-step-n {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--lp-blue);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.95rem;
+  margin-block-end: 14px;
+}
+
+.lp-steps h4 {
+  font-size: 1.08rem;
+  font-weight: 800;
+  color: var(--lp-ink-2);
+  margin: 0 0 6px;
+}
+
+.lp-steps p {
+  font-size: 0.98rem;
+  line-height: 1.65;
+  color: var(--lp-body);
+  text-wrap: pretty;
+  margin: 0;
+}
+
 /* ── what you can do ────────────────────────────────────────────
    The heading stays beside the list it names; the rows run down
    their own column so nine lines never become nine boxes. */
@@ -448,6 +512,10 @@
   .lp-tpl-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .lp-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 560px) {
@@ -459,6 +527,10 @@
   .lp-also-t {
     min-width: 0;
     flex: 1 1 100%;
+  }
+
+  .lp-steps {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .lp-plans-row {
