@@ -8,6 +8,9 @@ import {
   buildOpenApi,
 } from "./src/data/api/artifacts"
 import { articleImageSrcs, ImageSizes } from "./src/utils/article-images"
+import { buildSiteLlmsTxt, LlmsLink } from "./src/data/site-llms"
+import { SITE_URL } from "./src/utils/structured-data"
+import commonText from "./src/locales/he/common.json"
 import {
   articleLocale,
   defaultLocale,
@@ -213,8 +216,90 @@ const stripNulBytes = (reporter: { info: (s: string) => void }) => {
   }
 }
 
-export const onPostBuild: GatsbyNode["onPostBuild"] = async ({ reporter }) => {
+/* Pages that are part of the site but not what anyone asks an assistant
+   about; llms.txt lists them under "Optional" so a short context can drop
+   them. */
+const LLMS_OPTIONAL = new Set(["privacy", "terms", "accessibility", "jobs"])
+/* Not pages a reader lands on: the 404, the home (it is the file's own
+   heading) and the two indexes (their articles are listed one by one). */
+const LLMS_SKIP = new Set(["404", "index", "blog", "kb"])
+
+const writeSiteLlmsTxt = async (
+  graphql: Parameters<NonNullable<GatsbyNode["onPostBuild"]>>[0]["graphql"],
+  reporter: Parameters<NonNullable<GatsbyNode["onPostBuild"]>>[0]["reporter"]
+) => {
+  const pagesDir = path.join(__dirname, "src", "locales", defaultLocale, "pages")
+  const pages: LlmsLink[] = []
+  const optional: LlmsLink[] = []
+  for (const file of fs.readdirSync(pagesDir).sort()) {
+    const name = file.replace(/\.json$/, "")
+    if (!file.endsWith(".json") || LLMS_SKIP.has(name)) continue
+    if (!fs.existsSync(path.join(__dirname, "src", "pages", `${name}.tsx`))) continue
+    const seo = JSON.parse(fs.readFileSync(path.join(pagesDir, file), "utf8")).seo ?? {}
+    const link = {
+      // creaditor's title is its brand name, set in the page rather than the JSON
+      title: seo.title ?? name.charAt(0).toUpperCase() + name.slice(1),
+      url: `${SITE_URL}/${name}/`,
+      description: seo.description,
+    }
+    ;(LLMS_OPTIONAL.has(name) ? optional : pages).push(link)
+  }
+
+  const result = await graphql<{
+    allMarkdownRemark: {
+      nodes: {
+        fileAbsolutePath: string
+        frontmatter: { title: string; slug: string; order: number | null }
+      }[]
+    }
+  }>(`{
+    allMarkdownRemark(filter: { frontmatter: { slug: { ne: null } } }) {
+      nodes {
+        fileAbsolutePath
+        frontmatter { title slug order }
+      }
+    }
+  }`)
+  if (result.errors || !result.data) {
+    reporter.panicOnBuild("llms.txt: the article query failed", result.errors)
+    return
+  }
+
+  const inDefaultLocale = (p: string) => p.includes(`/${defaultLocale}/`)
+  const nodes = result.data.allMarkdownRemark.nodes.filter((n) =>
+    inDefaultLocale(n.fileAbsolutePath)
+  )
+  const linkTo = (dir: string) => (n: (typeof nodes)[number]): LlmsLink => ({
+    title: n.frontmatter.title,
+    url: `${SITE_URL}/${dir}/${encodeURIComponent(n.frontmatter.slug)}/`,
+  })
+  const guides = nodes
+    .filter((n) => n.fileAbsolutePath.includes("/content/kb/"))
+    .sort((a, b) => (a.frontmatter.order ?? 1e9) - (b.frontmatter.order ?? 1e9))
+    .map(linkTo("kb"))
+  const articles = nodes
+    .filter((n) => n.fileAbsolutePath.includes("/content/blog/"))
+    .sort((a, b) => a.frontmatter.title.localeCompare(b.frontmatter.title, defaultLocale))
+    .map(linkTo("blog"))
+
+  const contents = buildSiteLlmsTxt({
+    name: `${commonText.seo.orgName} (Sendmsg)`,
+    summary: commonText.seo.siteDescription,
+    siteUrl: SITE_URL,
+    pages,
+    guides,
+    articles,
+    optional,
+  })
+  fs.writeFileSync(path.join(__dirname, "public", "llms.txt"), contents, "utf8")
+  reporter.info(
+    `llms.txt: ${pages.length} pages, ${guides.length} guides, ${articles.length} articles`
+  )
+}
+
+export const onPostBuild: GatsbyNode["onPostBuild"] = async ({ graphql, reporter }) => {
   stripNulBytes(reporter)
+  await writeSiteLlmsTxt(graphql, reporter)
 
   const outDir = path.join(__dirname, "public", "api")
   fs.mkdirSync(outDir, { recursive: true })

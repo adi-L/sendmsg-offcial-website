@@ -7,10 +7,14 @@ import CTA from "../components/CTA"
 import SEO from "../components/SEO"
 import "../styles/pricing.css"
 import type { PageContext } from "../locales/config"
+import { faqPage } from "../utils/structured-data"
+import pricingText from "../locales/he/pricing.json"
 import heText from "../locales/he/pages/pricing.json"
 
 /* This page's text, per language: see src/locales/README.md. */
 const TEXT = { he: heText }
+/* the FAQ the Pricing component renders on this page */
+const PRICING = { he: pricingText }
 
 const PricingPage: React.FC = () => (
   <Layout>
@@ -30,6 +34,7 @@ export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
       title={t.seo.title}
       description={t.seo.description}
       pathname="/pricing/"
+      schema={[faqPage(PRICING[pageContext.locale].faqs)]}
     />
   )
 }

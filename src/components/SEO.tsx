@@ -2,6 +2,7 @@ import React from "react"
 import { withPrefix } from "gatsby"
 import { alternates, enabledLocales, Locale, localePath, locales } from "../locales/config"
 import heText from "../locales/he/common.json"
+import { ORG_ID, SITE_URL } from "../utils/structured-data"
 
 /* This component's text, per language: see src/locales/README.md. */
 const TEXT = { he: heText }
@@ -20,6 +21,23 @@ interface SEOProps {
   description?: string
   pathname?: string
   image?: string
+  /* Extra JSON-LD nodes (src/utils/structured-data.ts), added to the page's
+     @graph after the Organization they point back to. */
+  schema?: object[]
+  /* Articles and guides; their date goes out as article:published_time. */
+  ogType?: "website" | "article"
+  publishedTime?: string
+}
+
+/* Search results cut a description at about 155 characters, mid-word. The
+   imported articles' excerpts run longer, so trim at a word instead. */
+const DESCRIPTION_MAX = 155
+const clampDescription = (text: string): string => {
+  const flat = text.replace(/\s+/g, " ").trim()
+  if (flat.length <= DESCRIPTION_MAX) return flat
+  const cut = flat.slice(0, DESCRIPTION_MAX - 1)
+  const space = cut.lastIndexOf(" ")
+  return `${(space > 100 ? cut.slice(0, space) : cut).replace(/[\s,.:;\u2013\u2014-]+$/, "")}\u2026`
 }
 
 const SEO: React.FC<SEOProps> = ({
@@ -31,11 +49,14 @@ const SEO: React.FC<SEOProps> = ({
   description,
   pathname,
   image,
+  schema = [],
+  ogType = "website",
+  publishedTime,
 }) => {
   const c = TEXT[locale].seo
   const siteTitle = c.siteTitle
   const siteDescription = c.siteDescription
-  const siteUrl = "https://sendmsg.co.il"
+  const siteUrl = SITE_URL
   // og:image must be an absolute URL that resolves on the host actually
   // serving the build; the GitHub Pages preview sets GATSBY_ASSET_ORIGIN
   const assetOrigin = process.env.GATSBY_ASSET_ORIGIN || siteUrl
@@ -43,7 +64,7 @@ const SEO: React.FC<SEOProps> = ({
   // inner pages carry the short brand only: the full siteTitle pushed 68
   // of 153 titles past the ~65 characters a search result shows
   const pageTitle = title ? `${title} | ${c.titleSuffix}` : siteTitle
-  const pageDescription = description || siteDescription
+  const pageDescription = clampDescription(description || siteDescription)
   // the Hebrew home is the bare domain, as it always was; /en/ keeps its path
   const localized = pathname ? localePath(locale, pathname) : "/"
   const canonical = localized === "/" ? siteUrl : `${siteUrl}${localized}`
@@ -51,17 +72,24 @@ const SEO: React.FC<SEOProps> = ({
   const imageUrl = `${assetOrigin}${withPrefix(image || "/images/og-image.png")}`
 
   const isHome = !pathname || pathname === "/"
-  const homeSchema = {
+  const graph = {
     "@context": "https://schema.org",
     "@graph": [
       {
         "@type": "Organization",
-        "@id": `${siteUrl}/#organization`,
+        "@id": ORG_ID,
         name: c.orgName,
         alternateName: "Sendmsg",
         url: siteUrl,
         logo: `${assetOrigin}${withPrefix("/images/logo/logo.png")}`,
         telephone: "077-4600600",
+        contactPoint: {
+          "@type": "ContactPoint",
+          telephone: "+972-77-4600600",
+          contactType: "customer support",
+          areaServed: "IL",
+          availableLanguage: ["he"],
+        },
         sameAs: [
           "https://www.facebook.com/sendmsg",
           "https://www.instagram.com/sendmsg.system/",
@@ -71,14 +99,19 @@ const SEO: React.FC<SEOProps> = ({
           "https://www.pinterest.com/sendmsg_system/",
         ],
       },
-      {
-        "@type": "WebSite",
-        "@id": `${siteUrl}/#website`,
-        name: siteTitle,
-        url: siteUrl,
-        inLanguage: locale,
-        publisher: { "@id": `${siteUrl}/#organization` },
-      },
+      ...(isHome
+        ? [
+            {
+              "@type": "WebSite",
+              "@id": `${siteUrl}/#website`,
+              name: siteTitle,
+              url: siteUrl,
+              inLanguage: locale,
+              publisher: { "@id": ORG_ID },
+            },
+          ]
+        : []),
+      ...schema,
     ],
   }
 
@@ -119,10 +152,15 @@ const SEO: React.FC<SEOProps> = ({
       <meta property="og:title" content={pageTitle} />
       <meta property="og:description" content={pageDescription} />
       <meta property="og:url" content={canonical} />
-      <meta property="og:type" content="website" />
+      <meta property="og:type" content={ogType} />
+      {publishedTime && (
+        <meta property="article:published_time" content={publishedTime} />
+      )}
       <meta property="og:image" content={imageUrl} />
-      <meta property="og:image:width" content="1200" />
-      <meta property="og:image:height" content="630" />
+      {/* only the default card's size is known; a cover image is whatever
+          size it is, and a wrong size is worse than none */}
+      {!image && <meta property="og:image:width" content="1200" />}
+      {!image && <meta property="og:image:height" content="630" />}
       <meta
         property="og:image:alt"
         content={c.ogImageAlt}
@@ -131,12 +169,10 @@ const SEO: React.FC<SEOProps> = ({
       <meta name="twitter:title" content={pageTitle} />
       <meta name="twitter:description" content={pageDescription} />
       <meta name="twitter:image" content={imageUrl} />
-      {isHome && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(homeSchema) }}
-        />
-      )}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(graph) }}
+      />
     </>
   )
 }

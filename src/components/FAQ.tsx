@@ -31,9 +31,9 @@ const FAQ: React.FC = () => {
                   ▾
                 </span>
               </button>
-              {openIndex === i && (
-                <div style={styles.answer}>{faq.a}</div>
-              )}
+              {/* hidden, not unmounted: closed answers stay in the HTML
+                  for search engines and AI crawlers that never click */}
+              <div style={styles.answer} hidden={openIndex !== i}>{faq.a}</div>
             </div>
           ))}
         </div>

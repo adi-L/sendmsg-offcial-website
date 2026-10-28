@@ -23,6 +23,7 @@ import orSkahi from "../images/team/or.webp"
 import type { PageContext } from "../locales/config"
 import { useText } from "../locales/LocaleContext"
 import Fmt from "../locales/Fmt"
+import { faqPage } from "../utils/structured-data"
 import heText from "../locales/he/pages/about.json"
 
 /* This page's text, per language: see src/locales/README.md. */
@@ -673,6 +674,7 @@ export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
       title={t.seo.title}
       description={t.seo.description}
       pathname="/about/"
+      schema={[faqPage(t.aboutFaqs)]}
     />
   )
 }

@@ -97,7 +97,52 @@ const config: GatsbyConfig = {
         ],
       },
     },
-    `gatsby-plugin-sitemap`,
+    {
+      resolve: `gatsby-plugin-sitemap`,
+      options: {
+        /* Articles carry a publish date; giving it as <lastmod> tells a
+           crawler which of the 150-odd URLs are worth re-fetching. Pages
+           without one (the product pages, the guides) go out without it,
+           not with a made-up build date that changes on every deploy. Google
+           ignores <changefreq> and <priority>, so they are left out. */
+        query: `{
+          site { siteMetadata { siteUrl } }
+          allSitePage { nodes { path } }
+          allMarkdownRemark {
+            nodes {
+              fileAbsolutePath
+              frontmatter { slug date(formatString: "YYYY-MM-DD") }
+            }
+          }
+        }`,
+        resolvePages: ({
+          allSitePage,
+          allMarkdownRemark,
+        }: {
+          allSitePage: { nodes: { path: string }[] }
+          allMarkdownRemark: {
+            nodes: {
+              fileAbsolutePath: string
+              frontmatter: { slug: string | null; date: string | null }
+            }[]
+          }
+        }) => {
+          const dates = new Map<string, string>()
+          for (const n of allMarkdownRemark.nodes) {
+            const { slug, date } = n.frontmatter
+            if (slug && date && n.fileAbsolutePath.includes("/content/blog/")) {
+              dates.set(`/blog/${slug}/`, date)
+            }
+          }
+          return allSitePage.nodes.map((page) => ({
+            path: page.path,
+            lastmod: dates.get(page.path),
+          }))
+        },
+        serialize: ({ path, lastmod }: { path: string; lastmod?: string }) =>
+          lastmod ? { url: path, lastmod } : { url: path },
+      },
+    },
   ],
 }
 

@@ -9,6 +9,7 @@ import type { PageContext } from "../locales/config"
 import { useText } from "../locales/LocaleContext"
 import Rich from "../locales/Rich"
 import LocalizedLink from "../locales/LocalizedLink"
+import { faqPage } from "../utils/structured-data"
 import heText from "../locales/he/pages/shomer-shabbat.json"
 
 /* This page's text, per language: see src/locales/README.md. */
@@ -224,7 +225,8 @@ const ShomerShabbatPage: React.FC = () => {
                     <span>{faq.q}</span>
                     <span className="sh-faq-arrow" aria-hidden="true">▾</span>
                   </button>
-                  {openFaq === i && <div className="sh-faq-a">{faq.a}</div>}
+                  {/* hidden, not unmounted: see FAQ.tsx */}
+                  <div className="sh-faq-a" hidden={openFaq !== i}>{faq.a}</div>
                 </div>
               ))}
             </div>
@@ -246,6 +248,7 @@ export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
       title={t.seo.title}
       description={t.seo.description}
       pathname="/shomer-shabbat/"
+      schema={[faqPage(t.faqs)]}
     />
   )
 }

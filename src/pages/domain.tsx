@@ -8,6 +8,7 @@ import "../styles/domain.css"
 import type { PageContext } from "../locales/config"
 import { useText } from "../locales/LocaleContext"
 import LocalizedLink from "../locales/LocalizedLink"
+import { faqPage } from "../utils/structured-data"
 import heText from "../locales/he/pages/domain.json"
 
 /* This page's text, per language: see src/locales/README.md. */
@@ -184,6 +185,7 @@ export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => {
       title={t.seo.title}
       description={t.seo.description}
       pathname="/domain/"
+      schema={[faqPage(t.faqs)]}
     />
   )
 }

@@ -1,3 +1,10 @@
+# Everything on the site is public and meant to be found, by search engines
+# and by AI assistants alike (GPTBot, ClaudeBot, PerplexityBot,
+# Google-Extended and the rest fall under the * group).
+#
+# A plain-markdown map of the site for language models: /llms.txt
+# The API reference in the same form: /api/llms.txt
+
 User-agent: *
 Allow: /
 

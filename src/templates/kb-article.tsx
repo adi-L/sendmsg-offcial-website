@@ -10,10 +10,13 @@ import type { PageContext } from "../locales/config"
 import LocalizedLink from "../locales/LocalizedLink"
 import { useText } from "../locales/LocaleContext"
 import Rich from "../locales/Rich"
+import { article, breadcrumbs, SITE_URL } from "../utils/structured-data"
+import commonText from "../locales/he/common.json"
 import heText from "../locales/he/templates/kb-article.json"
 
 /* This page's text, per language: see src/locales/README.md. */
 const TEXT = { he: heText }
+const COMMON = { he: commonText }
 
 /* ── a single guide ─────────────────────────────────────────────
    Imported from the live knowledge base by scripts/import-kb.py.
@@ -36,6 +39,7 @@ interface Data {
       author: string | null
       categories: string[] | null
       tags: string[] | null
+      featuredImage: string | null
     }
   }
 }
@@ -136,6 +140,7 @@ export const query = graphql`
         author
         categories
         tags
+        featuredImage
       }
     }
   }
@@ -144,11 +149,31 @@ export const query = graphql`
 export const Head: HeadFC<Data, PageContext> = ({ data, pageContext }) => {
   const f = data.markdownRemark.frontmatter
   const t = TEXT[pageContext.locale]
+  const path = `/kb/${f.slug}/`
+  const description = formatText(t.seoDescription, { title: f.title })
   return (
     <SEO locale={pageContext.locale} availableIn={[pageContext.locale]}
       title={f.title}
-      description={formatText(t.seoDescription, { title: f.title })}
-      pathname={`/kb/${f.slug}/`}
+      description={description}
+      pathname={path}
+      image={f.featuredImage ?? undefined}
+      ogType="article"
+      schema={[
+        article({
+          type: "TechArticle",
+          title: f.title,
+          description,
+          path,
+          author: f.author ?? undefined,
+          image: f.featuredImage ? `${SITE_URL}${f.featuredImage}` : undefined,
+          inLanguage: pageContext.locale,
+        }),
+        breadcrumbs([
+          { name: COMMON[pageContext.locale].seo.orgName, path: "/" },
+          { name: t.back, path: "/kb/" },
+          { name: f.title, path },
+        ]),
+      ]}
     />
   )
 }

@@ -21,10 +21,14 @@ import InlineCTA from "../components/InlineCTA"
 import SEO from "../components/SEO"
 import type { PageContext } from "../locales/config"
 import { useText } from "../locales/LocaleContext"
+import { faqPage } from "../utils/structured-data"
+import faqText from "../locales/he/faq.json"
 import heText from "../locales/he/pages/index.json"
 
 /* This page's text, per language: see src/locales/README.md. */
 const TEXT = { he: heText }
+/* the FAQ component's questions, for the page's FAQPage markup */
+const FAQ_TEXT = { he: faqText }
 
 const IndexPage: React.FC = () => {
   const t = useText(TEXT)
@@ -58,4 +62,8 @@ const IndexPage: React.FC = () => {
 
 export default IndexPage
 
-export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => <SEO locale={pageContext.locale} pathname="/" />
+export const Head: HeadFC<unknown, PageContext> = ({ pageContext }) => (
+  <SEO locale={pageContext.locale} pathname="/"
+    schema={[faqPage(FAQ_TEXT[pageContext.locale].faqs)]}
+  />
+)

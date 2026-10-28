@@ -6,6 +6,7 @@ import SEO from "../components/SEO"
 import type { PageContext } from "../locales/config"
 import { useLocalePath, useText } from "../locales/LocaleContext"
 import { formatText } from "../locales/config"
+import { article, breadcrumbs, SITE_URL } from "../utils/structured-data"
 import heText from "../locales/he/templates/blog-post.json"
 
 /* This page's text, per language: see src/locales/README.md. */
@@ -17,10 +18,12 @@ interface BlogPostData {
     frontmatter: {
       title: string
       date: string
+      isoDate: string | null
       category: string
       excerpt: string
       slug: string
       author: string
+      featuredImage: string | null
     }
     timeToRead: number
   }
@@ -75,13 +78,39 @@ const BlogPostTemplate: React.FC<PageProps<BlogPostData, Context>> = ({
 
 export default BlogPostTemplate
 
-export const Head: HeadFC<BlogPostData, PageContext> = ({ data, pageContext }) => (
-  <SEO locale={pageContext.locale} availableIn={[pageContext.locale]}
-    title={data.markdownRemark.frontmatter.title}
-    description={data.markdownRemark.frontmatter.excerpt}
-    pathname={`/blog/${data.markdownRemark.frontmatter.slug}/`}
-  />
-)
+export const Head: HeadFC<BlogPostData, PageContext> = ({ data, pageContext }) => {
+  const f = data.markdownRemark.frontmatter
+  const t = TEXT[pageContext.locale]
+  const path = `/blog/${f.slug}/`
+  return (
+    <SEO locale={pageContext.locale} availableIn={[pageContext.locale]}
+      title={f.title}
+      description={f.excerpt}
+      pathname={path}
+      image={f.featuredImage ?? undefined}
+      ogType="article"
+      publishedTime={f.isoDate ?? undefined}
+      schema={[
+        article({
+          type: "BlogPosting",
+          title: f.title,
+          description: f.excerpt,
+          path,
+          date: f.isoDate ?? undefined,
+          author: f.author,
+          image: f.featuredImage ? `${SITE_URL}${f.featuredImage}` : undefined,
+          inLanguage: pageContext.locale,
+        }),
+        // the same trail the page shows above the title
+        breadcrumbs([
+          { name: t.a, path: "/" },
+          { name: t.a2, path: "/blog/" },
+          { name: f.title, path },
+        ]),
+      ]}
+    />
+  )
+}
 
 export const query = graphql`
   query BlogPost($id: String!) {
@@ -90,10 +119,12 @@ export const query = graphql`
       frontmatter {
         title
         date(formatString: "DD/MM/YYYY")
+        isoDate: date(formatString: "YYYY-MM-DD")
         category
         excerpt
         slug
         author
+        featuredImage
       }
       timeToRead
     }
