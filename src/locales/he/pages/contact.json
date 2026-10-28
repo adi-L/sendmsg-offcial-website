@@ -17,8 +17,8 @@
     {
       "t": "מדריכים",
       "d": "צעד אחר צעד, איך עושים הכל במערכת.",
-      "href": "https://www.sendmsg.co.il/kb/",
-      "external": true
+      "href": "/kb/",
+      "external": false
     },
     {
       "t": "מאמרים מקצועיים",
@@ -35,8 +35,8 @@
     {
       "t": "תכנית שותפים",
       "d": "ממליצים על שלח מסר ומרוויחים.",
-      "href": "https://www.sendmsg.co.il/affiliate/",
-      "external": true
+      "href": "/affiliate/",
+      "external": false
     }
   ],
   "callbackWindows": [

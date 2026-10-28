@@ -40,7 +40,9 @@ const SEO: React.FC<SEOProps> = ({
   // serving the build; the GitHub Pages preview sets GATSBY_ASSET_ORIGIN
   const assetOrigin = process.env.GATSBY_ASSET_ORIGIN || siteUrl
 
-  const pageTitle = title ? `${title} | ${siteTitle}` : siteTitle
+  // inner pages carry the short brand only: the full siteTitle pushed 68
+  // of 153 titles past the ~65 characters a search result shows
+  const pageTitle = title ? `${title} | ${c.titleSuffix}` : siteTitle
   const pageDescription = description || siteDescription
   // the Hebrew home is the bare domain, as it always was; /en/ keeps its path
   const localized = pathname ? localePath(locale, pathname) : "/"

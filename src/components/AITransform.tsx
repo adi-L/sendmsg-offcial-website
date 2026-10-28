@@ -63,7 +63,7 @@ const AITransform: React.FC = () => {
                 key={t.points[i].title}
                 className={`transform-item${p.lead ? " transform-item--lead" : ""}`}
               >
-                <span className="transform-mark">
+                <span className="transform-mark" aria-hidden="true">
                   {p.mark ?? <span className="transform-alef">{t.alefMark}</span>}
                 </span>
                 <div>
