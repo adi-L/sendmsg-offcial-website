@@ -3173,3 +3173,25 @@ body:has(.ink-hero) .site-header :focus-visible {
 main:focus {
   outline: none;
 }
+
+/* ── Social proof band, under the home hero ───────────────────── */
+.sp-band {
+  padding: clamp(28px, 3.4vw, 40px) 0 clamp(30px, 3.6vw, 44px);
+  background: var(--bg-white);
+  border-block-end: 1px solid var(--border-color);
+}
+
+.sp-heading {
+  font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--ink);
+  margin: 0 0 clamp(18px, 2.2vw, 26px);
+}
+
+@media (max-width: 640px) {
+  .sp-band .cm {
+    --cm-h: 30px;
+  }
+}

@@ -35,6 +35,8 @@ const IndexPage: React.FC = () => {
   return (
     <Layout>
       <Hero />
+      {/* who already sends with us, straight after the promise */}
+      <SocialProof />
       <AILaunchpad />
       <AITransform />
       <AdSpot />
@@ -48,7 +50,6 @@ const IndexPage: React.FC = () => {
       <Audience />
       <FreePlan />
       <GoogleReviews />
-      <SocialProof />
       <InlineCTA title={t.ctaJoinTitle} />
       <ISOCertification />
       <GlobalReach />
