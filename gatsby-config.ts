@@ -6,7 +6,7 @@ const config: GatsbyConfig = {
   siteMetadata: {
     title: `שלח מסר - מערכת דיוור אלקטרוני`,
     description: `מערכת דיוור אלקטרוני לעסקים, נגישה וידידותית. ניוזלטרים, SMS, דפי נחיתה, קורסים דיגיטליים ו-CRM במקום אחד.`,
-    siteUrl: `https://sendmsg.co.il`,
+    siteUrl: `https://www.sendmsg.co.il`,
     phone: `077-4600600`,
     whatsapp: `972559377588`,
     panelUrl: `https://panel.sendmsg.co.il/`,

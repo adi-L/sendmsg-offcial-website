@@ -12,7 +12,7 @@
      gone    WordPress machinery answering 410
 
    Location headers are compared by path, so a staging server that still
-   redirects to https://sendmsg.co.il passes; the target is then fetched from
+   redirects to https://www.sendmsg.co.il passes; the target is then fetched from
    the server under test, not from production. Exits 1 on any failure, so it
    can gate a launch. Run it again on launch day against the real domain. */
 

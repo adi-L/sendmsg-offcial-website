@@ -8,4 +8,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://sendmsg.co.il/sitemap-index.xml
+Sitemap: https://www.sendmsg.co.il/sitemap-index.xml

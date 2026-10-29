@@ -24,7 +24,7 @@ import { buildSample, LANGUAGES, LANGUAGE_LABELS } from "./samples"
  * data the page renders, so they cannot describe a different API.
  */
 
-const SITE = "https://sendmsg.co.il"
+const SITE = "https://www.sendmsg.co.il"
 
 const describe = (e: Endpoint) => `${e.method} ${e.path} — ${e.title}`
 

@@ -118,7 +118,7 @@ const TermsPage: React.FC = () => {
                 </li>
                 <li>
                   <a
-                    href="https://sendmsg.co.il/privacy"
+                    href="https://www.sendmsg.co.il/privacy/"
                     target="_blank"
                     rel="noopener noreferrer"
                   >

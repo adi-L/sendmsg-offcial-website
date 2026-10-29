@@ -6,7 +6,9 @@
    something a reader doesn't see -- that mismatch is what gets rich results
    withdrawn. */
 
-export const SITE_URL = "https://sendmsg.co.il"
+/* www, as the old site was: Search Console, the inbound links and Google's
+   index all know the site there, so the move changes pages, not the host. */
+export const SITE_URL = "https://www.sendmsg.co.il"
 export const ORG_ID = `${SITE_URL}/#organization`
 
 const abs = (path: string) => (path === "/" ? SITE_URL : `${SITE_URL}${path}`)

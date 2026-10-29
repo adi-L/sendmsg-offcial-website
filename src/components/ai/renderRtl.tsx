@@ -1,12 +1,13 @@
 import React from "react"
 
-// Our own origin only. A reply can legitimately contain a bare
-// https://sendmsg.co.il/... URL (the guide-matcher hands the model exactly
+// Our own origin only, with or without www (the site lives on www; the
+// gateway may still hand out the bare host). A reply can legitimately
+// contain a https://sendmsg.co.il/... URL (the guide-matcher hands the model exactly
 // that shape, see src/guides/match.ts in the gateway), and that is the
 // ONLY host this is ever allowed to linkify -- this is model-generated
 // text rendered into a real page, so turning an arbitrary https://... run
 // into a clickable <a> would be an open redirect/injection surface.
-const LINK_ORIGIN = "https://sendmsg.co.il/"
+const LINK_ORIGIN = /^https:\/\/(?:www\.)?sendmsg\.co\.il\//
 
 // Splits a reply into plain text and runs that must not be bidi-reordered:
 // our own links, prices (₪ or ש"ח with their digits), and phone numbers. A
@@ -17,7 +18,7 @@ const LINK_ORIGIN = "https://sendmsg.co.il/"
 // layout. The link branch below renders an <a>, not a span, and must NOT
 // go through the same isolation treatment as a number.
 const ISOLATE =
-  /((?:https:\/\/sendmsg\.co\.il\/[^\s֑-״"'()[\]<>,.;:!?]*)|(?:₪\s?[\d][\d.,]*)|(?:[\d][\d.,]*\s?(?:₪|ש"ח))|(?:0\d{1,2}-?\d{7})|(?:\d{3}-\d{7}))/g
+  /((?:https:\/\/(?:www\.)?sendmsg\.co\.il\/[^\s֑-״"'()[\]<>,.;:!?]*)|(?:₪\s?[\d][\d.,]*)|(?:[\d][\d.,]*\s?(?:₪|ש"ח))|(?:0\d{1,2}-?\d{7})|(?:\d{3}-\d{7}))/g
 
 // A guide href arrives percent-encoded on purpose: ISOLATE above excludes
 // Hebrew characters, so a raw Hebrew slug would truncate the match and
@@ -41,7 +42,7 @@ const displayUrl = (url: string): string => {
 const isolate = (text: string, key: string): React.ReactNode[] =>
   text.split(ISOLATE).map((part, i) => {
     if (i % 2 !== 1) return part
-    if (part.startsWith(LINK_ORIGIN)) {
+    if (LINK_ORIGIN.test(part)) {
       // Same tab, same site -- not an external destination, so no
       // target="_blank" (and therefore no rel="noopener" need either).
       return (
