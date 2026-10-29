@@ -9,6 +9,7 @@ import {
 } from "./src/data/api/artifacts"
 import { articleImageSrcs, ImageSizes } from "./src/utils/article-images"
 import { buildSiteLlmsTxt, LlmsLink } from "./src/data/site-llms"
+import { redirectPairs, toApache, toCsv, toNginx } from "./src/data/redirects"
 import { SITE_URL } from "./src/utils/structured-data"
 import {
   articleLocale,
@@ -295,9 +296,48 @@ const writeSiteLlmsTxt = async (
   )
 }
 
+/* The 301s from the old WordPress site, in the three forms a server might
+   want (src/data/redirects.ts says where each one comes from). The Apache
+   file goes into public/ as .htaccess, where Apache picks it up by itself;
+   the nginx map and the CSV are for whoever configures the server, so they
+   go beside the build in redirects/, not into the public site. */
+const writeRedirects = async (
+  graphql: Parameters<NonNullable<GatsbyNode["onPostBuild"]>>[0]["graphql"],
+  reporter: Parameters<NonNullable<GatsbyNode["onPostBuild"]>>[0]["reporter"]
+) => {
+  const result = await graphql<{
+    allMarkdownRemark: {
+      nodes: { fileAbsolutePath: string; frontmatter: { slug: string; source: string | null } }[]
+    }
+  }>(`{
+    allMarkdownRemark(filter: { frontmatter: { slug: { ne: null } } }) {
+      nodes { fileAbsolutePath frontmatter { slug source } }
+    }
+  }`)
+  if (result.errors || !result.data) {
+    reporter.panicOnBuild("redirects: the article query failed", result.errors)
+    return
+  }
+  const articles = result.data.allMarkdownRemark.nodes
+    .filter((n) => n.frontmatter.source)
+    .map((n) => ({
+      source: n.frontmatter.source as string,
+      route: `/${n.fileAbsolutePath.includes("/content/kb/") ? "kb" : "blog"}/${n.frontmatter.slug}/`,
+    }))
+  const pairs = redirectPairs(articles)
+
+  fs.writeFileSync(path.join(__dirname, "public", ".htaccess"), toApache(pairs, SITE_URL), "utf8")
+  const outDir = path.join(__dirname, "redirects")
+  fs.mkdirSync(outDir, { recursive: true })
+  fs.writeFileSync(path.join(outDir, "nginx-redirects.conf"), toNginx(pairs, SITE_URL), "utf8")
+  fs.writeFileSync(path.join(outDir, "redirects.csv"), toCsv(pairs, SITE_URL), "utf8")
+  reporter.info(`redirects: ${pairs.length} old URLs -> public/.htaccess, redirects/`)
+}
+
 export const onPostBuild: GatsbyNode["onPostBuild"] = async ({ graphql, reporter }) => {
   stripNulBytes(reporter)
   await writeSiteLlmsTxt(graphql, reporter)
+  await writeRedirects(graphql, reporter)
 
   const outDir = path.join(__dirname, "public", "api")
   fs.mkdirSync(outDir, { recursive: true })
